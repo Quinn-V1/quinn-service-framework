@@ -15,7 +15,7 @@
     <artifactId>quinn-service-sdk</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-sdk</name>
-    <description>基础功能中心外部调用层</description>
+    <description>Quinn服务框架：服务接口暴露层</description>
 
     <dependencies>
         <dependency>

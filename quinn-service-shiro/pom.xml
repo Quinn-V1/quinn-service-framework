@@ -15,7 +15,7 @@
     <artifactId>quinn-service-shiro</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-shiro</name>
-    <description>基于Shiro框架的权限验证</description>
+    <description>Quinn服务框架：权限验证-Shiro</description>
 
     <dependencies>
         <dependency>

@@ -15,7 +15,7 @@
     <artifactId>quinn-service-swagger</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-swagger</name>
-    <description>基础功能中心接口测试-swagger</description>
+    <description>Quinn服务框架：接口测试-swagger</description>
 
     <dependencies>
         <dependency>

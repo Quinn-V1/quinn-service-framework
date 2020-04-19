@@ -25,6 +25,7 @@
         <module>quinn-service-email</module>
         <module>quinn-service-file-default</module>
         <module>quinn-service-file-fast</module>
+        <module>quinn-service-i18n</module>
         <module>quinn-service-jasypt</module>
         <module>quinn-service-licence</module>
         <module>quinn-service-redis</module>
@@ -108,6 +109,12 @@
             <dependency>
                 <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-file-fast</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-i18n</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 

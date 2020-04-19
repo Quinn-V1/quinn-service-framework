@@ -15,7 +15,7 @@
     <artifactId>quinn-service-websocket</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-websocket</name>
-    <description>基础功能中心WebSocket</description>
+    <description>Quinn服务框架：WebSocket</description>
 
     <dependencies>
         <dependency>

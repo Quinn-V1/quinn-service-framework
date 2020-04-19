@@ -15,7 +15,7 @@
     <artifactId>quinn-service-sso</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-sso</name>
-    <description>权限验证抽象层</description>
+    <description>Quinn服务框架：权限验证抽象层</description>
 
     <dependencies>
         <dependency>

@@ -286,7 +286,12 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
             @Override
             public void invoke() {
-                pageAdapter.handlePageParam((PageDTO) condition);
+                BaseResult res = pageAdapter.handlePageParam((PageDTO) condition);
+                if (!res.isSuccess()) {
+                    result.appendPrev(res);
+                    return;
+                }
+
                 Page<VO> select = baseMapper.select(getData());
                 if (CollectionUtils.isEmpty(select)) {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)

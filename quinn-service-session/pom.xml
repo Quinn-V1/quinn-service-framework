@@ -15,7 +15,7 @@
     <artifactId>quinn-service-session</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-session</name>
-    <description>基础功能中心外会话处理</description>
+    <description>Quinn服务框架：会话处理</description>
 
     <dependencies>
         <dependency>

@@ -14,7 +14,7 @@
     <artifactId>quinn-service-biz</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-biz</name>
-    <description>基础功能中心业务实现层</description>
+    <description>Quinn服务框架：基础业务实现层</description>
 
     <properties>
         <java.version>1.8</java.version>

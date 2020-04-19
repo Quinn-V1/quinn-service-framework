@@ -15,7 +15,7 @@
     <artifactId>quinn-service-jasypt</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-jasypt</name>
-    <description>基础功能中心配置信息加密</description>
+    <description>Quinn服务框架：配置信息加密</description>
 
     <dependencies>
         <dependency>

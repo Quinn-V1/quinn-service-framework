@@ -15,7 +15,7 @@
     <artifactId>quinn-service-email</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-email</name>
-    <description>基础功能中心邮件</description>
+    <description>Quinn服务框架：邮件发送</description>
 
     <dependencies>
         <dependency>

@@ -15,7 +15,7 @@
     <artifactId>quinn-service-datasource</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-datasource</name>
-    <description>数据库配置</description>
+    <description>Quinn服务框架：数据库配置</description>
 
     <dependencies>
         <dependency>

@@ -14,7 +14,7 @@
     <artifactId>quinn-service-server</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-server</name>
-    <description>基础功能中心微服务运行层</description>
+    <description>Quinn服务框架：服务运行</description>
 
     <properties>
         <java.version>1.8</java.version>

@@ -15,7 +15,7 @@
     <artifactId>quinn-service-file-default</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-file-default</name>
-    <description>基础功能中心默认文件数据库</description>
+    <description>Quinn服务框架：文件操作-默认</description>
 
     <dependencies>
         <dependency>

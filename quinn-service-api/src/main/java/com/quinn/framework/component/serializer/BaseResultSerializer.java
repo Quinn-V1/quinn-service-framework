@@ -3,7 +3,9 @@ package com.quinn.framework.component.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.quinn.util.base.handler.MultiI18nMsgResolver;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.util.StringUtil;
 
 import java.io.IOException;
 
@@ -21,10 +23,20 @@ public class BaseResultSerializer extends JsonSerializer<BaseResult> {
         gen.writeStartObject();
         gen.writeBooleanField("success", value.isSuccess());
         gen.writeNumberField("level", value.getLevel());
-        gen.writeStringField("message", value.getMessage());
 
         if (value.getData() != null) {
             gen.writeObjectField("data", value.getData());
+        }
+
+        if (value.getMessageProp() != null) {
+            String msg = MultiI18nMsgResolver.resolveMessageProp(value.getMessageProp());
+            if (StringUtil.isEmpty(msg)) {
+                gen.writeStringField("message", value.getMessage());
+            } else {
+                gen.writeStringField("message", msg);
+            }
+        } else {
+            gen.writeStringField("message", value.getMessage());
         }
 
         gen.writeEndObject();

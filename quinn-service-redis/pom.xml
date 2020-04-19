@@ -15,7 +15,7 @@
     <artifactId>quinn-service-redis</artifactId>
     <version>1.0.0</version>
     <name>quinn-service-redis</name>
-    <description>基础功能中心REDIS缓存实现</description>
+    <description>Quinn服务框架：REDIS缓存实现</description>
 
     <dependencies>
         <dependency>
