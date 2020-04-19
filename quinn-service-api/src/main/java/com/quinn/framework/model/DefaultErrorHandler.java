@@ -1,0 +1,73 @@
+package com.quinn.framework.model;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quinn.framework.api.ErrorHandler;
+import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.factory.LoggerExtendFactory;
+import com.quinn.util.base.model.BaseResult;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+
+/**
+ * 默认错误处理器
+ *
+ * @author Qunhua.Liao
+ * @since 2020-04-09
+ */
+public class DefaultErrorHandler implements ErrorHandler {
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DefaultErrorHandler.class);
+
+    private static final ObjectMapper objectMapper = ObjectMapperFactory.defaultObjectMapper();
+
+    private static DefaultErrorHandler instance = new DefaultErrorHandler();
+
+    public DefaultErrorHandler() {
+    }
+
+    public static DefaultErrorHandler getInstance() {
+        return instance;
+    }
+
+    @Override
+    public Class getDivClass() {
+        return Throwable.class;
+    }
+
+    @Override
+    public BaseResult handleError(Exception e, HttpServletRequest request, HttpServletResponse response) {
+        BaseResult result = new BaseResult();
+        response.setHeader("Content-Type", "application/json;charset=utf-8");
+        response.setContentType("application/json;charset=utf-8");
+        PrintWriter out;
+
+        if (!response.isCommitted()) {
+            try {
+                out = response.getWriter();
+                result.setSuccess(false);
+
+                generateMessage(e, result);
+
+                objectMapper.writeValue(out, result);
+                out.flush();
+            } catch (Exception e1) {
+                LOGGER.error("Error occurs When write error info {0}[{1}]", e1, true,
+                        e.getClass().getName(), e.getMessage());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 生成消息
+     *
+     * @param e         错误
+     * @param result    结果
+     */
+    public void generateMessage(Exception e, BaseResult result) {
+        result.setMessage(e.getClass().getName() + ":" + e.getMessage());
+    }
+
+}

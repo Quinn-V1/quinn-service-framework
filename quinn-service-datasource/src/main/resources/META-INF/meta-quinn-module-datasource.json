@@ -1,0 +1,13 @@
+{
+  "group": "DATA_SOURCE",
+  "desc": "数据源配置",
+  "items": [
+    {
+      "key": "spring.output.ansi.enabled",
+      "name": "控制台颜色",
+      "type": "string",
+      "defaultValue": "ALWAYS",
+      "description": ""
+    }
+  ]
+}

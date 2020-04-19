@@ -1,0 +1,3 @@
+com.quinn.framework.component.configcollector.ClassPathConfigInfoCollector
+com.quinn.framework.component.configcollector.ModuleScanConfigurationCollector
+com.quinn.framework.component.configcollector.OutPathConfigInfoCollector

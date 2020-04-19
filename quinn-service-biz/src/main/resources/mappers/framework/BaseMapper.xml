@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.quinn.framework.mapper.BaseMapper">
+
+    <sql id="common_select_column">
+        t.ID id,
+        t.ROOT_ORG rootOrg,
+        t.INSERT_USER insertUser,
+        t.INSERT_DATE_TIME insertDateTime,
+        t.UPDATE_USER updateUser,
+        t.UPDATE_DATE_TIME updateDateTime,
+        t.DATA_VERSION dataVersion,
+        t.ARCHIVE_FLAG archiveFlag
+    </sql>
+
+    <sql id="common_insert_column">
+        ID,
+        ROOT_ORG,
+        INSERT_USER,
+        INSERT_DATE_TIME,
+        UPDATE_USER,
+        UPDATE_DATE_TIME,
+        DATA_VERSION,
+        ARCHIVE_FLAG
+    </sql>
+
+    <sql id="common_insert_value">
+        #{id,jdbcType=NUMERIC},
+        #{rootOrg,jdbcType=VARCHAR},
+        #{insertUser,jdbcType=VARCHAR},
+        #{insertDateTime,jdbcType=TIMESTAMP},
+        #{updateUser,jdbcType=VARCHAR},
+        #{updateDateTime,jdbcType=TIMESTAMP},
+        #{dataVersion,jdbcType=NUMERIC},
+        #{archiveFlag,jdbcType=NUMERIC}
+    </sql>
+
+    <sql id="common_update_value">
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_DATE_TIME = #{updateDateTime,jdbcType=TIMESTAMP},
+        DATA_VERSION = #{dataVersion,jdbcType=NUMERIC},
+        <if test="archiveFlag != null" >
+            ARCHIVE_FLAG = #{archiveFlag,jdbcType=INTEGER},
+        </if>
+    </sql>
+
+    <sql id="common_where_value">
+        <if test="id != null" >
+            AND t.ID = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="rootOrg != null" >
+            AND t.ROOT_ORG = #{rootOrg,jdbcType=VARCHAR}
+        </if>
+        <if test="insertUser != null" >
+            AND t.INSERT_USER = #{insertUser,jdbcType=VARCHAR}
+        </if>
+        <if test="insertDateTimeFrom != null" >
+            <![CDATA[ AND t.INSERT_DATE_TIME >= #{insertDateTimeFrom,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="insertDateTimeTo != null" >
+            <![CDATA[ AND t.INSERT_DATE_TIME < #{insertDateTimeTo,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="updateUser != null" >
+            AND t.UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDateTimeFrom != null" >
+            <![CDATA[ AND t.UPDATE_DATE_TIME >= #{updateDateTimeFrom,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="updateDateTimeTo != null" >
+            <![CDATA[ AND t.UPDATE_DATE_TIME < #{updateDateTimeTo,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="dataVersionFrom != null" >
+            <![CDATA[ AND t.DATA_VERSION >= #{dataVersionFrom,jdbcType=INTEGER} ]]>
+        </if>
+        <if test="dataVersionTo != null" >
+            <![CDATA[ AND t.DATA_VERSION < #{dataVersionTo,jdbcType=INTEGER} ]]>
+        </if>
+        <if test="archiveFlag != null" >
+            AND t.ARCHIVE_FLAG = #{archiveFlag,jdbcType=INTEGER}
+        </if>
+    </sql>
+
+</mapper>

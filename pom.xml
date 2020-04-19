@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>quinn-service-parent</artifactId>
+        <groupId>com.quinn</groupId>
+        <version>1.0.0</version>
+        <relativePath />
+    </parent>
+
+    <groupId>com.quinn.framework</groupId>
+    <artifactId>quinn-service-framework</artifactId>
+    <version>1.0.0</version>
+    <name>quinn-service-framework</name>
+    <description>基础功能中心父项目</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>quinn-service-api</module>
+        <module>quinn-service-biz</module>
+        <module>quinn-service-datasource</module>
+        <module>quinn-service-email</module>
+        <module>quinn-service-file-default</module>
+        <module>quinn-service-file-fast</module>
+        <module>quinn-service-jasypt</module>
+        <module>quinn-service-licence</module>
+        <module>quinn-service-redis</module>
+        <module>quinn-service-sdk</module>
+        <module>quinn-service-server</module>
+        <module>quinn-service-security</module>
+        <module>quinn-service-session</module>
+        <module>quinn-service-shiro</module>
+        <module>quinn-service-sso</module>
+        <module>quinn-service-swagger</module>
+        <module>quinn-service-websocket</module>
+    </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <util.version>1.0.0</util.version>
+        <framework.version>1.0.0</framework.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.quinn.util</groupId>
+            <artifactId>quinn-util-licence</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-framework</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-api</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-biz</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-datasource</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-email</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-file-default</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-file-fast</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-jasypt</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-licence</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-redis</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-sdk</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-security</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-server</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-session</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-shiro</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-sso</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-swagger</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-websocket</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-service-util</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-base</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-constant</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-encrypt</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-encrypt-file</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-excel</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-freemarker</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-generate</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-licence</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-metadata</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-print</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-stream</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

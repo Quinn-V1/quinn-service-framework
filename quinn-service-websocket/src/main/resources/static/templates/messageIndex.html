@@ -1,0 +1,76 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>消息索引页</title>
+    <style>
+        .test {
+        }
+    </style>
+</head>
+<body>
+<h3>站内信<span id="messageCount">0</span></h3>
+<h4>测试说明</h4>
+<h5>~~~</h5>
+<br/>
+<input id="text" type="text"/>
+<button onclick="send()">发送测试</button>
+<hr/>
+<button onclick="clos()">关闭连接</button>
+<hr/>
+<div id="message"></div>
+
+<script>
+    var websocket = null;
+    if ('WebSocket' in window) {
+        websocket = new WebSocket("ws://127.0.0.1:8030/websocket/admin");
+    } else {
+        alert("您的浏览器不支持websocket");
+    }
+
+    websocket.onopen = function () {
+        setMessageInHtml("connection success！")
+    }
+
+    window.onbeforeunload = function () {
+        close();
+    }
+
+    websocket.onclose = function () {
+        setMessageInHtml("closed websocket!")
+    }
+
+    websocket.onerror = function () {
+        setMessageInHtml("send error！");
+    }
+
+    websocket.onmessage = function (event) {
+        var json = JSON.parse(event.data);
+        switch (json["command"]) {
+            case -10:
+                alert(json["message"]);
+                break;
+            case -20:
+                var countEle = document.getElementById('messageCount');
+                var count = parseInt(countEle.textContent) + 1;
+                countEle.textContent = count;
+                break;
+            default:
+                break;
+        }
+    }
+
+    function setMessageInHtml(message) {
+        document.getElementById('message').innerHTML += message + "<br />";
+    }
+
+    function close() {
+        websocket.close(3000, "强制关闭");
+    }
+
+    function send() {
+        var msg = document.getElementById('text').value;
+        websocket.send(msg);
+    }
+</script>
+</body>
+</html>
