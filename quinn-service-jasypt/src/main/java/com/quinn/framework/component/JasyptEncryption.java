@@ -107,7 +107,8 @@ public class JasyptEncryption {
     }
 
     public static void main(String[] args) {
-        System.out.println(encrypt("root", "quinn-service", null));
+        System.out.println(encrypt("ming-bpm", "quinn-service", null));
+        System.out.println(encrypt("MingBpm!", "quinn-service", null));
     }
 
 }

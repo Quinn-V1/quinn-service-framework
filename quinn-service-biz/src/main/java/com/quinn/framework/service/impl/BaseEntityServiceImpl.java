@@ -29,7 +29,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import static com.quinn.util.constant.enums.ExceptionEnums.*;
+import static com.quinn.util.constant.enums.ExceptionEnum.*;
 
 /**
  * 基础实体类业务实现层

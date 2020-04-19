@@ -7,7 +7,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.util.FileUtil;
 import com.quinn.util.base.util.StreamUtil;
 import com.quinn.util.base.util.StringUtil;
-import com.quinn.util.constant.enums.ExceptionEnums;
+import com.quinn.util.constant.enums.ExceptionEnum;
 import com.quinn.util.constant.enums.StorageTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +38,8 @@ public class LocalStorageServiceImpl implements StorageService {
         // 判断参数是否完整
         if (StringUtils.isEmpty(fullPath) || in == null) {
             return BaseResult.build(false)
-                    .buildMessage(ExceptionEnums.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(ExceptionEnums.PARAM_SHOULD_NOT_NULL.paramNames[0], "fullPath or inputStream")
+                    .buildMessage(ExceptionEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(ExceptionEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "fullPath or inputStream")
                     .result();
         }
 
@@ -50,14 +50,14 @@ public class LocalStorageServiceImpl implements StorageService {
             if (file.isFile()) {
                 if (!file.delete()) {
                     return BaseResult.build(false)
-                            .buildMessage(ExceptionEnums.FILE_DELETE_FAIL.name(), 1, 0)
-                            .addParam(ExceptionEnums.FILE_DELETE_FAIL.paramNames[0], fullPath)
+                            .buildMessage(ExceptionEnum.FILE_DELETE_FAIL.name(), 1, 0)
+                            .addParam(ExceptionEnum.FILE_DELETE_FAIL.paramNames[0], fullPath)
                             .result();
                 }
             } else {
                 return BaseResult.build(false)
-                        .buildMessage(ExceptionEnums.FILE_OCCUPIED_BY_DIRECTORY.name(), 1, 0)
-                        .addParam(ExceptionEnums.FILE_OCCUPIED_BY_DIRECTORY.paramNames[0], fullPath)
+                        .buildMessage(ExceptionEnum.FILE_OCCUPIED_BY_DIRECTORY.name(), 1, 0)
+                        .addParam(ExceptionEnum.FILE_OCCUPIED_BY_DIRECTORY.paramNames[0], fullPath)
                         .result();
             }
         }
@@ -68,14 +68,14 @@ public class LocalStorageServiceImpl implements StorageService {
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 return BaseResult.build(false)
-                        .buildMessage(ExceptionEnums.FILE_DIRECTORY_CREATE_FAIL.name(), 1, 0)
-                        .addParam(ExceptionEnums.FILE_DIRECTORY_CREATE_FAIL.paramNames[0], filePath)
+                        .buildMessage(ExceptionEnum.FILE_DIRECTORY_CREATE_FAIL.name(), 1, 0)
+                        .addParam(ExceptionEnum.FILE_DIRECTORY_CREATE_FAIL.paramNames[0], filePath)
                         .result();
             }
         } else if (dir.isFile()) {
             return BaseResult.build(false)
-                    .buildMessage(ExceptionEnums.FILE_DIRECTORY_OCCUPIED_BY_FILE.name(), 1, 0)
-                    .addParam(ExceptionEnums.FILE_DIRECTORY_OCCUPIED_BY_FILE.paramNames[0], filePath)
+                    .buildMessage(ExceptionEnum.FILE_DIRECTORY_OCCUPIED_BY_FILE.name(), 1, 0)
+                    .addParam(ExceptionEnum.FILE_DIRECTORY_OCCUPIED_BY_FILE.paramNames[0], filePath)
                     .result();
         }
 
@@ -88,8 +88,8 @@ public class LocalStorageServiceImpl implements StorageService {
         } catch (IOException e) {
             LOGGER.error("Error occurs when upload File", e);
             return BaseResult.build(false)
-                    .buildMessage(ExceptionEnums.FILE_STREAM_OPERATION_FAIL.name(), 1, 0)
-                    .addParam(ExceptionEnums.FILE_STREAM_OPERATION_FAIL.paramNames[0], fullPath)
+                    .buildMessage(ExceptionEnum.FILE_STREAM_OPERATION_FAIL.name(), 1, 0)
+                    .addParam(ExceptionEnum.FILE_STREAM_OPERATION_FAIL.paramNames[0], fullPath)
                     .result();
         } finally {
             StreamUtil.closeQuietly(in, os);

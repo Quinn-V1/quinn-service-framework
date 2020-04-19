@@ -1,6 +1,6 @@
 package com.quinn.framework.exception;
 
-import com.quinn.util.constant.enums.ExceptionEnums;
+import com.quinn.util.constant.enums.ExceptionEnum;
 
 /**
  * 数据操作事务异常
@@ -11,7 +11,7 @@ import com.quinn.util.constant.enums.ExceptionEnums;
 public class DataOperationTransactionException extends ServiceException {
 
     {
-        buildParam(ExceptionEnums.DATA_OPERATION_TRANSACTION_TERMINATED.name(), 2, 2);
+        buildParam(ExceptionEnum.DATA_OPERATION_TRANSACTION_TERMINATED.name(), 2, 2);
     }
 
     public DataOperationTransactionException() {

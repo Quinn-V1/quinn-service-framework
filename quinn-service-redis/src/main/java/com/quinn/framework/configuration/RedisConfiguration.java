@@ -44,12 +44,6 @@ public class RedisConfiguration {
     @Value("${com.quinn-service.redis.database:0}")
     private int database;
 
-    @Value("${com.quinn-service.redis.cache.name:}")
-    private String cacheName;
-
-    @Value("${com.quinn-service.redis.keys.namespace:}")
-    private String keysNamespace;
-
     @Value("${com.quinn-service.redis.maxActive:8}")
     private int maxActive;
 
@@ -62,6 +56,18 @@ public class RedisConfiguration {
     @Value("${com.quinn-service.redis.minIdle:0}")
     private int minIdle;
 
+    @Value("${com.quinn-service.redis.timeout:2000}")
+    private int timeout;
+
+    @Value("${com.quinn-service.redis.cache.name:}")
+    private String cacheName;
+
+    @Value("${com.quinn-service.redis.keys.namespace:}")
+    private String keysNamespace;
+
+    @Value("${com.quinn-service.redis.keys.normalize:true}")
+    private boolean keysNormalize;
+
     @Value("${com.quinn-service.redis.hosts:}")
     private String hosts;
 
@@ -71,17 +77,11 @@ public class RedisConfiguration {
     @Value("${com.quinn-service.redis.sentinel.master:masterName}")
     private String sentinelMaster;
 
-    @Value("${com.quinn-service.redis.metrics.report.interval:300}")
-    private int reportInterval;
-
-    @Value("${com.quinn-service.redis.keys.normalize:true}")
-    private boolean keysNormalize;
-
-    @Value("${com.quinn-service.redis.timeout:2000}")
-    private int timeout;
-
     @Value("${com.quinn-service.redis.cluster.maxRedirects:3}")
     private int maxRedirects;
+
+    @Value("${com.quinn-service.redis.metrics.report.interval:300}")
+    private int reportInterval;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {

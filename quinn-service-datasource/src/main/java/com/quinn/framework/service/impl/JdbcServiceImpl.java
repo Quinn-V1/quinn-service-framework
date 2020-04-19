@@ -13,7 +13,7 @@ import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.ExceptionEnums;
+import com.quinn.util.constant.enums.ExceptionEnum;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -25,7 +25,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quinn.util.constant.enums.ExceptionEnums.DATA_OPERATION_TRANSACTION_TERMINATED;
+import static com.quinn.util.constant.enums.ExceptionEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
 
 /**
  * 数据库直接操作层
@@ -42,8 +42,8 @@ public class JdbcServiceImpl implements JdbcService {
     public BatchResult<String> executeUpdate(String sql, boolean transaction) {
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
-                    .buildMessage(ExceptionEnums.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(ExceptionEnums.PARAM_SHOULD_NOT_NULL.paramNames[0], "sql")
+                    .buildMessage(ExceptionEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(ExceptionEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "sql")
                     .result();
         }
 
@@ -85,8 +85,8 @@ public class JdbcServiceImpl implements JdbcService {
         T t = jdbcTemplate.queryForObject(sql, params, clazz);
         if (t == null) {
             return BaseResult.fail()
-                    .buildMessage(ExceptionEnums.RESULT_NOT_FOUND.name(), 0, 1)
-                    .addParam(ExceptionEnums.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
+                    .buildMessage(ExceptionEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                    .addParam(ExceptionEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
                     .result()
                     ;
         }
@@ -98,8 +98,8 @@ public class JdbcServiceImpl implements JdbcService {
         List<T> list = jdbcTemplate.queryForList(sql, params, clazz);
         if (CollectionUtil.isEmpty(list)) {
             return BaseResult.fail()
-                    .buildMessage(ExceptionEnums.RESULT_NOT_FOUND.name(), 0, 1)
-                    .addParam(ExceptionEnums.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
+                    .buildMessage(ExceptionEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                    .addParam(ExceptionEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
                     .result()
                     ;
         }

@@ -22,7 +22,7 @@ public class CacheController extends AbstractController {
     @Autowired(required = false)
     private CacheAllService cacheAllService;
 
-    @GetMapping(value = "/get")
+    @GetMapping(value = "get")
     @ApiOperation(value = "获取基本缓存")
     public BaseResult get(
             @ApiParam(name = "key", value = "缓存键", required = true)
@@ -31,7 +31,7 @@ public class CacheController extends AbstractController {
         return BaseResult.build(true).ofData(cacheAllService.get(key));
     }
 
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping(value = "delete")
     @ApiOperation(value = "获取基本缓存")
     public BaseResult delete(
             @ApiParam(name = "key", value = "缓存键", required = true)
@@ -41,20 +41,20 @@ public class CacheController extends AbstractController {
         return BaseResult.SUCCESS;
     }
 
-    @PostMapping(value = "/base")
+    @PostMapping(value = "set")
     @ApiOperation(value = "获取基本缓存")
     public BaseResult set(
             @ApiParam(name = "key", value = "缓存键", required = true)
             @RequestParam(name = "key") String key,
 
-            @ApiParam(name = "key", value = "缓存键", required = true)
-            @RequestParam(name = "key") String value
+            @ApiParam(name = "value", value = "缓存值", required = true)
+            @RequestParam(name = "value") String value
     ) {
         cacheAllService.set(key, value);
         return BaseResult.SUCCESS;
     }
 
-    @GetMapping(value = "/base/keys")
+    @GetMapping(value = "keys")
     @ApiOperation(value = "获取基本缓存自定样式键")
     public BaseResult keys(
             @ApiParam(name = "pattern", value = "缓存键")
