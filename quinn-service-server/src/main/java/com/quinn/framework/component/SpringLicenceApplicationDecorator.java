@@ -1,14 +1,15 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.SpringApplicationDecorator;
-import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.factory.LicenceClassLoader;
+import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.LicenceInfo;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.ExceptionEnums;
 import com.quinn.util.constant.enums.LicenceExceptionType;
 import com.quinn.util.constant.enums.SystemExitTypeEnum;
+import com.quinn.util.licence.model.ApplicationInfo;
 import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 
@@ -23,8 +24,6 @@ import java.util.Properties;
  * @since 2020-04-18
  */
 public class SpringLicenceApplicationDecorator implements SpringApplicationDecorator {
-
-    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(SpringLicenceApplicationDecorator.class);
 
     @Override
     @SneakyThrows
@@ -45,11 +44,21 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
         }
 
         if (resource == null) {
-            LOGGER.error(ExceptionEnums.LICENCE_EXCEPTION.name(), LicenceExceptionType.UNAUTHORIZED.code);
-            System.exit(SystemExitTypeEnum.LICENCE_ERROR.code);
+            Integer errCode = LicenceExceptionType.UNAUTHORIZED.code + SystemExitTypeEnum.LICENCE_ERROR.code;
+            System.err.println(ExceptionEnums.LICENCE_EXCEPTION.name() + "[" + errCode + "]");
+            System.exit(errCode);
         }
 
-        LicenceClassLoader.init(resource, SpringLicenceApplicationDecorator.class.getClassLoader());
+        BaseResult<LicenceInfo> init = LicenceClassLoader.init(resource,
+                SpringLicenceApplicationDecorator.class.getClassLoader());
+
+        if (!init.isSuccess()) {
+            Integer errCode = LicenceExceptionType.FILE_DESTROYED.code + SystemExitTypeEnum.LICENCE_ERROR.code;
+            System.err.println(ExceptionEnums.LICENCE_EXCEPTION.name() + "[" + errCode + "]");
+            System.exit(errCode);
+        }
+
+        ApplicationInfo.init(init.getData());
     }
 
 }

@@ -27,7 +27,7 @@ public class LocalStorageServiceImpl implements StorageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalStorageServiceImpl.class);
 
-    @Value("${com.quinn-service.file-upload-base-path:/upload/}")
+    @Value("${com.quinn-service.file-upload-base-path:upload/}")
     private String basePath;
 
     @Override
@@ -102,7 +102,7 @@ public class LocalStorageServiceImpl implements StorageService {
     public BaseResult<FileInfoAdapter> delete(FileInfoAdapter fileInfoAdapter) {
         File file = new File(fileInfoAdapter.getFullPath());
         if (file.exists()) {
-            file.delete();
+            FileUtil.deleteDir(file);
         }
         return BaseResult.SUCCESS;
     }
