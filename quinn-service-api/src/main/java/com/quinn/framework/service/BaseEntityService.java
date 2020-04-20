@@ -173,6 +173,14 @@ public interface BaseEntityService<DO, TO, VO> {
      * @param condition 综合条件
      * @return
      */
+    BaseResult<PageInfo<VO>> pageByMap(Map condition);
+
+    /**
+     * 综合查询：不分页
+     *
+     * @param condition 综合条件
+     * @return
+     */
     BaseResult<List<VO>> select(TO condition);
 
     /**

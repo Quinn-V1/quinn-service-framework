@@ -257,6 +257,11 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     }
 
     @Override
+    public BaseResult<PageInfo<VO>> pageByMap(Map condition) {
+        return page(new JSONObject(condition).toJavaObject(getTOClass()));
+    }
+
+    @Override
     public BaseResult<List<VO>> select(TO condition) {
         BaseResult<List<VO>> result = new BaseResult();
         condition.ofEntityClass(DOClass);
