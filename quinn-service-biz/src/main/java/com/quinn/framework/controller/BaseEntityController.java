@@ -2,8 +2,10 @@ package com.quinn.framework.controller;
 
 import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.entity.dto.BaseDTO;
+import com.quinn.framework.model.BatchUpdateInfo;
 import com.quinn.framework.model.PageInfo;
 import com.quinn.framework.service.BaseEntityService;
+import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +56,7 @@ public class BaseEntityController<DO extends BaseDO, TO extends BaseDTO, VO exte
             @ApiParam(name = "data", value = "Json格式数据", required = true)
             @RequestBody VO data
     ) {
-        return baseEntityService.insert(data);
+        return baseEntityService.insert(data.prepareForInsert(SessionUtil.getUserKey(), SessionUtil.getOrgKey()));
     }
 
     @DeleteMapping(value = "delete")
@@ -63,16 +65,7 @@ public class BaseEntityController<DO extends BaseDO, TO extends BaseDTO, VO exte
             @ApiParam(name = "data", value = "Json格式数据", required = true)
             @RequestBody VO data
     ) {
-        return baseEntityService.delete(data);
-    }
-
-    @DeleteMapping(value = "delete-list")
-    @ApiOperation(value = "批量删除")
-    public BatchResult<VO> deleteList(
-            @ApiParam(name = "data", value = "数据列表，含ID", required = true)
-            @RequestBody List<VO> dataList
-    ) {
-        return baseEntityService.deleteList(dataList, true);
+        return baseEntityService.delete(data.prepareForDelete(SessionUtil.getUserKey(), false));
     }
 
     @PutMapping(value = "update")
@@ -81,7 +74,25 @@ public class BaseEntityController<DO extends BaseDO, TO extends BaseDTO, VO exte
             @ApiParam(name = "data", value = "Json格式数据", required = true)
             @RequestBody VO data
     ) {
-        return baseEntityService.update(data);
+        return baseEntityService.update(data.prepareForUpdate(SessionUtil.getUserKey(), false));
+    }
+
+    @DeleteMapping(value = "delete-list")
+    @ApiOperation(value = "批量删除")
+    public BatchResult<VO> deleteList(
+            @ApiParam(name = "data", value = "数据列表，含ID", required = true)
+            @RequestBody List<VO> dataList
+    ) {
+        return baseEntityService.deleteList(dataList, true, false);
+    }
+
+    @PutMapping(value = "update-batch")
+    @ApiOperation("更新数据")
+    public BatchResult<VO> updateBatch(
+            @ApiParam(name = "data", value = "Json格式数据", required = true)
+            @RequestBody BatchUpdateInfo<VO> dataList
+    ) {
+        return baseEntityService.updateBatch(dataList, true, false, false);
     }
 
     @GetMapping(value = "get-by-id")

@@ -1,7 +1,9 @@
 package com.quinn.framework.entity.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.api.entityflag.IdGenerateAble;
 import com.quinn.util.constant.NumberConstant;
+import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -68,6 +70,12 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     private String rootOrg;
 
     /**
+     * 数据库操作
+     */
+    @JsonIgnore
+    private DbOperateTypeEnum dbOperateType;
+
+    /**
      * 获取缓存Key
      *
      * @return 缓存Key
@@ -86,21 +94,26 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
      *
      * @param orgKey  组织编码
      * @param userKey 用户编码
+     * @return 本身
      */
-    public void prepareForInsert(String userKey, String orgKey) {
+    public <T> T prepareForInsert(String userKey, String orgKey) {
         this.rootOrg = orgKey;
         this.archiveFlag = NumberConstant.INT_ZERO;
         this.dataVersion = NumberConstant.INT_ONE;
         this.insertUser = this.updateUser = userKey;
         this.insertDateTime = this.updateDateTime = LocalDateTime.now();
+        this.dbOperateType = DbOperateTypeEnum.INSERT;
+        return (T) this;
     }
 
     /**
      * 更新前准备
      *
      * @param userKey 用户编码
+     * @param allFlag 用户编码
+     * @return 本身
      */
-    public void prepareForUpdate(String userKey) {
+    public <T> T prepareForUpdate(String userKey, boolean allFlag) {
         this.updateUser = userKey;
         this.updateDateTime = LocalDateTime.now();
         if (dataVersion == null) {
@@ -112,45 +125,53 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
                 dataVersion = dataVersion - 1;
             }
         }
+        this.dbOperateType = allFlag ?  DbOperateTypeEnum.UPDATE_ALL : DbOperateTypeEnum.UPDATE_NON_EMPTY;
+        return (T) this;
     }
 
     /**
      * 删除前准备
      *
      * @param userKey 用户编码
+     * @param hardFlag 用户编码
+     * @return 本身
      */
-    public boolean prepareForDelete(String userKey) {
-        this.prepareForUpdate(userKey);
+    public <T> T prepareForDelete(String userKey, boolean hardFlag) {
+        this.prepareForUpdate(userKey, false);
         if (dataVersion == null || dataVersion.intValue() == 0) {
             this.dataVersion = -1;
-            return true;
+            return (T) this;
         }
         if (dataVersion.intValue() < 0) {
-            return false;
+            return (T) this;
         }
 
         this.dataVersion = -dataVersion - 1;
-        return true;
+        this.dbOperateType = hardFlag ? DbOperateTypeEnum.DELETE_HARD : DbOperateTypeEnum.DELETE_SOFT;
+        return (T) this;
     }
 
     /**
      * 恢复前准备
      *
      * @param userKey 用户编码
+     * @param hardFlag 用户编码
+     * @return 本身
      */
-    public boolean prepareForRecover(String userKey) {
-        this.prepareForUpdate(userKey);
+    public <T> T prepareForRecover(String userKey, boolean hardFlag) {
+        this.prepareForUpdate(userKey, false);
         if (dataVersion == null || dataVersion.intValue() == 0) {
             this.dataVersion = 1;
-            return true;
+            return (T) this;
         }
 
         if (dataVersion.intValue() > 0) {
-            return false;
+            return (T) this;
         }
 
         this.dataVersion = -dataVersion + 1;
-        return true;
+        this.dbOperateType = hardFlag ?  DbOperateTypeEnum.RECOVERY_HARD : DbOperateTypeEnum.RECOVERY_SOFT;
+        return (T) this;
     }
 
     @Override

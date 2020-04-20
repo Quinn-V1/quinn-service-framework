@@ -1,8 +1,8 @@
 package com.quinn.framework.mapper;
 
 import com.github.pagehelper.Page;
-import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.dto.BaseDTO;
 
 /**
  * 基础数据操作接口
@@ -51,5 +51,13 @@ public interface BaseMapper<DO extends BaseDO, TO extends BaseDTO, VO extends DO
      * @return 更新是否成功
      */
     int update(DO t);
+
+    /**
+     * 更新单条数据（全量）
+     *
+     * @param t 数据
+     * @return 是否成功（记录数）
+     */
+    int updateAll(DO t);
 
 }

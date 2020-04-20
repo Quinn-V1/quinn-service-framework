@@ -1,10 +1,13 @@
 package com.quinn.framework.service;
 
 import com.quinn.framework.api.EntityServiceInterceptor;
+import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.dto.BaseDTO;
+import com.quinn.framework.model.BatchUpdateInfo;
+import com.quinn.framework.model.PageInfo;
 import com.quinn.util.base.exception.UnSupportedMethodException;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
-import com.quinn.framework.model.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,7 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-03-27
  */
-public interface BaseEntityService<DO, TO, VO> {
+public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO extends DO> {
 
     /**
      * 新增之前操作
@@ -103,7 +106,7 @@ public interface BaseEntityService<DO, TO, VO> {
     /**
      * 更新之后操作
      *
-     * @param result   新业务数据
+     * @param result  新业务数据
      * @param oldData 旧业务数据
      * @return 后置操作是否成功
      */
@@ -207,9 +210,10 @@ public interface BaseEntityService<DO, TO, VO> {
      *
      * @param list        实体列表
      * @param transaction 是否事务管理
+     * @param hardFlag 是否硬删除
      * @return 删除是否成功
      */
-    default BatchResult<VO> deleteList(List<VO> list, boolean transaction) {
+    default BatchResult<VO> deleteList(List<VO> list, boolean transaction, boolean hardFlag) {
         throw new UnSupportedMethodException();
     }
 
@@ -218,11 +222,23 @@ public interface BaseEntityService<DO, TO, VO> {
      *
      * @param list        实体列表
      * @param transaction 是否事务管理
+     * @param allFlag 是否全量更新
      * @return 更新是否成功
      */
-    default BatchResult<VO> updateList(List<VO> list, boolean transaction) {
+    default BatchResult<VO> updateList(List<VO> list, boolean transaction, boolean allFlag) {
         throw new UnSupportedMethodException();
     }
+
+    /**
+     * 批量更新操作
+     *
+     * @param dataList    数据列表
+     * @param transaction 事务标识
+     * @param allFlag     全量更新标识
+     * @param hardFlag    硬删除标识
+     * @return 更新结果
+     */
+    BatchResult<VO> updateBatch(BatchUpdateInfo<VO> dataList, boolean transaction, boolean allFlag, boolean hardFlag);
 
     /**
      * 获取服务实体的数据类对象
@@ -252,5 +268,4 @@ public interface BaseEntityService<DO, TO, VO> {
      * @return 业务操作对象本身, 方便链式操作
      */
     BaseEntityService addEntityServiceInterceptor(EntityServiceInterceptor entityServiceInterceptor);
-
 }

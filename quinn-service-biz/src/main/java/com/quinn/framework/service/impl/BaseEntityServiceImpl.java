@@ -12,6 +12,7 @@ import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.entity.dto.PageDTO;
 import com.quinn.framework.exception.DataOperationTransactionException;
 import com.quinn.framework.mapper.BaseMapper;
+import com.quinn.framework.model.BatchUpdateInfo;
 import com.quinn.framework.model.PageInfo;
 import com.quinn.framework.model.methodinvorker.*;
 import com.quinn.framework.service.BaseEntityService;
@@ -19,6 +20,7 @@ import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
+import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +91,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
     @Override
     public BaseResult<VO> insert(VO data) {
-        data.prepareForInsert(SessionUtil.getUserKey(), SessionUtil.getOrgKey());
         BaseResult result = beforeInsert(data);
         entityServiceInterceptorChain.doChain(new BaseInsertMethodInvoker<DO>(result, data) {
             @Override
@@ -118,8 +119,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         }
 
         VO vo = result.getData();
-        vo.prepareForDelete(SessionUtil.getUserKey());
-
         BaseResult res = beforeDelete(vo);
         if (!res.isSuccess()) {
             return res;
@@ -128,7 +127,13 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
-                int res = baseMapper.delete(this.getData());
+                int res;
+                if (this.getData().getDbOperateType() == DbOperateTypeEnum.DELETE_HARD) {
+                    res = baseMapper.delete(this.getData());
+                } else {
+                    res = baseMapper.update(this.getData());
+                }
+
                 if (res >= 0) {
                     getResult().ofData(getData());
                 } else {
@@ -151,8 +156,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             return result;
         }
 
-        data.prepareForUpdate(SessionUtil.getUserKey());
-
         VO vo = result.getData();
         BaseResult res = beforeUpdate(vo, data);
         if (!res.isSuccess()) {
@@ -162,7 +165,13 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
-                int res = baseMapper.update(this.getData());
+                int res;
+                if (this.getData().getDbOperateType() == DbOperateTypeEnum.UPDATE_ALL) {
+                    res = baseMapper.updateAll(this.getData());
+                } else {
+                    res = baseMapper.update(this.getData());
+                }
+
                 if (res >= 0) {
                     getResult().ofData(vo);
                 } else {
@@ -188,7 +197,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         VO data = result.getData();
         beforeRecovery(data);
 
-        data.prepareForRecover(SessionUtil.getUserKey());
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<VO>(result, data) {
             @Override
             public void invoke() {
@@ -332,10 +340,10 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     }
 
     @Override
-    public BatchResult<VO> deleteList(List<VO> list, boolean transaction) {
+    public BatchResult<VO> deleteList(List<VO> list, boolean transaction, boolean hardFlag) {
         BatchResult<VO> result = new BatchResult(list.size());
         for (int i = 0; i < list.size(); i++) {
-            BaseResult<VO> res = delete(list.get(i));
+            BaseResult<VO> res = delete(list.get(i).prepareForDelete(SessionUtil.getUserKey(), hardFlag));
             if (!res.isSuccess() && transaction) {
                 throw new DataOperationTransactionException(res.getMessage())
                         .getMessageProp()
@@ -352,10 +360,10 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     }
 
     @Override
-    public BatchResult<VO> updateList(List<VO> list, boolean transaction) {
+    public BatchResult<VO> updateList(List<VO> list, boolean transaction, boolean allFlag) {
         BatchResult<VO> result = new BatchResult(list.size());
         for (int i = 0; i < list.size(); i++) {
-            BaseResult<VO> res = update(list.get(i));
+            BaseResult<VO> res = update(list.get(i).prepareForUpdate(SessionUtil.getUserKey(), allFlag));
             if (!res.isSuccess() && transaction) {
                 throw new DataOperationTransactionException(res.getMessage())
                         .getMessageProp()
@@ -367,6 +375,38 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                         .exception();
             }
             result.addItem(res);
+        }
+        return result;
+    }
+
+    @Override
+    public BatchResult<VO> updateBatch(BatchUpdateInfo<VO> dataList, boolean transaction, boolean allFlag, boolean hardFlag) {
+        BaseResult<List<VO>> dataRes = dataList.flag(allFlag, hardFlag);
+        if (!dataRes.wantContinue()) {
+            return BatchResult.fromPrev(dataRes);
+        }
+
+        List<VO> list = dataRes.getData();
+        BatchResult result = new BatchResult(list.size());
+        for (VO data : list) {
+            DbOperateTypeEnum dbOperateType = data.getDbOperateType();
+            switch (dbOperateType) {
+                case INSERT:
+                case RECOVERY_HARD:
+                    result.addItem(insert(data));
+                    break;
+                case DELETE_SOFT:
+                case UPDATE_NON_EMPTY:
+                case UPDATE_ALL:
+                case RECOVERY_SOFT:
+                    result.addItem(update(data));
+                    break;
+                case DELETE_HARD:
+                    result.addItem(delete(data));
+                    break;
+                default:
+                    break;
+            }
         }
         return result;
     }
