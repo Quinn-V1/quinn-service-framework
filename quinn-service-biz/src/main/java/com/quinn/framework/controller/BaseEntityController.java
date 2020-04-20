@@ -87,9 +87,9 @@ public class BaseEntityController<DO extends BaseDO, TO extends BaseDTO, VO exte
     }
 
     @PutMapping(value = "update-batch")
-    @ApiOperation("更新数据")
+    @ApiOperation("批量更新")
     public BatchResult<VO> updateBatch(
-            @ApiParam(name = "data", value = "Json格式数据", required = true)
+            @ApiParam(name = "data", value = "新数据列表 & 旧数据列表", required = true)
             @RequestBody BatchUpdateInfo<VO> dataList
     ) {
         return baseEntityService.updateBatch(dataList, true, false, false);
