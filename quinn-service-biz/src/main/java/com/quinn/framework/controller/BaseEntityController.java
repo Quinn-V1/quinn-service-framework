@@ -18,7 +18,7 @@ import java.util.List;
  * @author Qunhua.Liao
  * @since 2020-03-30
  */
-public class AbstractEntityController<DO extends BaseDO, TO extends BaseDTO, VO extends DO>
+public class BaseEntityController<DO extends BaseDO, TO extends BaseDTO, VO extends DO>
         extends AbstractController {
 
     /**
@@ -41,7 +41,7 @@ public class AbstractEntityController<DO extends BaseDO, TO extends BaseDTO, VO 
      */
     private Class<VO> VOClass;
 
-    public AbstractEntityController(BaseEntityService<DO, TO, VO> baseEntityService) {
+    public BaseEntityController(BaseEntityService<DO, TO, VO> baseEntityService) {
         this.baseEntityService = baseEntityService;
         DOClass = baseEntityService.getDOClass();
         TOClass = baseEntityService.getTOClass();
