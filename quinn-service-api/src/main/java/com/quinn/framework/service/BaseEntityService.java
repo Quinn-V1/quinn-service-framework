@@ -30,8 +30,6 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
         return BaseResult.success(data);
     }
 
-    ;
-
     /**
      * 插入单条数据
      *
@@ -50,8 +48,6 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
         return result;
     }
 
-    ;
-
     /**
      * 删除之前操作
      *
@@ -61,8 +57,6 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
     default BaseResult<VO> beforeDelete(VO data) {
         return BaseResult.success(data);
     }
-
-    ;
 
     /**
      * 删除单条数据
@@ -81,8 +75,6 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
     default BaseResult<VO> afterDelete(BaseResult<VO> result) {
         return result;
     }
-
-    ;
 
     /**
      * 更新之前操作
@@ -124,8 +116,6 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
         return BaseResult.success(data);
     }
 
-    ;
-
     /**
      * 恢复数据
      *
@@ -143,8 +133,6 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
     default BaseResult<VO> afterRecovery(BaseResult<VO> result) {
         return result;
     }
-
-    ;
 
     /**
      * 查找一条记录

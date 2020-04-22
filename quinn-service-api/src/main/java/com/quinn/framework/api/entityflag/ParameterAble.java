@@ -20,13 +20,13 @@ public interface ParameterAble {
      *
      * @return  参数值
      */
-    default String getParamValue(){return null;}
+    default String getCoDbParamValue(){return null;}
 
     /**
      * 获取参数值
      *
      * @param paramValue    参数值
      */
-    default void setParamValue(String paramValue) {}
+    default void setCoDbParamValue(String paramValue) {}
 
 }

@@ -43,7 +43,7 @@ public class ParameterAbleReadEntityServiceInterceptor implements EntityServiceI
             ParameterAble parameterAble = (ParameterAble) object;
             BaseResult<ParameterAble> res = parameterAbleService.selectByKey(parameterAble.cacheKey());
             if (res.isSuccess()) {
-                parameterAble.setParamValue(res.getData().getParamValue());
+                parameterAble.setCoDbParamValue(res.getData().getCoDbParamValue());
             }
         }
     }
