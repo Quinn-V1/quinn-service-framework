@@ -142,18 +142,17 @@ public class RedisConfiguration {
         return redisTemplate;
     }
 
-    @Bean
-    public ApplicationSerializer redisSerializer() {
+    @Bean("applicationSerializer")
+    public ApplicationSerializer applicationSerializer() {
         return new ApplicationRedisSerializer();
     }
 
     @Bean(name = {"cacheAllService", "cacheCommonService", "cacheLockService", "cacheCounterService"})
     public CacheAllService cacheAllService(
-            RedisTemplate redisTemplate,
-            @Qualifier("redisSerializer") ApplicationSerializer redisSerializer
+            RedisTemplate redisTemplate
     ) {
         RedisAllServiceImpl redisBaseService =
-                new RedisAllServiceImpl(redisTemplate, redisSerializer, cacheName, keysNamespace);
+                new RedisAllServiceImpl(redisTemplate, applicationSerializer(), cacheName, keysNamespace);
         return redisBaseService;
     }
 

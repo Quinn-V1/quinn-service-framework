@@ -36,7 +36,7 @@ public class ModuleScanConfigurationCollector extends BaseConfigInfoCollector im
 
     @SneakyThrows
     @Override
-    public void collect(Properties priorityProperties, Set<String> ignoreKeys) {
+    public void collect(Properties priorityProperties) {
 
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
         Resource[] resources = pathMatchingResourcePatternResolver.getResources(ConfigConstant.MODULE_DEFINITION_RESOURCES);

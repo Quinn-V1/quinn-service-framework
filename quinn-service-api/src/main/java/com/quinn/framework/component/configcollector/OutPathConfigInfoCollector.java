@@ -24,7 +24,7 @@ public class OutPathConfigInfoCollector extends BaseConfigInfoCollector implemen
     }
 
     @Override
-    public void collect(Properties properties, Set<String> ignoreKeys) {
+    public void collect(Properties properties) {
         String path = properties.getProperty(ConfigConstant.CONFIG_KEY_OUT_CONFIGURATION_FILE_PATH);
         if (StringUtil.isEmpty(path)) {
             return;

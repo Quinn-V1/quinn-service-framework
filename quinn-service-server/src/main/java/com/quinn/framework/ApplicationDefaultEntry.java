@@ -8,12 +8,15 @@ import com.quinn.framework.model.SpringApplicationFactory;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.util.CollectionUtil;
 import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.constant.CharConstant;
 import com.quinn.util.licence.model.ApplicationInfo;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.SimpleCommandLinePropertySource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -70,19 +73,37 @@ public class ApplicationDefaultEntry {
      * @return 整合后的属性集
      */
     private static PriorityProperties collectProperties(String[] args) {
+        PriorityProperties priorityProperties = generatePropertyFromArgs(args);
+        BaseConfigInfoCollector.collectProperties(priorityProperties);
+        return priorityProperties;
+    }
+
+    /**
+     * 添加系统参数，并标记命令行参数的最高优先级
+     *
+     * @param args  命令行参数
+     * @return      具有优先级标识的配置信息
+     */
+    private static PriorityProperties generatePropertyFromArgs(String[] args) {
         PriorityProperties priorityProperties = new PriorityProperties();
-
-        // 增加命令行参数（优先级最高）
-        SimpleCommandLinePropertySource simpleCommandLinePropertySource = new SimpleCommandLinePropertySource(args);
-        priorityProperties.addPropertySource(simpleCommandLinePropertySource);
-        Set<String> commandLineParamNames = CollectionUtil.asHashSet(simpleCommandLinePropertySource.getPropertyNames());
-
-        // 加入系统参数
+        ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+        List<String> nonOptionArgs = applicationArguments.getNonOptionArgs();
         priorityProperties.putAll(System.getProperties());
 
-        // 自定义获取系统参数
-        BaseConfigInfoCollector.collectProperties(priorityProperties, commandLineParamNames);
+        if (!CollectionUtil.isEmpty(nonOptionArgs)) {
+            for (String arg : nonOptionArgs) {
+                if (arg.startsWith(ConfigConstant.NON_OPTION_ARG_PREFIX_SYSTEM)
+                        || arg.startsWith(ConfigConstant.OPTION_ARG_PREFIX)) {
 
+                    int ind = arg.indexOf(CharConstant.CHAR_EQUAL);
+                    if (ind > 0) {
+                        String key = arg.substring(2, ind);
+                        priorityProperties.addPriorityKeys(key);
+                        priorityProperties.put(key, arg.substring(ind + 1));
+                    }
+                }
+            }
+        }
         return priorityProperties;
     }
 

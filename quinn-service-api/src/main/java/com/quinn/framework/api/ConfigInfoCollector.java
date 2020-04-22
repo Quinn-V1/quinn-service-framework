@@ -24,9 +24,8 @@ public interface ConfigInfoCollector {
      * 收集配置信息
      *
      * @param properties 加载源属性
-     * @param ignoreKeys 加载过程中如果有以下属性不要覆盖
      * @return
      */
-    void collect(Properties properties, Set<String> ignoreKeys);
+    void collect(Properties properties);
 
 }
