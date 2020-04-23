@@ -210,12 +210,6 @@
 
             <dependency>
                 <groupId>com.quinn.util</groupId>
-                <artifactId>quinn-util-encrypt-file</artifactId>
-                <version>${util.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.quinn.util</groupId>
                 <artifactId>quinn-util-excel</artifactId>
                 <version>${util.version}</version>
             </dependency>
@@ -229,6 +223,12 @@
             <dependency>
                 <groupId>com.quinn.util</groupId>
                 <artifactId>quinn-util-generate</artifactId>
+                <version>${util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.util</groupId>
+                <artifactId>quinn-util-danger</artifactId>
                 <version>${util.version}</version>
             </dependency>
 

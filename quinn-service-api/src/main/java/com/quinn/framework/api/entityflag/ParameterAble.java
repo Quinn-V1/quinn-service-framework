@@ -1,5 +1,7 @@
 package com.quinn.framework.api.entityflag;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 可参数配置化标识
  *
@@ -20,6 +22,7 @@ public interface ParameterAble {
      *
      * @return  参数值
      */
+    @ApiModelProperty("综合额外参数")
     default String getCoDbParamValue(){return null;}
 
     /**

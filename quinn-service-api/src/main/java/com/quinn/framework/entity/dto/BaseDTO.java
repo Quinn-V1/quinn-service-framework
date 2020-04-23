@@ -1,6 +1,7 @@
 package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quinn.util.base.convertor.BaseConverter;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -155,15 +156,30 @@ public class BaseDTO<T> {
     }
 
     /**
+     * 逆向解析数据编码
+     */
+    public void dataKey(String dataKey) {
+        this.id = BaseConverter.staticConvert(dataKey, Long.class);
+    }
+
+    /**
      * 获取缓存键
-     *
-     * @return
      */
     public String cacheKey() {
         if (entityClass == null) {
             return null;
         }
         return entityClass.getSimpleName() + ":" + dataKey();
+    }
+
+    /**
+     * 逆向解析缓存键
+     */
+    public void cacheKey(String cacheKey) {
+        if (entityClass != null) {
+            cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + 1);
+        }
+        dataKey(cacheKey);
     }
 
     @Override
