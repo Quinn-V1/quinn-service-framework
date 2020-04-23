@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * 系统对外开放接口
+ * 通用主数据对外开放接口
  *
  * @author Qunhua.Liao
  * @since 2020-03-31
  */
 @RestController
 @RequestMapping("/core/key-value/*")
-@Api(tags = {"0ZZ010框架：状态查询"})
+@Api(tags = {"0ZY010数据：通用主数据"})
 public class KeyValueController extends AbstractController {
 
     @PostMapping(value = "list")
-    @ApiOperation("获取通用数据列表")
+    @ApiOperation("获取通用主数据列表")
     public BaseResult generalizedList(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
             @RequestBody Map<String, Object> condition
