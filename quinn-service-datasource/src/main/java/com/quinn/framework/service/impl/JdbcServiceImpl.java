@@ -13,8 +13,8 @@ import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.ExceptionEnum;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
+import com.quinn.util.constant.enums.ExceptionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.CallableStatementCreator;
@@ -39,7 +39,7 @@ public class JdbcServiceImpl implements JdbcService {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public BatchResult<String> executeUpdate(String sql, boolean transaction) {
+    public BatchResult<String> executeUpdateBatch(String sql, boolean transaction) {
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
                     .buildMessage(ExceptionEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
@@ -78,6 +78,11 @@ public class JdbcServiceImpl implements JdbcService {
 
         result.setLevel(count);
         return result;
+    }
+
+    @Override
+    public BaseResult<Integer> executeUpdate(String sql, Object... params) {
+        return BaseResult.success(jdbcTemplate.update(sql, params));
     }
 
     @Override

@@ -97,7 +97,7 @@ public class DataAdminController extends AbstractController {
             @ApiParam(name = "transaction", value = "事务控制", required = true)
             @RequestParam(name = "transaction") boolean transaction
     ) {
-        return jdbcService.executeUpdate(sql, transaction);
+        return jdbcService.executeUpdateBatch(sql, transaction);
     }
 
     /**
