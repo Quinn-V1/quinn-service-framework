@@ -2,6 +2,7 @@ package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.util.StringUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -133,6 +134,24 @@ public class BaseDTO<T> {
      */
     @ApiModelProperty("更新用户")
     private String updateUser;
+
+    /**
+     * 关键字SQL条件字符串（模糊匹配）
+     *
+     * @return 关键字SQL条件字符串（模糊匹配）
+     */
+    private String getKeyWordsLikeCond() {
+        return StringUtil.isEmpty(keyWords) ? null : "%" + keyWords + "%";
+    }
+
+    /**
+     * 关键字SQL条件字符串（模糊匹配）
+     *
+     * @return 关键字SQL条件字符串（模糊匹配）
+     */
+    private String getKeyWordsLikeStartCond() {
+        return StringUtil.isEmpty(keyWords) ? null :keyWords + "%";
+    }
 
     /**
      * 设置实体类对象
