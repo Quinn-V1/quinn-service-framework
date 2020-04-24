@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class PageDTO<T> extends BaseDTO {
+public abstract class PageDTO<T> extends BaseDTO {
 
     /**
      * 当前页

@@ -1,6 +1,7 @@
 package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quinn.framework.util.enums.WrapperEnum;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.util.StringUtil;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 基础数据传输类
@@ -17,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
-public class BaseDTO<T> {
+public abstract class BaseDTO<T> {
 
     {
         // 默认不做查询条数限制
@@ -150,15 +153,15 @@ public class BaseDTO<T> {
      * @return 关键字SQL条件字符串（模糊匹配）
      */
     private String getKeyWordsLikeStartCond() {
-        return StringUtil.isEmpty(keyWords) ? null :keyWords + "%";
+        return StringUtil.isEmpty(keyWords) ? null : keyWords + "%";
     }
 
     /**
      * 设置实体类对象
      *
-     * @param <V>           结果泛型
-     * @param entityClass   实体类对象
-     * @return              本身
+     * @param <V>         结果泛型
+     * @param entityClass 实体类对象
+     * @return 本身
      */
     public <V extends BaseDTO> V ofEntityClass(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -205,6 +208,174 @@ public class BaseDTO<T> {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + ":" + dataKey();
+    }
+
+    /**
+     * 根据属性找列名
+     *
+     * @param prop 属性
+     * @return 列名
+     */
+    public abstract String columnOfProp(String prop);
+
+    /**
+     * 获取表名
+     *
+     * @return 表名
+     */
+    public abstract String tableName();
+
+    /**
+     * 自有查询对象
+     *
+     * @author Qunhua.Liao
+     * @since 2020-04-24
+     */
+    public class FreeQuery {
+
+        /**
+         * 带参构造器
+         *
+         * @param resultClass   结果类型
+         * @param condSize      条件数
+         * @param resultSize    结果数
+         */
+        private FreeQuery (Class resultClass, int condSize, int resultSize) {
+            this.resultClass = resultClass;
+            this.condFields = new ArrayList<>(condSize);
+            this.resultFields = new ArrayList<>(resultSize);
+        }
+
+        /**
+         * 条件字段
+         */
+        private List<CondField> condFields;
+
+        /**
+         * 结果字段
+         */
+        private List<ResultField> resultFields;
+
+        /**
+         * 结果类型
+         */
+        private Class resultClass;
+
+        /**
+         * 参数
+         */
+        private Object[] params;
+
+        /**
+         * 生成SQL文件
+         *
+         * @return SQL文
+         */
+        public String generateSql() {
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT ");
+            for (ResultField resultField : resultFields) {
+                query.append(resultField.fullName()).append(",");
+            }
+
+            query.deleteCharAt(query.length() - 1);
+            query.append(" FROM ").append(tableName()).append(" WHERE ");
+
+            params = new Object[condFields.size()];
+            for (int i = 0; i < condFields.size(); i++) {
+                CondField condField = condFields.get(i);
+                query.append(columnOfProp(condField.prop)).append(" = ? AND ");
+                params[i] = condField.value;
+            }
+
+            query.delete(query.length() - 5, query.length());
+            return query.toString();
+        }
+
+        /**
+         * 获取参数
+         *
+         * @return 参数
+         */
+        public Object[] getParams() {
+            return params;
+        }
+
+        /**
+         * 包裹 属性
+         *
+         * @param prop
+         * @param wrapper
+         */
+        public void wrapResultField(String prop, WrapperEnum wrapper) {
+            resultFields.add(new ResultField(prop, wrapper));
+        }
+
+        public void addParamField(String prop, WrapperEnum wrapper) {
+            resultFields.add(new ResultField(prop, wrapper));
+        }
+    }
+
+    /**
+     * 条件字段
+     *
+     * @author Qunhua.Liao
+     * @since 2020-04-24
+     */
+    private class CondField {
+
+        private CondField(String prop, Object value) {
+            this.prop = prop;
+            this.value = value;
+        }
+
+        /**
+         * 属性名称
+         */
+        String prop;
+
+        /**
+         * 条件值
+         */
+        Object value;
+
+    }
+
+    /**
+     * 结果字段
+     *
+     * @author Qunhua.Liao
+     * @since 2020-04-24
+     */
+    private class ResultField {
+
+        private ResultField(String prop, WrapperEnum wrapper) {
+            this.prop = prop;
+            this.wrapper = wrapper;
+        }
+
+        /**
+         * 属性名称
+         */
+        String prop;
+
+        /**
+         * 包装方式
+         */
+        WrapperEnum wrapper;
+
+        /**
+         * 全名
+         *
+         * @return 全名
+         */
+        public String fullName() {
+            if (wrapper == null) {
+                return columnOfProp(prop) + " AS " + prop;
+            } else {
+                return wrapper.wrap(columnOfProp(prop)) + " AS " + prop;
+            }
+        }
     }
 
 }

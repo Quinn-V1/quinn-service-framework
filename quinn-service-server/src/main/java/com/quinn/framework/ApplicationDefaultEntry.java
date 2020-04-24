@@ -72,7 +72,7 @@ public class ApplicationDefaultEntry {
      * @param args 命令行参数
      * @return 整合后的属性集
      */
-    private static PriorityProperties collectProperties(String[] args) {
+    public static PriorityProperties collectProperties(String[] args) {
         PriorityProperties priorityProperties = generatePropertyFromArgs(args);
         BaseConfigInfoCollector.collectProperties(priorityProperties);
         return priorityProperties;
