@@ -158,8 +158,9 @@ public class BaseDTO<T> {
     /**
      * 逆向解析数据编码
      */
-    public void dataKey(String dataKey) {
+    public boolean dataKey(String dataKey) {
         this.id = BaseConverter.staticConvert(dataKey, Long.class);
+        return true;
     }
 
     /**
