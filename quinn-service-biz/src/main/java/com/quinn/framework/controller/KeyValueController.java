@@ -26,11 +26,20 @@ public class KeyValueController extends AbstractController {
 
     @PostMapping(value = "list")
     @ApiOperation("获取通用主数据列表")
-    public BaseResult generalizedList(
+    public BaseResult list(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
             @RequestBody Map<String, Object> condition
     ) {
         return KeyValueMultiService.selectByMap(condition);
+    }
+
+    @PostMapping(value = "page")
+    @ApiOperation("获取通用主数据列表")
+    public BaseResult page(
+            @ApiParam(name = "condition", value = "Json格式条件", required = true)
+            @RequestBody Map<String, Object> condition
+    ) {
+        return KeyValueMultiService.pageByMap(condition);
     }
 
 }
