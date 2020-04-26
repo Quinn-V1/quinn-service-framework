@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 基础配置类：其中的Bean在生产环境中需要根据需要换掉
@@ -68,6 +69,12 @@ public class BaseBizConfiguration {
     @ConditionalOnMissingBean(value = {FileHandler.class})
     public FileHandler fileHandler(StorageService storageService) {
         return new DemoFileHandler(storageService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(value = {RestTemplate.class})
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }
