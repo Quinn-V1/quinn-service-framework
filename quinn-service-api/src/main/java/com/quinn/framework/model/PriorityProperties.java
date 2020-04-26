@@ -23,11 +23,6 @@ public class PriorityProperties extends Properties {
      */
     private Set<String> priorityKeys = new ConcurrentSkipListSet<>();
 
-    /**
-     * 优先级：越大优先级越高
-     */
-    private int priority;
-
     @Override
     public synchronized Object setProperty(String key, String value) {
         if (priorityKeys.contains(key)) {

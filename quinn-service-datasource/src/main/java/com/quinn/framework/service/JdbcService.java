@@ -1,5 +1,6 @@
 package com.quinn.framework.service;
 
+import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.model.CallableObject;
 import com.quinn.framework.model.NextNumSeqValue;
 import com.quinn.util.base.model.BaseResult;
@@ -13,16 +14,53 @@ import java.util.List;
  * @author Qunhua.Liao
  * @since 2020-04-04
  */
-public interface JdbcService {
+public interface JdbcService extends FreeQueryService {
 
     /**
-     * 直接执行DDL-SQL \ DML-SQL
+     * 自由查找
      *
-     * @param sql         SQL
-     * @param transaction 是否事务管理
+     * @param freeQuery 自由查询对象
+     * @param <T>       结果实体类
+     * @return 查询结果
+     */
+    <T> BaseResult<T> getFree(BaseDTO.FreeQuery freeQuery);
+
+    /**
+     * 自由查找
+     *
+     * @param freeQuery 自由查询对象
+     * @param <T>       结果实体类
+     * @return 查询结果
+     */
+    <T> BaseResult<List<T>> selectFree(BaseDTO.FreeQuery freeQuery);
+
+    /**
+     * 自由更新
+     *
+     * @param freeUpdate 自由更新对象
+     * @return 查询结果
+     */
+    BaseResult<Integer> updateFree(BaseDTO.FreeUpdate freeUpdate);
+
+    /**
+     * 直接执行SQL
+     *
+     * @param sql    查询SQL
+     * @param clazz  返回实体类
+     * @param params 参数
      * @return 执行结果
      */
-    BatchResult<String> executeUpdateBatch(String sql, boolean transaction);
+    <T> BaseResult<T> queryForObject(String sql, Class<T> clazz, Object... params);
+
+    /**
+     * 直接执行SQL
+     *
+     * @param sql    查询SQL
+     * @param clazz  返回实体类
+     * @param params 参数
+     * @return 执行结果
+     */
+    <T> BaseResult<List<T>> queryForList(String sql, Class<T> clazz, Object... params);
 
     /**
      * 直接执行DDL-SQL \ DML-SQL
@@ -34,24 +72,13 @@ public interface JdbcService {
     BaseResult<Integer> executeUpdate(String sql, Object... params);
 
     /**
-     * 直接执行SQL
+     * 直接执行DDL-SQL \ DML-SQL
      *
-     * @param sql    查询SQL
-     * @param clazz  返回实体类
-     * @param params 参数
+     * @param sql         SQL
+     * @param transaction 是否事务管理
      * @return 执行结果
      */
-    <T> BaseResult<T> executeQueryForObject(String sql, Class<T> clazz, Object... params);
-
-    /**
-     * 直接执行SQL
-     *
-     * @param sql    查询SQL
-     * @param clazz  返回实体类
-     * @param params 参数
-     * @return 执行结果
-     */
-    <T> BaseResult<List<T>> executeQueryForList(String sql, Class<T> clazz, Object... params);
+    BatchResult<String> updateBatch(String sql, boolean transaction);
 
     /**
      * 获取序列下一个值

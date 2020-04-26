@@ -198,7 +198,7 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
      *
      * @param list        实体列表
      * @param transaction 是否事务管理
-     * @param hardFlag 是否硬删除
+     * @param hardFlag    是否硬删除
      * @return 删除是否成功
      */
     default BatchResult<VO> deleteList(List<VO> list, boolean transaction, boolean hardFlag) {
@@ -210,7 +210,7 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
      *
      * @param list        实体列表
      * @param transaction 是否事务管理
-     * @param allFlag 是否全量更新
+     * @param allFlag     是否全量更新
      * @return 更新是否成功
      */
     default BatchResult<VO> updateList(List<VO> list, boolean transaction, boolean allFlag) {

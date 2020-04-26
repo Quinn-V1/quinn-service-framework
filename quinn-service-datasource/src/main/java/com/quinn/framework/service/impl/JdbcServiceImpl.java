@@ -1,5 +1,6 @@
 package com.quinn.framework.service.impl;
 
+import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.exception.DataOperationTransactionException;
 import com.quinn.framework.model.CallableObject;
 import com.quinn.framework.model.NextNumSeqValue;
@@ -39,7 +40,24 @@ public class JdbcServiceImpl implements JdbcService {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public BatchResult<String> executeUpdateBatch(String sql, boolean transaction) {
+    public <T> BaseResult<T> getFree(BaseDTO.FreeQuery freeQuery) {
+        return queryForObject(freeQuery.generateSql(), freeQuery.getResultClass(),
+                freeQuery.getParams());
+    }
+
+    @Override
+    public <T> BaseResult<List<T>> selectFree(BaseDTO.FreeQuery freeQuery) {
+        return queryForObject(freeQuery.generateSql(), freeQuery.getResultClass(),
+                freeQuery.getParams());
+    }
+
+    @Override
+    public BaseResult<Integer> updateFree(BaseDTO.FreeUpdate freeUpdate) {
+        return executeUpdate(freeUpdate.generateSql(), freeUpdate.getParams());
+    }
+
+    @Override
+    public BatchResult<String> updateBatch(String sql, boolean transaction) {
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
                     .buildMessage(ExceptionEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
@@ -86,7 +104,7 @@ public class JdbcServiceImpl implements JdbcService {
     }
 
     @Override
-    public <T> BaseResult<T> executeQueryForObject(String sql, Class<T> clazz, Object... params) {
+    public <T> BaseResult<T> queryForObject(String sql, Class<T> clazz, Object... params) {
         T t = jdbcTemplate.queryForObject(sql, params, clazz);
         if (t == null) {
             return BaseResult.fail()
@@ -99,7 +117,7 @@ public class JdbcServiceImpl implements JdbcService {
     }
 
     @Override
-    public <T> BaseResult<List<T>> executeQueryForList(String sql, Class<T> clazz, Object... params) {
+    public <T> BaseResult<List<T>> queryForList(String sql, Class<T> clazz, Object... params) {
         List<T> list = jdbcTemplate.queryForList(sql, params, clazz);
         if (CollectionUtil.isEmpty(list)) {
             return BaseResult.fail()

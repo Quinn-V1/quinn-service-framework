@@ -8,6 +8,7 @@ import com.quinn.framework.service.JdbcService;
 import com.quinn.framework.service.impl.JdbcServiceImpl;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -33,6 +34,12 @@ import java.util.Map;
  */
 @Configuration
 public class DataSourceConfiguration {
+
+    @Value("${com.quinn-service.database.transaction.timeout.read:5}")
+    private int readTransactionTimeOut;
+
+    @Value("${com.quinn-service.database.transaction.timeout.write:5}")
+    private int writeTransactionTimeOut;
 
     @Bean
     @Primary
@@ -63,8 +70,10 @@ public class DataSourceConfiguration {
         // 只读事务
         RuleBasedTransactionAttribute readOnlyTx = new RuleBasedTransactionAttribute();
         readOnlyTx.setReadOnly(true);
+        readOnlyTx.setTimeout(readTransactionTimeOut);
         readOnlyTx.setPropagationBehavior(TransactionDefinition.PROPAGATION_NOT_SUPPORTED);
         txMap.put("get*", readOnlyTx);
+        txMap.put("select*", readOnlyTx);
         txMap.put("query*", readOnlyTx);
 
         // 需要事务
@@ -72,12 +81,14 @@ public class DataSourceConfiguration {
                 TransactionDefinition.PROPAGATION_REQUIRED,
                 Collections.singletonList(new RollbackRuleAttribute(Exception.class)));
 
-        requiredTx.setTimeout(5);
+        requiredTx.setTimeout(writeTransactionTimeOut);
         txMap.put("add*", requiredTx);
         txMap.put("save*", requiredTx);
         txMap.put("insert*", requiredTx);
         txMap.put("update*", requiredTx);
         txMap.put("delete*", requiredTx);
+        txMap.put("execute*", requiredTx);
+        txMap.put("generate*", requiredTx);
 
         NameMatchTransactionAttributeSource source = new NameMatchTransactionAttributeSource();
         source.setNameMap(txMap);

@@ -1,9 +1,11 @@
 package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quinn.framework.util.enums.UpdateTypeEnum;
 import com.quinn.framework.util.enums.WrapperEnum;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.constant.StringConstant;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -228,28 +230,104 @@ public abstract class BaseDTO<T> {
     /**
      * 自有查询对象
      *
+     * @param clazz      结果对象
+     * @param condSize   条件列数
+     * @param resultSize 结果列数
+     * @return 自有查询对象
+     */
+    public FreeQuery freeQuery(Class clazz, int condSize, int resultSize) {
+        FreeQuery freeQuery = new FreeQuery(clazz, condSize, resultSize);
+        return freeQuery;
+    }
+
+    /**
+     * 自有查询对象
+     *
+     * @param clazz       结果对象
+     * @param condSize    条件列数
+     * @param resultProps 结果列数
+     * @return 自有查询对象
+     */
+    public FreeQuery freeQuery(Class clazz, int condSize, String... resultProps) {
+        FreeQuery freeQuery = new FreeQuery(clazz, condSize, resultProps);
+        return freeQuery;
+    }
+
+    /**
+     * 自有新增
+     *
+     * @param valueSize 值大小
+     * @param condSize  条件大小
+     * @return 自由更新对象
+     */
+    public FreeUpdate freeUpdate(int valueSize, int condSize) {
+        return new FreeUpdate(UpdateTypeEnum.UPDATE).valueSize(valueSize).condSize(condSize);
+    }
+
+    /**
+     * 自有新增
+     *
+     * @param condSize 条件大小
+     * @return 自由删除对象
+     */
+    public FreeUpdate freeIDelete(int condSize) {
+        return new FreeUpdate(UpdateTypeEnum.DELETE).valueSize(condSize);
+    }
+
+    /**
+     * 自有新增
+     *
+     * @param valueSize 值大小
+     * @return 自由新增对象
+     */
+    public FreeUpdate freeInsert(int valueSize) {
+        return new FreeUpdate(UpdateTypeEnum.INSERT).valueSize(valueSize);
+    }
+
+    /**
+     * 自有查询对象
+     *
      * @author Qunhua.Liao
      * @since 2020-04-24
      */
-    public class FreeQuery {
+    public class FreeQuery<T> {
 
         /**
          * 带参构造器
          *
-         * @param resultClass   结果类型
-         * @param condSize      条件数
-         * @param resultSize    结果数
+         * @param resultClass 结果类型
+         * @param condSize    条件数
+         * @param resultSize  结果数
          */
-        private FreeQuery (Class resultClass, int condSize, int resultSize) {
+        private FreeQuery(Class<T> resultClass, int condSize, int resultSize) {
             this.resultClass = resultClass;
             this.condFields = new ArrayList<>(condSize);
             this.resultFields = new ArrayList<>(resultSize);
         }
 
         /**
+         * 带参构造器
+         *
+         * @param resultClass 结果类型
+         * @param condSize    条件数
+         * @param props       结果数
+         */
+        private FreeQuery(Class<T> resultClass, int condSize, String... props) {
+            this.resultClass = resultClass;
+            this.condFields = new ArrayList<>(condSize);
+
+            if (props != null) {
+                this.resultFields = new ArrayList<>(props.length);
+                for (String prop : props) {
+                    wrapResultField(prop, null);
+                }
+            }
+        }
+
+        /**
          * 条件字段
          */
-        private List<CondField> condFields;
+        private List<FieldValue> condFields;
 
         /**
          * 结果字段
@@ -259,7 +337,7 @@ public abstract class BaseDTO<T> {
         /**
          * 结果类型
          */
-        private Class resultClass;
+        private Class<T> resultClass;
 
         /**
          * 参数
@@ -283,9 +361,9 @@ public abstract class BaseDTO<T> {
 
             params = new Object[condFields.size()];
             for (int i = 0; i < condFields.size(); i++) {
-                CondField condField = condFields.get(i);
-                query.append(columnOfProp(condField.prop)).append(" = ? AND ");
-                params[i] = condField.value;
+                FieldValue FieldValue = condFields.get(i);
+                query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
+                params[i] = FieldValue.value;
             }
 
             query.delete(query.length() - 5, query.length());
@@ -302,17 +380,187 @@ public abstract class BaseDTO<T> {
         }
 
         /**
+         * 获取结果类型
+         *
+         * @return 结果类型
+         */
+        public Class<T> getResultClass() {
+            return resultClass;
+        }
+
+        /**
          * 包裹 属性
          *
          * @param prop
          * @param wrapper
          */
-        public void wrapResultField(String prop, WrapperEnum wrapper) {
+        public FreeQuery<T> wrapResultField(String prop, WrapperEnum wrapper) {
             resultFields.add(new ResultField(prop, wrapper));
+            return this;
         }
 
-        public void addParamField(String prop, WrapperEnum wrapper) {
-            resultFields.add(new ResultField(prop, wrapper));
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         */
+        public FreeQuery<T> addParamField(String prop, Object value) {
+            if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
+                condFields.add(new FieldValue(prop, value));
+            }
+            return this;
+        }
+    }
+
+    /**
+     * 自由更新对象
+     *
+     * @author Qunhua.Liao
+     * @since 2020-04-24
+     */
+    public class FreeUpdate {
+
+        private FreeUpdate(UpdateTypeEnum updateType) {
+            this.updateType = updateType;
+        }
+
+        /**
+         * 设置值列
+         *
+         * @param size 列数
+         * @return 本身
+         */
+        private FreeUpdate valueSize(int size) {
+            valueFields = new ArrayList<>(size);
+            return this;
+        }
+
+        /**
+         * 设置值列
+         *
+         * @param size 列数
+         * @return 本身
+         */
+        private FreeUpdate condSize(int size) {
+            condFields = new ArrayList<>(size);
+            return this;
+        }
+
+        /**
+         * 更新类型
+         */
+        private UpdateTypeEnum updateType;
+
+        /**
+         * 值字段
+         */
+        private List<FieldValue> valueFields;
+
+        /**
+         * 条件字段
+         */
+        private List<FieldValue> condFields;
+
+        /**
+         * 参数
+         */
+        private Object[] params;
+
+        /**
+         * 生成SQL
+         *
+         * @return SQL
+         */
+        public String generateSql() {
+            StringBuilder query = new StringBuilder();
+
+            switch (updateType) {
+                case UPDATE:
+                    query.append("UPDATE ").append(tableName()).append(" SET ");
+                    params = new Object[valueFields.size() + condFields.size()];
+                    int k = 0;
+                    for (; k < valueFields.size(); k++) {
+                        FieldValue FieldValue = valueFields.get(k);
+                        query.append(columnOfProp(FieldValue.prop)).append(" = ?,");
+                        params[k] = FieldValue.value;
+                    }
+                    query.deleteCharAt(query.length());
+
+                    query.append(" WHERE ");
+                    for (int i = 0; i < condFields.size(); i++) {
+                        FieldValue FieldValue = condFields.get(i);
+                        query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
+                        params[k + i] = FieldValue.value;
+                    }
+                    query.delete(query.length() - 5, query.length());
+
+                    break;
+                case INSERT:
+                    query.append("INSERT INTO ").append(tableName()).append("(");
+                    StringBuilder queryVal = new StringBuilder();
+
+                    params = new Object[valueFields.size()];
+
+                    for (int i = 0; i < valueFields.size(); i++) {
+                        FieldValue FieldValue = valueFields.get(i);
+                        query.append(columnOfProp(FieldValue.prop)).append(",");
+                        queryVal.append("?,");
+                        params[i] = FieldValue.value;
+                    }
+                    query.deleteCharAt(query.length());
+                    queryVal.deleteCharAt(queryVal.length());
+
+                    query.append(") VALUES (");
+                    query.append(queryVal).append(")");
+
+                case DELETE:
+                    query.append("DELETE FROM ").append(tableName()).append(" WHERE ");
+                    params = new Object[condFields.size()];
+
+                    for (int i = 0; i < condFields.size(); i++) {
+                        FieldValue FieldValue = condFields.get(i);
+                        query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
+                        params[i] = FieldValue.value;
+                    }
+                    query.delete(query.length() - 5, query.length());
+                    break;
+                default:
+                    break;
+            }
+
+            return query.toString();
+        }
+
+        /**
+         * 获取参数
+         *
+         * @return 参数
+         */
+        public Object getParams() {
+            return params;
+        }
+
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         */
+        public FreeUpdate addValueField(String prop, Object value) {
+            valueFields.add(new FieldValue(prop, value));
+            return this;
+        }
+
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         */
+        public FreeUpdate addParamField(String prop, Object value) {
+            condFields.add(new FieldValue(prop, value));
+            return this;
         }
     }
 
@@ -322,9 +570,9 @@ public abstract class BaseDTO<T> {
      * @author Qunhua.Liao
      * @since 2020-04-24
      */
-    private class CondField {
+    private class FieldValue {
 
-        private CondField(String prop, Object value) {
+        private FieldValue(String prop, Object value) {
             this.prop = prop;
             this.value = value;
         }

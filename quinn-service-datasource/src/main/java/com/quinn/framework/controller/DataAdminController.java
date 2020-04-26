@@ -75,7 +75,7 @@ public class DataAdminController extends AbstractController {
     ) {
         try {
             Class clazz = Class.forName(dataClass);
-            return jdbcService.executeQueryForList(sql, clazz);
+            return jdbcService.queryForList(sql, clazz);
         } catch (ClassNotFoundException e) {
             return BaseResult.fail("数据类型不对，请联系管理员进行操作");
         }
@@ -97,7 +97,7 @@ public class DataAdminController extends AbstractController {
             @ApiParam(name = "transaction", value = "事务控制", required = true)
             @RequestParam(name = "transaction") boolean transaction
     ) {
-        return jdbcService.executeUpdateBatch(sql, transaction);
+        return jdbcService.updateBatch(sql, transaction);
     }
 
     /**
