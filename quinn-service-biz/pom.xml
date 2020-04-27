@@ -30,12 +30,6 @@
         <!-- support danger class of this framework -->
         <dependency>
             <groupId>com.quinn.util</groupId>
-            <artifactId>quinn-util-freemarker</artifactId>
-        </dependency>
-
-        <!-- support danger class of this framework -->
-        <dependency>
-            <groupId>com.quinn.util</groupId>
             <artifactId>quinn-util-danger</artifactId>
             <scope>provided</scope>
             <optional>true</optional>

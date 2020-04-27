@@ -27,6 +27,12 @@
             <artifactId>quinn-util-base</artifactId>
         </dependency>
 
+        <!-- support danger class of this framework -->
+        <dependency>
+            <groupId>com.quinn.util</groupId>
+            <artifactId>quinn-util-freemarker</artifactId>
+        </dependency>
+
         <!-- support Spring boot start -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

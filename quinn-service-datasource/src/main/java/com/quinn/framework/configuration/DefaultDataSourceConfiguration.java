@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2020-04-18
  */
 @Configuration
-@AutoConfigureOrder(Integer.MAX_VALUE - 1000)
+@AutoConfigureOrder(Integer.MAX_VALUE - 2000)
 public class DefaultDataSourceConfiguration {
 
     @Bean

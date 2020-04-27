@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * @author 国际化解析器监听器
+ * 国际化解析器监听器
+ *
+ * @author Qunhua.Liao
+ * @since 2020-04-26
  */
 @Component
 public class I18nResolverListener implements ApplicationListener<ContextRefreshedEvent> {

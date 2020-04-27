@@ -1,20 +1,22 @@
 package com.quinn.framework.component.strategy;
 
 import com.alibaba.fastjson.JSONObject;
-import com.quinn.framework.api.StrategyExecutor;
-import com.quinn.framework.model.strategy.HttpParam;
-import com.quinn.util.FreeMarkTemplateLoader;
+import com.quinn.framework.api.strategy.StrategyExecutor;
+import com.quinn.framework.api.strategy.StrategyScript;
+import com.quinn.framework.model.strategy.BaseStrategyParam;
+import com.quinn.framework.model.strategy.HttpRequestParam;
 import com.quinn.util.base.model.BaseResult;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
 import java.net.URI;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Http Get请求策略
@@ -22,31 +24,41 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-04-25
  */
-@Component("HTTP_GETStrategyExecutor")
-public class HttpGetStrategy implements StrategyExecutor<HttpParam, Map<String, Object>> {
+@Component("HTTP_GET_StrategyExecutor")
+public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
 
-    @Resource
+    @Autowired
+    @Qualifier("restTemplate")
     private RestTemplate restTemplate;
 
-    @SneakyThrows
+    @Autowired
+    @Qualifier("strategyExecutorService")
+    private ExecutorService strategyExecutorService;
+
     @Override
-    public <T> BaseResult<T> execute(HttpParam httpParam, Map<String, Object> dynamicParam) {
-        String url = httpParam.getUrl();
-        url = FreeMarkTemplateLoader.invoke(url, dynamicParam);
-        RequestEntity requestEntity = httpParam.wrapBuilder(RequestEntity.get(new URI(url)))
-                .build();
+    @SneakyThrows
+    public <T> BaseResult<T> execute(HttpRequestParam httpRequestParam) {
+        Class clazz = httpRequestParam.getResultClass();
+        final Class resultClass = clazz == null ? JSONObject.class : clazz;
 
-        Class resultClass = httpParam.getResultClass();
-        resultClass = resultClass == null ? JSONObject.class : resultClass;
-        ResponseEntity res = this.restTemplate.exchange(requestEntity, resultClass);
+        RequestEntity requestEntity = httpRequestParam.wrapBuilder(
+                RequestEntity.get(new URI(httpRequestParam.getUrl()))).build();
 
-        if (res.getStatusCodeValue() < HttpStatus.OK.value()
-                || res.getStatusCodeValue() > HttpStatus.MULTIPLE_CHOICES.value()) {
-            return BaseResult.fail().ofData(res.getStatusCodeValue())
-                    .ofMessage(res.getStatusCode().getReasonPhrase());
+        if (httpRequestParam.isAsync()) {
+            strategyExecutorService.execute(() -> {
+                ResponseEntity res = restTemplate.exchange(requestEntity, resultClass);
+                httpRequestParam.wrapResult(res);
+            });
+            return BaseResult.SUCCESS;
+        } else {
+            ResponseEntity res = restTemplate.exchange(requestEntity, resultClass);
+            return httpRequestParam.wrapResult(res);
         }
+    }
 
-        return httpParam.wrapResult((T) res.getBody());
+    @Override
+    public HttpRequestParam parseParam(StrategyScript strategyScript, Map<String, Object> param) {
+        return HttpRequestParam.fromScript(strategyScript, param);
     }
 
 }

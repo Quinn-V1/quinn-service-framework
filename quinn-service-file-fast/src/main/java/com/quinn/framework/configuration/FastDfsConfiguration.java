@@ -20,8 +20,6 @@ import org.springframework.jmx.support.RegistrationPolicy;
 @AutoConfigureOrder(OrderedConstant.LOWER_V1)
 public class FastDfsConfiguration {
 
-    // 引入 com.github.tobato 相关Bean
-
     @Primary
     @Bean("storageService")
     public StorageService storageService() {
