@@ -18,7 +18,7 @@ public interface FileHandler {
      * @param fileAdapter 文件适配器
      * @return 文件索引信息
      */
-    BaseResult upload(FileAdapter fileAdapter);
+    BaseResult<FileInfoAdapter> upload(FileAdapter fileAdapter);
 
     /**
      * 校验文件是否已经存在

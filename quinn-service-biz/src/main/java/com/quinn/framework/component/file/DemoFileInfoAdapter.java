@@ -21,6 +21,16 @@ public class DemoFileInfoAdapter implements FileInfoAdapter {
     }
 
     @Override
+    public Long getId() {
+        return null;
+    }
+
+    @Override
+    public String getFileKey() {
+        return getFullPath();
+    }
+
+    @Override
     public String getFilePath() {
         return this.fileAdapter.getFilePath();
     }

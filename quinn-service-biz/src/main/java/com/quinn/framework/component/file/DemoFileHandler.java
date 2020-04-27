@@ -22,7 +22,7 @@ public class DemoFileHandler implements FileHandler {
     }
 
     @Override
-    public BaseResult upload(FileAdapter fileAdapter) {
+    public BaseResult<FileInfoAdapter> upload(FileAdapter fileAdapter) {
         return storageService.upload(new DemoFileInfoAdapter(fileAdapter));
     }
 

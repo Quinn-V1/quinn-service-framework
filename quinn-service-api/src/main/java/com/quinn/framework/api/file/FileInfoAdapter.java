@@ -12,6 +12,20 @@ import java.io.OutputStream;
 public interface FileInfoAdapter {
 
     /**
+     * 获取文件ID
+     *
+     * @return  文件ID
+     */
+    Long getId();
+
+    /**
+     * 获取文件编码
+     *
+     * @return 文件编码
+     */
+    String getFileKey();
+
+    /**
      * 获取文件相对路径
      *
      * @return 相对路径
@@ -84,14 +98,14 @@ public interface FileInfoAdapter {
     /**
      * 文件大小
      *
-     * @return  文件大小
+     * @return 文件大小
      */
     long getFileSize();
 
     /**
      * 文件类型
      *
-     * @return  文件类型
+     * @return 文件类型
      */
     String getFileType();
 
