@@ -21,6 +21,14 @@ public interface FileHandler {
     BaseResult<FileInfoAdapter> upload(FileAdapter fileAdapter);
 
     /**
+     * 文件详细信息
+     *
+     * @param fileKey 文件编码
+     * @return 文件信息
+     */
+    BaseResult<FileInfoAdapter> fileInfo(String fileKey);
+
+    /**
      * 校验文件是否已经存在
      *
      * @param fileAdapter 文件信息

@@ -22,19 +22,9 @@ import java.util.Map;
 public class BaseStrategyParam<T> {
 
     /**
-     * 同步标识
-     */
-    private boolean async;
-
-    /**
      * 结果类型
      */
-    public Class<T> resultClass;
-
-    /**
-     * 回调函数
-     */
-    private MethodInvokerOneParam callback;
+    private Class<T> resultClass;
 
     /**
      * 运行时传参数名称

@@ -27,6 +27,11 @@ public class DemoFileHandler implements FileHandler {
     }
 
     @Override
+    public BaseResult<FileInfoAdapter> fileInfo(String fileKey) {
+        return null;
+    }
+
+    @Override
     public boolean exists(FileAdapter fileAdapter) {
         return false;
     }

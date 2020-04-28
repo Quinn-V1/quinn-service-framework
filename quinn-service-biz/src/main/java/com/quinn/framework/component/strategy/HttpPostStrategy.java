@@ -3,7 +3,6 @@ package com.quinn.framework.component.strategy;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
-import com.quinn.framework.model.strategy.BaseStrategyParam;
 import com.quinn.framework.model.strategy.HttpRequestParam;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.model.BaseResult;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Http Post请求策略
@@ -30,10 +28,6 @@ public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
     @Qualifier("restTemplate")
     private RestTemplate restTemplate;
 
-    @Autowired
-    @Qualifier("strategyExecutorService")
-    private ExecutorService strategyExecutorService;
-
     @Override
     public <T> BaseResult<T> execute(HttpRequestParam httpRequestParam) {
 
@@ -47,16 +41,8 @@ public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
             throw new ParameterShouldNotEmpty();
         }
 
-        if (httpRequestParam.isAsync()) {
-            strategyExecutorService.execute(() -> {
-                ResponseEntity res = restTemplate.postForEntity(httpRequestParam.getUrl(), entity, resultClass);
-                httpRequestParam.wrapResult(res);
-            });
-            return BaseResult.SUCCESS;
-        } else {
-            ResponseEntity res = restTemplate.postForEntity(httpRequestParam.getUrl(), entity, resultClass);
-            return httpRequestParam.wrapResult(res);
-        }
+        ResponseEntity res = restTemplate.postForEntity(httpRequestParam.getUrl(), entity, resultClass);
+        return httpRequestParam.wrapResult(res);
     }
 
     @Override

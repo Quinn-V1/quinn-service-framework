@@ -66,14 +66,11 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
         BaseResult result;
         if (res.getStatusCodeValue() < HttpStatus.OK.value()
                 || res.getStatusCodeValue() > HttpStatus.MULTIPLE_CHOICES.value()) {
+
             result = BaseResult.fail().ofData(res.getStatusCodeValue())
                     .ofMessage(res.getStatusCode().getReasonPhrase());
         } else {
             result = customWrapResult(res.getBody());
-        }
-
-        if (getCallback() != null) {
-            getCallback().invoke(result);
         }
 
         return result;
