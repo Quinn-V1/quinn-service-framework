@@ -1,5 +1,7 @@
 package com.quinn.framework.service.impl;
 
+import com.quinn.framework.api.strategy.Strategy;
+import com.quinn.framework.api.strategy.StrategyBean;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.exception.DataOperationTransactionException;
 import com.quinn.framework.model.CallableObject;
@@ -34,7 +36,7 @@ import static com.quinn.util.constant.enums.ExceptionEnum.DATA_OPERATION_TRANSAC
  * @author Qunhua.Liao
  * @since 202-04-04
  */
-public class JdbcServiceImpl implements JdbcService {
+public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -130,12 +132,12 @@ public class JdbcServiceImpl implements JdbcService {
     }
 
     @Override
+    @Strategy("generateNextValueOfSeq")
     public BaseResult<Long> generateNextValueOfSeq(String seqName) {
         CallableObject<Long> callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, Long.class, 2)
                         .addOutParam(SqlConstant.PARAM_SEQ_VALUE, Types.BIGINT)
-                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName)
-                ;
+                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName);
         return executeCallableForObject(callableObject);
     }
 
@@ -144,8 +146,7 @@ public class JdbcServiceImpl implements JdbcService {
         CallableObject<NextNumSeqValue> callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, NextNumSeqValue.class, 2)
                         .addOutParam(SqlConstant.PARAM_SEQ_VALUE, Types.BIGINT)
-                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName)
-                ;
+                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName);
         return executeCallableForObject(callableObject);
     }
 

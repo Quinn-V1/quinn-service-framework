@@ -38,7 +38,7 @@ public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
     public static void addStrategyBeanMap(Map<String, StrategyBean> strategyBeanMap) {
         for (Map.Entry<String, StrategyBean> entry : strategyBeanMap.entrySet()) {
             StrategyBean bean = entry.getValue();
-            Method[] methods = bean.getClass().getMethods();
+            Method[] methods = bean.getClass().getSuperclass().getMethods();
             for (Method method : methods) {
                 Strategy declaredAnnotation = method.getDeclaredAnnotation(Strategy.class);
                 if (declaredAnnotation == null) {
