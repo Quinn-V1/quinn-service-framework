@@ -37,6 +37,12 @@ public class BaseStrategyParam<T> {
     protected void initParam(StrategyScript strategyScript, Map<String, Object> param) {
         JSONObject jsonObject = new JSONObject();
         LinkedList<String> paramTempChain = strategyScript.getParamTempChain();
+        if (paramTempChain == null) {
+            jsonObject.putAll(param);
+            setJsonParam(jsonObject);
+            return;
+        }
+
         for (String paramTemplate : paramTempChain) {
             paramTemplate = FreeMarkTemplateLoader.invoke(paramTemplate, param);
             CollectionUtil.mergeMap(jsonObject, JSONObject.parseObject(paramTemplate));

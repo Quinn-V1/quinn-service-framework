@@ -53,12 +53,12 @@ public class SessionUtil {
     /**
      * 会话信息默认值：用户ID
      */
-    public static final Long DEFAULT_SYSTEM_USER_ID = NumberConstant.LONG_ZERO;
+    public static final Long DEFAULT_SYSTEM_USER_ID = NumberConstant.NONE_OF_DATA_ID;
 
     /**
      * 会话信息默认值：组织ID
      */
-    public static final Long DEFAULT_SYSTEM_ORG_ID = NumberConstant.LONG_ZERO;
+    public static final Long DEFAULT_SYSTEM_ORG_ID = NumberConstant.NONE_OF_DATA_ID;
 
     /**
      * 会话信息默认值：用户编码
