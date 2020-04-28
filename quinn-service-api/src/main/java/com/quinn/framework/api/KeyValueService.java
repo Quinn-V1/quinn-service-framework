@@ -26,6 +26,22 @@ public interface KeyValueService<K extends KeyValue, C extends BaseDTO> {
     /**
      * 综合查询
      *
+     * @param id 系统主键
+     * @return 指定主数据
+     */
+    BaseResult<K> getById(Long id);
+
+    /**
+     * 综合查询
+     *
+     * @param condition 基础条件
+     * @return 指定主数据
+     */
+    BaseResult<K> get(C condition);
+
+    /**
+     * 综合查询
+     *
      * @param condition 基础条件
      * @return 符合条件的列表
      */

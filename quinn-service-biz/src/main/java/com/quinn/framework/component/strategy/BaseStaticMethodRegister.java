@@ -1,6 +1,7 @@
-package com.quinn.framework.component;
+package com.quinn.framework.component.strategy;
 
 import com.quinn.framework.api.strategy.StaticMethodRegister;
+import com.quinn.framework.component.KeyValueMultiService;
 import com.quinn.framework.util.SessionUtil;
 
 /**
@@ -9,12 +10,13 @@ import com.quinn.framework.util.SessionUtil;
  * @author Qunhua.Liao
  * @since 2020-04-28
  */
-public class ApiStaticMethodRegister implements StaticMethodRegister {
+public class BaseStaticMethodRegister implements StaticMethodRegister {
 
     @Override
     public Class[] register() {
         return new Class[]{
-                SessionUtil.class
+                SessionUtil.class,
+                KeyValueMultiService.class
         };
     }
 

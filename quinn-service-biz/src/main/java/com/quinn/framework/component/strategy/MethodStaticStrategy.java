@@ -48,12 +48,12 @@ public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam>
                         paramClass[i] = parameters[i].getType();
                     }
 
-                    STATIC_METHOD_INVOKER_MAP.put(declaredAnnotation.value(), param -> {
+                    STATIC_METHOD_INVOKER_MAP.put(declaredAnnotation.value(), paramMap -> {
                         Object[] params = new Object[paramNames.length];
                         for (int i = 0; i < paramNames.length; i++) {
-                            Object o = param.get(i + "");
+                            Object o = paramMap.get(paramNames[i]);
                             if (o == null) {
-                                o = param.get(paramNames[i]);
+                                o = paramMap.get(i + "");
                             }
                             params[i] = BaseConverter.staticConvert(o, paramClass[i]);
                         }
