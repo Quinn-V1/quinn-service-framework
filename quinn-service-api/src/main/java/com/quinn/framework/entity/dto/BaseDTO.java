@@ -290,7 +290,7 @@ public abstract class BaseDTO<T> {
      * @author Qunhua.Liao
      * @since 2020-04-24
      */
-    public class FreeQuery<T> {
+    public class FreeQuery<V> {
 
         /**
          * 带参构造器
@@ -299,7 +299,7 @@ public abstract class BaseDTO<T> {
          * @param condSize    条件数
          * @param resultSize  结果数
          */
-        private FreeQuery(Class<T> resultClass, int condSize, int resultSize) {
+        private FreeQuery(Class<V> resultClass, int condSize, int resultSize) {
             this.resultClass = resultClass;
             this.condFields = new ArrayList<>(condSize);
             this.resultFields = new ArrayList<>(resultSize);
@@ -312,7 +312,7 @@ public abstract class BaseDTO<T> {
          * @param condSize    条件数
          * @param props       结果数
          */
-        private FreeQuery(Class<T> resultClass, int condSize, String... props) {
+        private FreeQuery(Class<V> resultClass, int condSize, String... props) {
             this.resultClass = resultClass;
             this.condFields = new ArrayList<>(condSize);
 
@@ -337,7 +337,7 @@ public abstract class BaseDTO<T> {
         /**
          * 结果类型
          */
-        private Class<T> resultClass;
+        private Class<V> resultClass;
 
         /**
          * 参数
@@ -384,7 +384,7 @@ public abstract class BaseDTO<T> {
          *
          * @return 结果类型
          */
-        public Class<T> getResultClass() {
+        public Class<V> getResultClass() {
             return resultClass;
         }
 
@@ -394,7 +394,7 @@ public abstract class BaseDTO<T> {
          * @param prop
          * @param wrapper
          */
-        public FreeQuery<T> wrapResultField(String prop, WrapperEnum wrapper) {
+        public FreeQuery<V> wrapResultField(String prop, WrapperEnum wrapper) {
             resultFields.add(new ResultField(prop, wrapper));
             return this;
         }
@@ -405,7 +405,7 @@ public abstract class BaseDTO<T> {
          * @param prop  属性
          * @param value 参数
          */
-        public FreeQuery<T> addParamField(String prop, Object value) {
+        public FreeQuery<V> addParamField(String prop, Object value) {
             if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
                 condFields.add(new FieldValue(prop, value));
             }
