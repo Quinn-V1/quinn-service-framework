@@ -48,6 +48,11 @@ public class MultiErrorHandler {
             exceptionClass = exceptionClass.getSuperclass();
         }
 
+        Throwable cause = e.getCause();
+        if (cause instanceof Exception) {
+            handleError((Exception) cause, request, response);
+        }
+
         LOGGER.errorError("Error {0}[{1}] handle by default", e, e.getClass().getName(),
                 e.getMessage());
         return defaultHandler.handleError(e, request, response);

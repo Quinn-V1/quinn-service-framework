@@ -107,19 +107,4 @@ public class DataSourceConfiguration {
         return pointcutAdvisor;
     }
 
-    @Bean
-    public JdbcService jdbcService() {
-        return new JdbcServiceImpl();
-    }
-
-    @Bean
-    public ErrorHandler duplicateKeyExceptionHandler() {
-        return new DuplicateKeyExceptionHandler();
-    }
-
-    @Bean
-    public ErrorHandler dataIntegrityViolationExceptionHandler() {
-        return new DataIntegrityViolationExceptionHandler();
-    }
-
 }

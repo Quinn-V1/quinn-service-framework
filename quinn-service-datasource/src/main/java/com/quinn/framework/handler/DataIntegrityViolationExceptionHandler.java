@@ -3,6 +3,7 @@ package com.quinn.framework.handler;
 import com.quinn.framework.model.DefaultErrorHandler;
 import com.quinn.util.base.model.BaseResult;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,15 +15,16 @@ import java.util.regex.Pattern;
  * @author Qunhua.Liao
  * @since 2020-04-09
  */
+@Component("dataIntegrityViolationExceptionHandler")
 public class DataIntegrityViolationExceptionHandler extends DefaultErrorHandler {
 
-    private static final Pattern pattern = Pattern.compile("(Column ')(.*)(' cannot be null)");
+    private static final Pattern PATTERN = Pattern.compile("(Column ')(.*)(' cannot be null)");
 
     @Override
     public void generateMessage(Exception e, BaseResult result) {
-        Matcher matcher = pattern.matcher(e.getMessage());
+        Matcher matcher = PATTERN.matcher(e.getMessage());
         if (matcher.find()) {
-            result.setMessage("字段" + matcher.group(4) + "不可为空重复");
+            result.setMessage("字段" + matcher.group(2) + "不可为空");
         }
     }
 

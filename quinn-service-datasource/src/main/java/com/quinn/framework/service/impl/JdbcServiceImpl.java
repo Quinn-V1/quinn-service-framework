@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import static com.quinn.util.constant.enums.ExceptionEnum.DATA_OPERATION_TRANSAC
  * @author Qunhua.Liao
  * @since 202-04-04
  */
+@Service("jdbcService")
 public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Autowired
