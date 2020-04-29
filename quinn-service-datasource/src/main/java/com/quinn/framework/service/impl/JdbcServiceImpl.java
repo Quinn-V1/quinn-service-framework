@@ -134,7 +134,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
     }
 
     @Override
-    @Strategy("generateNextValueOfSeq")
+    @Strategy("jdbcService.generateNextValueOfSeq")
     public BaseResult<Long> generateNextValueOfSeq(String seqName) {
         CallableObject<Long> callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, Long.class, 2)
@@ -144,6 +144,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
     }
 
     @Override
+    @Strategy("jdbcService.generateNextNumValueOfSeq")
     public BaseResult<NextNumSeqValue> generateNextNumValueOfSeq(String seqName, int num) {
         CallableObject<NextNumSeqValue> callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, NextNumSeqValue.class, 2)
