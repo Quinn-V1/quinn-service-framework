@@ -86,7 +86,6 @@ public class EmailSender implements MessageSender {
             javaMailProperties.put("mail.smtp.ssl.enable", "true");
             javaMailProperties.put("mail.smtp.ssl.socketFactory", sf);
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
         }
 
         javaMailProperties.put("mail.smtp.auth", param.getBoolean("mail.smtp.auth"));

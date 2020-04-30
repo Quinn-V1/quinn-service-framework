@@ -86,14 +86,30 @@ public class ApplicationDefaultEntry {
      */
     private static PriorityProperties generatePropertyFromArgs(String[] args) {
         PriorityProperties priorityProperties = new PriorityProperties();
-        ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
-        List<String> nonOptionArgs = applicationArguments.getNonOptionArgs();
         priorityProperties.putAll(System.getProperties());
 
+        ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+
+        Set<String> optionNames = applicationArguments.getOptionNames();
+        if (!CollectionUtil.isEmpty(optionNames)) {
+            for (String name : optionNames) {
+                priorityProperties.addPriorityKeys(name);
+                List<String> optionValues = applicationArguments.getOptionValues(name);
+                if (CollectionUtil.isEmpty(optionValues)) {
+                    continue;
+                }
+                if (optionValues.size() == 1) {
+                    priorityProperties.put(name, optionValues.get(0));
+                } else {
+                    priorityProperties.put(name, optionValues.toArray(new String[optionValues.size()]));
+                }
+            }
+        }
+
+        List<String> nonOptionArgs = applicationArguments.getNonOptionArgs();
         if (!CollectionUtil.isEmpty(nonOptionArgs)) {
             for (String arg : nonOptionArgs) {
-                if (arg.startsWith(ConfigConstant.NON_OPTION_ARG_PREFIX_SYSTEM)
-                        || arg.startsWith(ConfigConstant.OPTION_ARG_PREFIX)) {
+                if (arg.startsWith(ConfigConstant.NON_OPTION_ARG_PREFIX_SYSTEM)) {
 
                     int ind = arg.indexOf(CharConstant.CHAR_EQUAL);
                     if (ind > 0) {
