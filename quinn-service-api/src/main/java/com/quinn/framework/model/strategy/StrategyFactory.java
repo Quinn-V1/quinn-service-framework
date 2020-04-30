@@ -111,7 +111,7 @@ public class StrategyFactory {
 
                     if (paramItem.getValueStrategy() != null) {
                         BaseResult<Object> execute = StrategyFactory.build(paramItem.getValueStrategy(),
-                                true, params).execute();
+                                false, params).execute();
                         if (execute.isSuccess()) {
                             paramValue = execute.getData();
                         }
