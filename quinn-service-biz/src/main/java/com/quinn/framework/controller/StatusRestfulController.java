@@ -20,22 +20,22 @@ import java.time.LocalDateTime;
  * @since 2020-03-31
  */
 @RestController
-@RequestMapping("/framework/status/*")
+@RequestMapping("/core/status/*")
 @Api(tags = {"0ZZ010框架：状态查询"})
 public class StatusRestfulController extends AbstractController {
 
-    @GetMapping("touch-result")
+    @GetMapping("touch-restful")
     @ApiOperation("查看应用是否正常启动")
-    BaseResult<String> touchRestFul(
+    BaseResult<String> touchRestful(
             @ApiParam(name = "param", value = "参数", required = true)
             @RequestParam(name = "param") String param
     ) {
         return BaseResult.build(true).ofData(param);
     }
 
-    @GetMapping(value = "now-result")
+    @GetMapping(value = "now-restful")
     @ApiOperation(value = "查询当前时间")
-    public BaseResult<String> nowRestFul(
+    public BaseResult<String> nowRestful(
     ) {
         return BaseResult.build(true).ofData(BaseConverter.staticToString(LocalDateTime.now()));
     }

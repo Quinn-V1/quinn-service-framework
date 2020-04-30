@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-03-31
  */
 @RestController
-@RequestMapping("/framework/monitor/*")
+@RequestMapping("/core/monitor/*")
 @Api(tags = {"0ZZ020框架：系统监控"})
 public class MonitorController extends AbstractController {
 
