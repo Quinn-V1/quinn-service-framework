@@ -14,13 +14,23 @@ import lombok.Setter;
 public class NextNumSeqValue {
 
     /**
+     * 序列名
+     */
+    private String seqName;
+
+    /**
+     * 序列数
+     */
+    private int seqNum;
+
+    /**
      * 开始值
      */
-    private long startValue;
+    private long seqValue;
 
     /**
      * 步长
      */
-    private int step;
+    private int seqStep;
 
 }

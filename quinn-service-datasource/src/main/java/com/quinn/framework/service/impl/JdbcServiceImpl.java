@@ -25,6 +25,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,25 +137,29 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
     @Override
     @Strategy("jdbcService.generateNextValueOfSeq")
     public BaseResult<Long> generateNextValueOfSeq(String seqName) {
-        CallableObject<Long> callableObject =
+        CallableObject callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, Long.class, 2)
                         .addOutParam(SqlConstant.PARAM_SEQ_VALUE, Types.BIGINT)
-                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName);
+                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName)
+                ;
         return executeCallableForObject(callableObject);
     }
 
     @Override
     @Strategy("jdbcService.generateNextNumValueOfSeq")
-    public BaseResult<NextNumSeqValue> generateNextNumValueOfSeq(String seqName, int num) {
-        CallableObject<NextNumSeqValue> callableObject =
-                CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, NextNumSeqValue.class, 2)
+    public BaseResult<NextNumSeqValue> generateNextNumValueOfSeq(String seqName, int seqNum) {
+        CallableObject callableObject =
+                CallableObject.build(CallableTypeEnum.PROCEDURE, SqlConstant.SEQ_NEXT_N_VALUE, NextNumSeqValue.class, 4)
+                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName)
+                        .addInParam(SqlConstant.SEQ_NUMBER, seqNum)
                         .addOutParam(SqlConstant.PARAM_SEQ_VALUE, Types.BIGINT)
-                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName);
+                        .addOutParam(SqlConstant.PARAM_SEQ_STEP, Types.INTEGER)
+                ;
         return executeCallableForObject(callableObject);
     }
 
     @Override
-    public <T> BaseResult<List<T>> executeCallableForList(CallableObject<T> callableObject) {
+    public <T> BaseResult<List<T>> executeCallableForList(CallableObject callableObject) {
         List<T> data = jdbcTemplate.execute(new CallableCallableStatementCreator(callableObject), cs -> {
             cs.execute();
             ResultSet result = cs.getResultSet();
@@ -181,7 +186,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
     }
 
     @Override
-    public <T> BaseResult<T> executeCallableForObject(CallableObject<T> callableObject) {
+    public <T> BaseResult<T> executeCallableForObject(CallableObject callableObject) {
         T data = jdbcTemplate.execute(new CallableCallableStatementCreator(callableObject), cs -> {
             cs.execute();
             Class<T> clazz = callableObject.getResultClass();
@@ -192,6 +197,28 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
                 if (result != null) {
                     RowMapper<T> rowMapper = new BeanPropertyRowMapper<>(clazz);
                     return rowMapper.mapRow(result, 1);
+                } else {
+                    List<CallableObject.CallableParam> params = callableObject.getParams();
+                    try {
+                        T t = clazz.newInstance();
+                        int i = 1;
+                        for (CallableObject.CallableParam param : params) {
+                            try {
+                                Field field = clazz.getDeclaredField(param.getName());
+                                field.setAccessible(true);
+                                if (param.isOut()) {
+                                    field.set(t, cs.getObject(i));
+                                } else {
+                                    field.set(t, param.getValue());
+                                }
+                            } catch (Exception e) {
+                            } finally {
+                                i++;
+                            }
+                        }
+                        return t;
+                    } catch (Exception e) {
+                    }
                 }
             }
             return null;

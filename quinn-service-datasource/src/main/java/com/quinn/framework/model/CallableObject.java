@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class CallableObject<T> {
+public class CallableObject {
 
     private CallableObject() {
     }
@@ -37,7 +37,7 @@ public class CallableObject<T> {
     /**
      * 返回结果类型
      */
-    private Class<T> resultClass;
+    private Class resultClass;
 
     /**
      * 存储过程参数
@@ -51,11 +51,10 @@ public class CallableObject<T> {
      * @param name         名称
      * @param resultClass  返回值类型
      * @param paramSize    参数个数
-     * @param <T>          返回值类型泛型
      * @return
      */
-    public static <T> CallableObject<T> build(CallableTypeEnum callableType, String name, Class<T> resultClass, int paramSize) {
-        CallableObject<T> callableObject = new CallableObject<>();
+    public static  CallableObject build(CallableTypeEnum callableType, String name, Class resultClass, int paramSize) {
+        CallableObject callableObject = new CallableObject();
         callableObject.setCallableType(callableType);
         callableObject.setName(name);
         callableObject.setResultClass(resultClass);
@@ -68,7 +67,7 @@ public class CallableObject<T> {
      *
      * @return 本身
      */
-    public <P> CallableObject<T> addInParam(String paramName, P paramValue) {
+    public <P> CallableObject addInParam(String paramName, P paramValue) {
         CallableParam callableParam = addParam(paramName);
         if (paramValue != null) {
             callableParam.setValueType(JdbcTypeEnum.getJdbcSqlTypeByName(paramValue.getClass()).code);
@@ -84,7 +83,7 @@ public class CallableObject<T> {
      *
      * @return 本身
      */
-    public CallableObject<T> addOutParam(String paramName, int jdbcType) {
+    public CallableObject addOutParam(String paramName, int jdbcType) {
         CallableParam callableParam = addParam(paramName);
         callableParam.setDirect(CallableParameterDirectionEnum.OUT);
         callableParam.setValueType(jdbcType);
@@ -96,7 +95,7 @@ public class CallableObject<T> {
      *
      * @return 本身
      */
-    public <P> CallableObject<T> addBothParam(String paramName, P paramValue, int jdbcType) {
+    public <P> CallableObject addBothParam(String paramName, P paramValue, int jdbcType) {
         CallableParam callableParam = addParam(paramName);
         callableParam.setValue(paramValue);
         callableParam.setDirect(CallableParameterDirectionEnum.BOTH);
@@ -187,12 +186,16 @@ public class CallableObject<T> {
          */
         private P value;
 
+        public boolean isOut() {
+            return CallableParameterDirectionEnum.OUT == direct || CallableParameterDirectionEnum.BOTH == direct;
+        }
+
         /**
          * 返回持有当前参数对象的CallableObject对象
          *
          * @return CallableObject对象
          */
-        public CallableObject<T> object() {
+        public CallableObject object() {
             return CallableObject.this;
         }
 

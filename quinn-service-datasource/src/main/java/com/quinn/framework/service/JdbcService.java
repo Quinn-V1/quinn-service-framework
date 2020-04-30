@@ -92,10 +92,10 @@ public interface JdbcService extends FreeQueryService {
      * 获取序列下N个值
      *
      * @param seqName 序列名
-     * @param num     若干个值
+     * @param seqNum  若干个值
      * @return 起始值、步长
      */
-    BaseResult<NextNumSeqValue> generateNextNumValueOfSeq(String seqName, int num);
+    BaseResult<NextNumSeqValue> generateNextNumValueOfSeq(String seqName, int seqNum);
 
     /**
      * 执行存储过程
@@ -103,7 +103,7 @@ public interface JdbcService extends FreeQueryService {
      * @param callableObject 出参类型
      * @return 出参
      */
-    <T> BaseResult<List<T>> executeCallableForList(CallableObject<T> callableObject);
+    <T> BaseResult<List<T>> executeCallableForList(CallableObject callableObject);
 
     /**
      * 执行存储过程
@@ -111,6 +111,6 @@ public interface JdbcService extends FreeQueryService {
      * @param callableObject 出参类型
      * @return 出参
      */
-    <T> BaseResult<T> executeCallableForObject(CallableObject<T> callableObject);
+    <T> BaseResult<T> executeCallableForObject(CallableObject callableObject);
 
 }

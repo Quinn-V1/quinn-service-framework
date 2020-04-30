@@ -119,7 +119,7 @@ public class DataAdminController extends AbstractController {
      * 获取序列下N个值
      *
      * @param seqName 序列名
-     * @param num     若干个值
+     * @param seqNum  若干个值
      * @return 起始值、步长
      */
     @ApiOperation(value = "获取序列下N个值", httpMethod = "POST")
@@ -128,10 +128,10 @@ public class DataAdminController extends AbstractController {
             @ApiParam(name = "seqName", value = "序列名称", required = true)
             @RequestParam(name = "seqName") String seqName,
 
-            @ApiParam(name = "num", value = "序列个数", required = true)
-            @RequestParam(name = "num") int num
+            @ApiParam(name = "seqNum", value = "序列个数", required = true)
+            @RequestParam(name = "seqNum") int seqNum
     ) {
-        return jdbcService.generateNextNumValueOfSeq(seqName, num);
+        return jdbcService.generateNextNumValueOfSeq(seqName, seqNum);
     }
 
 
