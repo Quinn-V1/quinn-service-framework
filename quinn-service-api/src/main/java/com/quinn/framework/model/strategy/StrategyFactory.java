@@ -7,6 +7,7 @@ import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.exception.UnSupportedStrategyException;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.enums.ExceptionEnum;
 
 import java.util.HashMap;
@@ -140,7 +141,22 @@ public class StrategyFactory {
          * @return 本身
          */
         public StrategyBuilder ofResultClass(Class clazz) {
-            strategyParam.setResultClass(clazz);
+            if (clazz != null) {
+                strategyParam.setResultClass(clazz);
+            }
+            return this;
+        }
+
+        /**
+         * 设置结果类型
+         *
+         * @param clazz 结果类型
+         * @return 本身
+         */
+        public StrategyBuilder ofResultClass(String clazz) {
+            if (StringUtil.isNotEmpty(clazz)) {
+                strategyParam.setResultClass(BaseConverter.classOf(clazz));
+            }
             return this;
         }
 
