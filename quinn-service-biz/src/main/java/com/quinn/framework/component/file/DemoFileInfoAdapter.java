@@ -1,6 +1,6 @@
 package com.quinn.framework.component.file;
 
-import com.quinn.framework.api.file.FileAdapter;
+import com.quinn.util.base.api.FileAdapter;
 import com.quinn.framework.api.file.FileInfoAdapter;
 
 import java.io.InputStream;

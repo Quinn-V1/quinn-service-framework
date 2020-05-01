@@ -1,8 +1,8 @@
 package com.quinn.framework.api.file;
 
+import com.quinn.util.base.api.FileAdapter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
-import com.quinn.util.base.model.TempContainer;
 
 /**
  * 文件处理
