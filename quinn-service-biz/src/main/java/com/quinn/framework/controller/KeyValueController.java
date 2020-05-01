@@ -22,7 +22,7 @@ import java.util.Map;
 public class KeyValueController extends AbstractController {
 
     @PostMapping(value = "list")
-    @ApiOperation("获取通用主数据列表")
+    @ApiOperation("综合获取通用主数据列表")
     public BaseResult list(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
             @RequestBody Map<String, Object> condition
@@ -31,7 +31,7 @@ public class KeyValueController extends AbstractController {
     }
 
     @PostMapping(value = "page")
-    @ApiOperation("获取通用主数据列表")
+    @ApiOperation("分页获取通用主数据列表")
     public BaseResult page(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
             @RequestBody Map<String, Object> condition

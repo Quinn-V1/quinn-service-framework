@@ -78,17 +78,14 @@ public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
     }
 
     @Override
-    public <T> BaseResult<T> execute(BeanMethodParam beanMethodParam) {
+    public Object execute(BeanMethodParam beanMethodParam) {
         StrategyBean bean = STRATEGY_BEAN_MAP.get(beanMethodParam.getUrl());
         BeanMethodInvoker beanMethodInvoker = BEAN_METHOD_INVOKER_MAP.get(beanMethodParam.getUrl());
         if (bean == null && beanMethodInvoker == null) {
             return BaseResult.fail();
         }
-        Object object = beanMethodInvoker.revoke(bean, beanMethodParam.getJsonParam());
-        if (object instanceof BaseResult) {
-            return (BaseResult) object;
-        }
-        return BaseResult.success((T) object);
+
+        return beanMethodInvoker.revoke(bean, beanMethodParam.getJsonParam());
     }
 
     @Override

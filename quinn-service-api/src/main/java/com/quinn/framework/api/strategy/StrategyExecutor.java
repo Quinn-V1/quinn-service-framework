@@ -22,7 +22,7 @@ public interface StrategyExecutor<S extends BaseStrategyParam> {
      * @param strategyParam 脚本
      * @return 执行结果
      */
-    <T> BaseResult<T> execute(S strategyParam);
+    Object execute(S strategyParam);
 
     /**
      * 解析参数

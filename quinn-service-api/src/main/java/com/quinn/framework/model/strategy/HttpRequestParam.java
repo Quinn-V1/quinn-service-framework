@@ -3,6 +3,7 @@ package com.quinn.framework.model.strategy;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.enums.HttpMethodEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +52,6 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * @return 包装后的构建器
      */
     public RequestEntity.HeadersBuilder wrapBuilder(RequestEntity.HeadersBuilder headersBuilder) {
-
         return headersBuilder;
     }
 
@@ -61,19 +61,8 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * @param res 结果体
      * @return 包装后的结果 BaseResult
      */
-    public BaseResult<T> wrapResult(ResponseEntity<T> res) {
-
-        BaseResult result;
-        if (res.getStatusCodeValue() < HttpStatus.OK.value()
-                || res.getStatusCodeValue() > HttpStatus.MULTIPLE_CHOICES.value()) {
-
-            result = BaseResult.fail().ofData(res.getStatusCodeValue())
-                    .ofMessage(res.getStatusCode().getReasonPhrase());
-        } else {
-            result = customWrapResult(res.getBody());
-        }
-
-        return result;
+    public Object wrapResult(ResponseEntity<T> res) {
+        return res.getBody();
     }
 
     /**

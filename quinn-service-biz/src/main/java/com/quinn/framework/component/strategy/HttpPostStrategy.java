@@ -29,7 +29,7 @@ public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
     private RestTemplate restTemplate;
 
     @Override
-    public <T> BaseResult<T> execute(HttpRequestParam httpRequestParam) {
+    public Object execute(HttpRequestParam httpRequestParam) {
 
         Class clazz = httpRequestParam.getResultClass();
         Class resultClass = clazz == null ? JSONObject.class : clazz;

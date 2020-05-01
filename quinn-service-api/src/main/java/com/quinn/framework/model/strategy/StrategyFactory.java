@@ -111,10 +111,12 @@ public class StrategyFactory {
                     Object paramValue = paramItem.getParamValue();
 
                     if (paramItem.getValueStrategy() != null) {
-                        BaseResult<Object> execute = StrategyFactory.build(paramItem.getValueStrategy(),
+                        Object execute = StrategyFactory.build(paramItem.getValueStrategy(),
                                 false, params).execute();
-                        if (execute.isSuccess()) {
-                            paramValue = execute.getData();
+                        if (execute instanceof BaseResult) {
+                            paramValue = ((BaseResult) execute).getData();
+                        } else {
+                            paramValue = execute;
                         }
                     }
 
@@ -174,10 +176,9 @@ public class StrategyFactory {
         /**
          * 执行脚本
          *
-         * @param <T> 结果泛型
          * @return 执行结果
          */
-        public <T> BaseResult<T> execute() {
+        public Object execute() {
             if (async) {
                 strategyExecutorService.execute(() -> {
                     exec();
@@ -193,8 +194,8 @@ public class StrategyFactory {
          *
          * @return 执行结果
          */
-        private BaseResult exec() {
-            BaseResult result = BaseResult.fail();
+        private Object exec() {
+            Object result = BaseResult.fail();
             try {
                 result = strategyExecutor.execute(strategyParam);
                 return result;

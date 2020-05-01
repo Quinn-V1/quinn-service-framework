@@ -30,7 +30,7 @@ public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
 
     @Override
     @SneakyThrows
-    public <T> BaseResult<T> execute(HttpRequestParam httpRequestParam) {
+    public Object execute(HttpRequestParam httpRequestParam) {
         Class clazz = httpRequestParam.getResultClass();
         final Class resultClass = clazz == null ? JSONObject.class : clazz;
 

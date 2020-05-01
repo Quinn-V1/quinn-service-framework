@@ -4,6 +4,7 @@ import com.quinn.framework.api.strategy.*;
 import com.quinn.framework.model.strategy.StaticMethodParam;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.enums.ExceptionEnum;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +71,7 @@ public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam>
     }
 
     @Override
-    public <T> BaseResult<T> execute(StaticMethodParam staticMethodParam) {
+    public Object execute(StaticMethodParam staticMethodParam) {
         StaticMethodInvoker staticMethodInvoker = STATIC_METHOD_INVOKER_MAP.get(staticMethodParam.getUrl());
         if (staticMethodInvoker == null) {
             return BaseResult.fail()
@@ -79,12 +80,7 @@ public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam>
                     .result();
         }
 
-        Object obj = staticMethodInvoker.revoke(staticMethodParam.getJsonParam());
-        if (obj instanceof BaseResult) {
-            return (BaseResult) obj;
-        }
-
-        return BaseResult.success((T) obj);
+        return staticMethodInvoker.revoke(staticMethodParam.getJsonParam());
     }
 
     @Override
