@@ -15,8 +15,7 @@ public interface CustomApplicationListener {
      * 应用启动监听
      *
      * @param applicationContext    应用容器
-     * @param applicationInfo       应用服务
      */
-    void applicationStarted(ApplicationContext applicationContext, ApplicationInfo applicationInfo);
+    void applicationStarted(ApplicationContext applicationContext);
 
 }

@@ -1,9 +1,8 @@
 package com.quinn.framework.listener;
 
-import com.quinn.framework.api.CustomApplicationListener;
 import com.quinn.framework.component.SpringBeanHolder;
-import com.quinn.util.licence.model.ApplicationInfo;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,11 +12,10 @@ import org.springframework.stereotype.Component;
  * @since 2020-04-23
  */
 @Component
-public class SpringHolderListener implements CustomApplicationListener {
+public class SpringHolderListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
-    public void applicationStarted(ApplicationContext applicationContext, ApplicationInfo applicationInfo) {
-        SpringBeanHolder.setApplicationContext(applicationContext);
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        SpringBeanHolder.setApplicationContext(event.getApplicationContext());
     }
-
 }

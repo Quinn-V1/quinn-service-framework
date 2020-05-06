@@ -62,7 +62,7 @@ public class ApplicationDefaultEntry {
 
         ApplicationInfo.getInstance().stated();
         for (Map.Entry<String, CustomApplicationListener> listener : listeners.entrySet()) {
-            listener.getValue().applicationStarted(applicationContext, ApplicationInfo.getInstance());
+            listener.getValue().applicationStarted(applicationContext);
         }
     }
 
