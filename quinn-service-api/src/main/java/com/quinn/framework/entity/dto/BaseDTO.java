@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.util.enums.UpdateTypeEnum;
 import com.quinn.framework.util.enums.WrapperEnum;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.util.CollectionUtil;
 import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.OrderByTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -156,7 +154,7 @@ public abstract class BaseDTO<T> {
      * @return 排序字符串
      */
     public String getOrderBy() {
-        if (StringUtil.isNotEmpty(orderBy)) {
+        if (orderBy != null) {
             return orderBy;
         }
 
@@ -166,15 +164,22 @@ public abstract class BaseDTO<T> {
 
         StringBuilder query = new StringBuilder();
         for (OrderField orderField : orderFields) {
-            query.append(orderField.alias).append(CharConstant.DOT)
-                    .append(orderField.prop).append(CharConstant.BLANK)
-                    .append(orderField.order).append(", ")
+            String column = columnOfProp(orderField.getProp());
+            if (StringUtil.isEmpty(column)) {
+                continue;
+            }
+
+            query.append(orderField.ofAlias()).append(CharConstant.DOT)
+                    .append(column).append(CharConstant.BLANK)
+                    .append(orderField.ofOrder()).append(", ")
             ;
         }
 
-        query.delete(query.length() - 2, query.length());
-        orderBy = query.toString();
+        if (query.length() > 0) {
+            query.delete(query.length() - 2, query.length());
+        }
 
+        orderBy = query.toString();
         return orderBy;
     }
 
@@ -711,59 +716,6 @@ public abstract class BaseDTO<T> {
             } else {
                 return wrapper.wrap(columnOfProp(prop)) + " AS " + prop;
             }
-        }
-    }
-
-    /**
-     * 排序字段
-     *
-     * @author Qunhua.Liao
-     * @since 2020-05-08
-     */
-    @Getter
-    @Setter
-    public class OrderField {
-
-        /**
-         * 属性名
-         */
-        @ApiModelProperty("属性名")
-        private String prop;
-
-        /**
-         * 别名
-         */
-        @ApiModelProperty("别名")
-        private String alias;
-
-        /**
-         * 顺序
-         */
-        @ApiModelProperty("顺序")
-        private String order;
-
-        public OrderField() {
-        }
-
-        public OrderField(String prop, String alias, String order) {
-            if (StringUtil.isEmpty(prop)) {
-                throw new ParameterShouldNotEmpty();
-            }
-            this.prop = prop;
-            this.alias = alias;
-            this.order = order;
-        }
-
-        public String getAlias() {
-            return StringUtil.isEmpty(alias) ? tableName() : alias;
-        }
-
-        public String getOrder() {
-            if (StringUtil.isEmpty(order)) {
-                return OrderByTypeEnum.DEFAULT_ORDER;
-            }
-            OrderByTypeEnum orderByTypeEnum = OrderByTypeEnum.valueOf(order);
-            return orderByTypeEnum == null ? OrderByTypeEnum.DEFAULT_ORDER : orderByTypeEnum.name();
         }
     }
 }
