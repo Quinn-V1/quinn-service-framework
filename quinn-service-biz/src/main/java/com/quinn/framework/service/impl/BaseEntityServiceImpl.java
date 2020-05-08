@@ -385,28 +385,51 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         if (!dataRes.wantContinue()) {
             return BatchResult.fromPrev(dataRes);
         }
+        return updateBatchExec(dataRes.getData(), transaction);
+    }
 
-        List<VO> list = dataRes.getData();
+    /**
+     * 根据标记更新列表
+     *
+     * @param list 列表
+     * @return 批处理结果
+     */
+    protected BatchResult updateBatchExec(List<VO> list, boolean transaction) {
         BatchResult result = new BatchResult(list.size());
-        for (VO data : list) {
+
+        for (int i = 0; i < list.size(); i++) {
+            VO data = list.get(i);
             DbOperateTypeEnum dbOperateType = data.getDbOperateType();
+            BaseResult res = BaseResult.SUCCESS;
             switch (dbOperateType) {
                 case INSERT:
                 case RECOVERY_HARD:
-                    result.addItem(insert(data));
+                    res = insert(data);
                     break;
                 case DELETE_SOFT:
                 case UPDATE_NON_EMPTY:
                 case UPDATE_ALL:
                 case RECOVERY_SOFT:
-                    result.addItem(update(data));
+                    res = update(data);
                     break;
                 case DELETE_HARD:
-                    result.addItem(delete(data));
+                    res = delete(data);
                     break;
                 default:
                     break;
             }
+
+            if (transaction && !res.isSuccess()) {
+                throw new DataOperationTransactionException()
+                        .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], dbOperateType)
+                        .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], getVOClass().getName())
+                        .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], list.size())
+                        .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[3], i + 1)
+                        .exception()
+                        ;
+            }
+
+            result.addItem(res);
         }
         return result;
     }
