@@ -81,4 +81,15 @@
         </if>
     </sql>
 
+    <sql id="common_order_value">
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${orderBy}
+            </when>
+            <otherwise>
+                ORDER BY t.id desc
+            </otherwise>
+        </choose>
+    </sql>
+
 </mapper>

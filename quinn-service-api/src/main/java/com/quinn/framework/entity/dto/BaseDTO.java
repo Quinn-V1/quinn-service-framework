@@ -4,8 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.util.enums.UpdateTypeEnum;
 import com.quinn.framework.util.enums.WrapperEnum;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.exception.ParameterShouldNotEmpty;
+import com.quinn.util.base.util.CollectionUtil;
 import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.OrderByTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -139,6 +143,54 @@ public abstract class BaseDTO<T> {
      */
     @ApiModelProperty("更新用户")
     private String updateUser;
+
+    /**
+     * 排序字段
+     */
+    @ApiModelProperty("排序字段")
+    private List<OrderField> orderFields;
+
+    /**
+     * 获取或者生成排序字符串
+     *
+     * @return 排序字符串
+     */
+    public String getOrderBy() {
+        if (StringUtil.isNotEmpty(orderBy)) {
+            return orderBy;
+        }
+
+        if (CollectionUtil.isEmpty(orderFields)) {
+            return null;
+        }
+
+        StringBuilder query = new StringBuilder();
+        for (OrderField orderField : orderFields) {
+            query.append(orderField.alias).append(CharConstant.DOT)
+                    .append(orderField.prop).append(CharConstant.BLANK)
+                    .append(orderField.order).append(", ")
+            ;
+        }
+
+        query.delete(query.length() - 2, query.length());
+        orderBy = query.toString();
+
+        return orderBy;
+    }
+
+    /**
+     * 添加排序字段
+     *
+     * @param prop  属性名
+     * @param alias 别名
+     * @param order 排序
+     */
+    public void addOrderBy(String prop, String alias, String order) {
+        if (orderFields == null) {
+            orderFields = new ArrayList<>();
+        }
+        orderFields.add(new OrderField(prop, alias, order));
+    }
 
     /**
      * 关键字SQL条件字符串（模糊匹配）
@@ -293,6 +345,49 @@ public abstract class BaseDTO<T> {
     public class FreeQuery<V> {
 
         /**
+         * 条件字段
+         */
+        private List<FieldValue> condFields;
+
+        /**
+         * 结果字段
+         */
+        private List<ResultField> resultFields;
+
+        /**
+         * 结果类型
+         */
+        private Class<V> resultClass;
+
+        /**
+         * 参数
+         */
+        private Object[] params;
+
+        /**
+         * 分组字段
+         */
+        private String[] groupFields;
+
+        /**
+         * 获取结果类型
+         *
+         * @return 结果类型
+         */
+        public Class<V> getResultClass() {
+            return resultClass;
+        }
+
+        /**
+         * 获取参数
+         *
+         * @return 参数
+         */
+        public Object[] getParams() {
+            return params;
+        }
+
+        /**
          * 带参构造器
          *
          * @param resultClass 结果类型
@@ -325,26 +420,6 @@ public abstract class BaseDTO<T> {
         }
 
         /**
-         * 条件字段
-         */
-        private List<FieldValue> condFields;
-
-        /**
-         * 结果字段
-         */
-        private List<ResultField> resultFields;
-
-        /**
-         * 结果类型
-         */
-        private Class<V> resultClass;
-
-        /**
-         * 参数
-         */
-        private Object[] params;
-
-        /**
          * 生成SQL文件
          *
          * @return SQL文
@@ -357,42 +432,42 @@ public abstract class BaseDTO<T> {
             }
 
             query.deleteCharAt(query.length() - 1);
-            query.append(" FROM ").append(tableName()).append(" WHERE ");
+            query.append(" FROM ").append(tableName());
 
-            params = new Object[condFields.size()];
-            for (int i = 0; i < condFields.size(); i++) {
-                FieldValue FieldValue = condFields.get(i);
-                query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
-                params[i] = FieldValue.value;
+            if (!CollectionUtil.isEmpty(condFields)) {
+                query.append(" WHERE ");
+                params = new Object[condFields.size()];
+                for (int i = 0; i < condFields.size(); i++) {
+                    FieldValue FieldValue = condFields.get(i);
+                    query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
+                    params[i] = FieldValue.value;
+                }
+
+                query.delete(query.length() - 5, query.length());
             }
 
-            query.delete(query.length() - 5, query.length());
+            if (!CollectionUtil.isEmpty(groupFields)) {
+                query.append(" GROUP BY ");
+                for (String groupField : groupFields) {
+                    query.append(columnOfProp(groupField)).append(", ");
+                }
+                query.delete(query.length() - 2, query.length());
+            }
+
+            String orderBy = getOrderBy();
+            if (!StringUtil.isEmpty(orderBy)) {
+                query.append(" ORDER BY").append(orderBy);
+            }
+
             return query.toString();
-        }
-
-        /**
-         * 获取参数
-         *
-         * @return 参数
-         */
-        public Object[] getParams() {
-            return params;
-        }
-
-        /**
-         * 获取结果类型
-         *
-         * @return 结果类型
-         */
-        public Class<V> getResultClass() {
-            return resultClass;
         }
 
         /**
          * 包裹 属性
          *
-         * @param prop
-         * @param wrapper
+         * @param prop    属性名
+         * @param wrapper 包装方式
+         * @return 本身
          */
         public FreeQuery<V> wrapResultField(String prop, WrapperEnum wrapper) {
             resultFields.add(new ResultField(prop, wrapper));
@@ -404,6 +479,7 @@ public abstract class BaseDTO<T> {
          *
          * @param prop  属性
          * @param value 参数
+         * @return 本身
          */
         public FreeQuery<V> addParamField(String prop, Object value) {
             if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
@@ -411,6 +487,18 @@ public abstract class BaseDTO<T> {
             }
             return this;
         }
+
+        /**
+         * 添加分组字段
+         *
+         * @param props 分组属性名
+         * @return 本身
+         */
+        public FreeQuery<V> groupBy(String... props) {
+            this.groupFields = props;
+            return this;
+        }
+
     }
 
     /**
@@ -626,4 +714,56 @@ public abstract class BaseDTO<T> {
         }
     }
 
+    /**
+     * 排序字段
+     *
+     * @author Qunhua.Liao
+     * @since 2020-05-08
+     */
+    @Getter
+    @Setter
+    public class OrderField {
+
+        /**
+         * 属性名
+         */
+        @ApiModelProperty("属性名")
+        private String prop;
+
+        /**
+         * 别名
+         */
+        @ApiModelProperty("别名")
+        private String alias;
+
+        /**
+         * 顺序
+         */
+        @ApiModelProperty("顺序")
+        private String order;
+
+        public OrderField() {
+        }
+
+        public OrderField(String prop, String alias, String order) {
+            if (StringUtil.isEmpty(prop)) {
+                throw new ParameterShouldNotEmpty();
+            }
+            this.prop = prop;
+            this.alias = alias;
+            this.order = order;
+        }
+
+        public String getAlias() {
+            return StringUtil.isEmpty(alias) ? tableName() : alias;
+        }
+
+        public String getOrder() {
+            if (StringUtil.isEmpty(order)) {
+                return OrderByTypeEnum.DEFAULT_ORDER;
+            }
+            OrderByTypeEnum orderByTypeEnum = OrderByTypeEnum.valueOf(order);
+            return orderByTypeEnum == null ? OrderByTypeEnum.DEFAULT_ORDER : orderByTypeEnum.name();
+        }
+    }
 }
