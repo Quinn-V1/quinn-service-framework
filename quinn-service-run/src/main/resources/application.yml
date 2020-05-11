@@ -1,6 +1,6 @@
 ## 用本地配置
 server:
-  port: 8030 # 启动端口
+  port: 8010 # 启动端口
   servlet:
     context-path: /
 
