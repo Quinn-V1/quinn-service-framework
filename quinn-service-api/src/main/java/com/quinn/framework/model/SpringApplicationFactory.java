@@ -28,6 +28,7 @@ public class SpringApplicationFactory {
     public static PriorityProperties collectProperties(String[] args) {
         PriorityProperties priorityProperties = generatePropertyFromArgs(args);
         BaseConfigInfoCollector.collectProperties(priorityProperties);
+        System.setProperties(priorityProperties);
         return priorityProperties;
     }
 

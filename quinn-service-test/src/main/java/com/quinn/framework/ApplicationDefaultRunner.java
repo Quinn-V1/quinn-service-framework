@@ -1,5 +1,6 @@
 package com.quinn.framework;
 
+import com.quinn.framework.annotation.TestEntry;
 import com.quinn.framework.component.BaseConfigInfoReWriter;
 import com.quinn.framework.model.SpringApplicationFactory;
 import org.junit.runners.model.InitializationError;
@@ -19,7 +20,10 @@ public class ApplicationDefaultRunner extends SpringJUnit4ClassRunner {
         super(clazz);
         Properties properties = SpringApplicationFactory.collectProperties(new String[0]);
         BaseConfigInfoReWriter.decryptProperties(properties);
-        SpringApplicationFactory.buildApplication(clazz, properties);
+
+        TestEntry annotation = clazz.getAnnotation(TestEntry.class);
+        Class entryClass = annotation == null ? ApplicationDefaultEntry.class : annotation.value();
+        SpringApplicationFactory.buildApplication(entryClass, properties);
     }
 
 }
