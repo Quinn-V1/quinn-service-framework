@@ -8,7 +8,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.util.StreamUtil;
 import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.enums.StorageTypeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,7 +26,7 @@ public class FastDfsStorageServiceImpl implements StorageService {
     @Value("${com.quinn-service.file.fast.group:group1}")
     private String groupName;
 
-    @Autowired
+    @Resource
     @Qualifier("defaultGenerateStorageClient")
     private GenerateStorageClient generateStorageClient;
 

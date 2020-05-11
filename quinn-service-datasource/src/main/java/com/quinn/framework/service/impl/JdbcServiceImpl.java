@@ -18,7 +18,7 @@ import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.constant.enums.ExceptionEnum;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,7 +41,7 @@ import static com.quinn.util.constant.enums.ExceptionEnum.DATA_OPERATION_TRANSAC
 @Service("jdbcService")
 public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
-    @Autowired
+    @Resource
     private JdbcTemplate jdbcTemplate;
 
     @Override

@@ -36,6 +36,7 @@
 <!--        <module>quinn-service-shiro</module>-->
         <module>quinn-service-sso</module>
         <module>quinn-service-swagger</module>
+        <module>quinn-service-test</module>
         <module>quinn-service-websocket</module>
     </modules>
 
@@ -175,6 +176,12 @@
             <dependency>
                 <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-swagger</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-test</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 

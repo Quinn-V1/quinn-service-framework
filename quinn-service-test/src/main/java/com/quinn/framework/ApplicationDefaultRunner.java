@@ -17,9 +17,9 @@ public class ApplicationDefaultRunner extends SpringJUnit4ClassRunner {
 
     public ApplicationDefaultRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
-        Properties properties = ApplicationDefaultEntry.collectProperties(new String[0]);
+        Properties properties = SpringApplicationFactory.collectProperties(new String[0]);
         BaseConfigInfoReWriter.decryptProperties(properties);
-        SpringApplicationFactory.buildApplication(ApplicationDefaultEntry.class, properties);
+        SpringApplicationFactory.buildApplication(clazz, properties);
     }
 
 }

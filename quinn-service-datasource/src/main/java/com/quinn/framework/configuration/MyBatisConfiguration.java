@@ -8,7 +8,6 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -43,10 +42,10 @@ import javax.sql.DataSource;
 @AutoConfigureAfter({DataSourceAutoConfiguration.class})
 public class MyBatisConfiguration implements EnvironmentAware {
 
-    @Autowired(required = false)
+    @javax.annotation.Resource
     private DatabaseIdProvider databaseIdProvider;
 
-    @Autowired(required = false)
+    @javax.annotation.Resource
     private Interceptor[] interceptors;
 
     private String dbType;

@@ -23,7 +23,7 @@ import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -86,7 +86,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
      */
     protected Class<VO> VOClass;
 
-    @Autowired
+    @Resource
     private PageAdapter pageAdapter;
 
     @Override

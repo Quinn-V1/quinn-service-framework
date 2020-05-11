@@ -4,7 +4,7 @@ import com.quinn.framework.api.strategy.StrategyBean;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.component.strategy.MethodBeanStrategy;
 import com.quinn.framework.model.strategy.StrategyFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 @Component
 public class StrategyLoadListener implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
+    @Resource
     @Qualifier("strategyExecutorService")
     private ExecutorService strategyExecutorService;
 

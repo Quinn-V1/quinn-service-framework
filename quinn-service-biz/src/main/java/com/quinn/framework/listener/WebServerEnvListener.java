@@ -4,7 +4,7 @@ import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.util.IpUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
@@ -36,7 +36,7 @@ public class WebServerEnvListener implements ApplicationListener<WebServerInitia
     @Value("${spring.application.name:}")
     private String applicationName;
 
-    @Autowired
+    @Resource
     private ApplicationInfo applicationInfo;
 
     @Override

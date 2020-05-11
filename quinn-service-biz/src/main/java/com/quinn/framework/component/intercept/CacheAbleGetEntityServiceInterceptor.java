@@ -10,7 +10,7 @@ import com.quinn.framework.service.CacheAbleService;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.enums.MessageLevelEnum;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterceptor {
 
-    @Autowired
+    @Resource
     private CacheAbleService cacheAbleService;
 
     @Override

@@ -4,7 +4,7 @@ import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,7 @@ public class MonitorController extends AbstractController {
     /**
      * 应用信息
      */
-    @Autowired
+    @Resource
     private ApplicationInfo applicationInfo;
 
     @GetMapping("visit-times")

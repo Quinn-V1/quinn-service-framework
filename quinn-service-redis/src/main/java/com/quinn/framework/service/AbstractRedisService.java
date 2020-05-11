@@ -5,7 +5,7 @@ import com.quinn.framework.api.cache.CacheCommonService;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.util.StringUtil;
 import com.quinn.util.constant.StringConstant;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -31,7 +31,7 @@ public abstract class AbstractRedisService implements CacheCommonService {
     /**
      * redis模版
      */
-    @Autowired
+    @Resource
     protected RedisTemplate redisTemplate;
 
     /**

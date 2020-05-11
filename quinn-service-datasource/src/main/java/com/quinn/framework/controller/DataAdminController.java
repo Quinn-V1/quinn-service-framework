@@ -9,7 +9,7 @@ import com.quinn.util.base.model.BatchResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = {"0ZY070管理：数据超级权限"})
 public class DataAdminController extends AbstractController {
 
-    @Autowired
+    @Resource
     private JdbcService jdbcService;
 
     /**

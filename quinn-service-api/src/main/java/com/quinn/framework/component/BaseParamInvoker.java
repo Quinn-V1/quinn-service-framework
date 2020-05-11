@@ -6,7 +6,7 @@ import com.quinn.util.constant.enums.ParamTypeEnum;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.util.CollectionUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -22,7 +22,7 @@ import java.util.Map;
 @Service("paramInvoker")
 public class BaseParamInvoker implements ParamInvoker {
 
-    @Autowired
+    @Resource
     private Map<String, ParamResolver> resolverMap;
 
     @Override

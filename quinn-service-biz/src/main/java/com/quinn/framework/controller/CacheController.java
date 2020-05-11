@@ -5,7 +5,7 @@ import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"0ZY050通用：缓存操作"})
 public class CacheController extends AbstractController {
 
-    @Autowired(required = false)
+    @Resource
     private CacheAllService cacheAllService;
 
     @GetMapping(value = "get")

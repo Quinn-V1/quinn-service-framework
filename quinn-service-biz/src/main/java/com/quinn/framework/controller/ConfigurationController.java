@@ -7,7 +7,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ public class ConfigurationController extends AbstractController {
     /**
      * 应用实例信息
      */
-    @Autowired
+    @Resource
     private ApplicationInfo applicationInfo;
 
     @GetMapping(value = "property")

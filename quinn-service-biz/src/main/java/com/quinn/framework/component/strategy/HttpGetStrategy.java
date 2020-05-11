@@ -6,7 +6,7 @@ import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.framework.model.strategy.HttpRequestParam;
 import com.quinn.util.base.model.BaseResult;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Component("HTTP_GET_StrategyExecutor")
 public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
 
-    @Autowired
+    @Resource
     @Qualifier("restTemplate")
     private RestTemplate restTemplate;
 

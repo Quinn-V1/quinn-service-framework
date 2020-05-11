@@ -8,7 +8,7 @@ import com.quinn.framework.api.methodflag.SaveFlag;
 import com.quinn.framework.component.EntityServiceInterceptorChain;
 import com.quinn.framework.service.ParameterAbleService;
 import com.quinn.util.base.model.BaseResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParameterAbleDeleteEntityServiceInterceptor implements EntityServiceInterceptor {
 
-    @Autowired
+    @Resource
     private ParameterAbleService parameterAbleService;
 
     @Override

@@ -5,7 +5,7 @@ import com.quinn.util.constant.enums.ParamTypeEnum;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.handler.DefaultPlaceholderHandler;
 import com.quinn.util.base.model.BaseResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +34,7 @@ public class ParamResolverSql implements ParamResolver {
      */
     public static final String PARAM_KEY_SQL_SINGLE_RESULT = "singleResult";
 
-    @Autowired
+    @Resource
     private JdbcTemplate jdbcTemplate;
 
     @Override

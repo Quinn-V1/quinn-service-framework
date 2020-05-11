@@ -7,7 +7,7 @@ import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.util.DateUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +33,7 @@ public class ApplicationController extends AbstractController {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(ApplicationController.class);
 
-    @Autowired
+    @Resource
     private ApplicationInfo applicationInfo;
 
     @Value("${com.quinn-service.framework.magic-code:2106db2f557e45b588720f21acf6973f}")

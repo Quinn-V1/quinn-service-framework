@@ -4,7 +4,7 @@ import com.quinn.framework.api.entityflag.IdGenerateAble;
 import com.quinn.framework.service.IdGenerateAbleService;
 import com.quinn.framework.service.JdbcService;
 import com.quinn.util.base.model.BaseResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 默认ID生成器
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class DefaultIdGenerateAbleService implements IdGenerateAbleService {
 
-    @Autowired
+    @Resource
     private JdbcService jdbcService;
 
     @Override
