@@ -97,7 +97,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             public void invoke() {
                 int res = baseMapper.insert(this.getData());
                 if (res >= 0) {
-                    getResult().ofData(getById(this.getData().getId()).getData());
+                    getResult().ofData(data);
                 } else {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
                             .buildMessage(DATA_OPERATION_MISS_HINT.name(), 1, 2)
