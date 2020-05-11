@@ -27,28 +27,21 @@ public abstract class BaseConfigInfoReWriter implements ConfigInfoReWriter {
 
     @Override
     public void encrypt(Properties properties) {
-        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            String key = BaseConverter.staticToString(entry.getKey());
-            String value = BaseConverter.staticToString(entry.getValue());
-            if (StringUtil.isEmpty(value)) {
-                continue;
-            }
-
-            if (keyMatches(key) || valueMatches(value)) {
-                keysEffected.add(key);
-                entry.setValue(encryptValue(value));
-            }
+        for (String key : effectedKeys()) {
+            properties.setProperty(key, encryptValue(properties.getProperty(key)));
         }
     }
 
     @Override
     public void decrypt(Properties properties) {
-        for (String key : effectedKeys()) {
-            String value = properties.getProperty(key);
-            if (StringUtil.isEmpty(value)) {
-                continue;
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            String key = BaseConverter.staticToString(entry.getKey());
+            String value = BaseConverter.staticToString(entry.getValue());
+
+            if (keyMatches(key) || valueMatches(value)) {
+                keysEffected.add(key);
+                properties.put(key, decryptValue(value));
             }
-            properties.put(key, decryptValue(value));
         }
     }
 

@@ -35,7 +35,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- support Spring boot web -->
+        <!-- spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

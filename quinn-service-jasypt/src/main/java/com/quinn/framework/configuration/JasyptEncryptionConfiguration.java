@@ -1,6 +1,7 @@
 package com.quinn.framework.configuration;
 
 import com.quinn.framework.component.JasyptEncryption;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.util.StringUtil;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 import org.jasypt.encryption.StringEncryptor;
@@ -22,17 +23,17 @@ public class JasyptEncryptionConfiguration {
     /**
      * 默认加密盐
      */
-    private static final String DEFAULT_SALT = "quinn-service";
+    private static final String DEFAULT_SALT = ConfigConstant.ENCRYPT_SALT;
 
     /**
      * 默认加密后字符串冠以前缀，用于区别此项配置是加过密的
      */
-    private static final String DEFAULT_ENCRYPT_PREFIX = "ENC(";
+    private static final String DEFAULT_ENCRYPT_PREFIX = ConfigConstant.ENCRYPT_VALUE_PREFIX;
 
     /**
      * 默认加密后字符串冠以前缀，用于区别此项配置是加过密的
      */
-    private static final String DEFAULT_ENCRYPT_SUFFIX = ")";
+    private static final String DEFAULT_ENCRYPT_SUFFIX = ConfigConstant.ENCRYPT_VALUE_SUFFIX;
 
     @Value("${bjqh.framework.crypt.algorithm:" + JasyptEncryption.DEFAULT_ALGORITHM + "}")
     private String algorithm;

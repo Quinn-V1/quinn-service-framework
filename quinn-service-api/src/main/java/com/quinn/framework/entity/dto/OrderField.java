@@ -20,7 +20,7 @@ public class OrderField {
     /**
      * 默认表别名
      */
-    private static final String DEFAULT_TABLE_ALIAS = "t";
+    public static final String DEFAULT_TABLE_ALIAS = "t";
 
     public OrderField() {
     }

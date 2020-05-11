@@ -14,6 +14,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.List;
@@ -34,7 +36,12 @@ import java.util.Set;
                 "${" + ConfigConstant.PACKAGE_NAME_MODULES_BEAN + ":}"
         }
 )
-public class ApplicationDefaultEntry {
+public class ApplicationDefaultEntry extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources (ApplicationDefaultEntry.class);
+    }
 
     /**
      * 应用入口函数

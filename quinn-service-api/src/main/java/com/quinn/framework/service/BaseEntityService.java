@@ -91,7 +91,9 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
      * 更新单条数据
      *
      * @param data 实体数据
-     * @return 更新是否成功
+     * @return 更新是否成功（包着旧数据
+     *
+     * ）
      */
     BaseResult<VO> update(VO data);
 

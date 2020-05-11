@@ -46,12 +46,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- dependencies blow supports encrypt config info -->
-        <dependency>
-            <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-jasypt</artifactId>
-        </dependency>
-
         <!-- dependencies blow supports base operation of database -->
         <dependency>
             <groupId>com.quinn.framework</groupId>
