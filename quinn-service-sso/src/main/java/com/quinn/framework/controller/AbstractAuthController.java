@@ -5,7 +5,7 @@ import com.quinn.framework.api.TokenInfo;
 import com.quinn.framework.service.AuthService;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public abstract class AbstractAuthController<T extends TokenInfo, A extends AuthInfo> {
 
-    @Autowired
+    @Resource
     private AuthService authService;
 
     @ResponseBody
