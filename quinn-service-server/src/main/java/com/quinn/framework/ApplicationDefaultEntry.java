@@ -36,12 +36,7 @@ import java.util.Set;
                 "${" + ConfigConstant.PACKAGE_NAME_MODULES_BEAN + ":}"
         }
 )
-public class ApplicationDefaultEntry extends SpringBootServletInitializer {
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources (ApplicationDefaultEntry.class);
-    }
+public class ApplicationDefaultEntry {
 
     /**
      * 应用入口函数

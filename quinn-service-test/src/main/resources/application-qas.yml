@@ -1,0 +1,21 @@
+# 测试环境
+spring:
+  profiles: qas
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/bpm7?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
+    username: ENC(05CD2AB2E85FDA5F41B894CB00EF6112)
+    password: ENC(F1B4781AF70446F7A539E012B451CC9D)
+
+fdfs:
+  tracker-list:
+    - 127.0.0.1:22122
+
+com:
+  quinn-service:
+    licence:
+      path: ming-cloud_licence.lic
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: ENC(216902373776ACD3EA504C86A1EC67E9)
+      database: 1
