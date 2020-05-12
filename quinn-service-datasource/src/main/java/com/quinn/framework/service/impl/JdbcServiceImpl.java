@@ -8,7 +8,9 @@ import com.quinn.framework.model.CallableObject;
 import com.quinn.framework.model.NextNumSeqValue;
 import com.quinn.framework.service.JdbcService;
 import com.quinn.framework.util.enums.CallableTypeEnum;
+import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.base.util.CollectionUtil;
@@ -41,6 +43,8 @@ import static com.quinn.util.constant.enums.ExceptionEnum.DATA_OPERATION_TRANSAC
 @Service("jdbcService")
 public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(JdbcServiceImpl.class);
+
     @Resource
     private JdbcTemplate jdbcTemplate;
 
@@ -63,6 +67,8 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public BatchResult<String> updateBatch(String sql, boolean transaction) {
+        LOGGER.info("updateBatch: {}", sql);
+
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
                     .buildMessage(ExceptionEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
@@ -105,6 +111,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public BaseResult<Integer> executeUpdate(String sql, Object... params) {
+        LOGGER.info("updateBatch: {} with params {}", sql, CollectionUtil.join(params));
         return BaseResult.success(jdbcTemplate.update(sql, params));
     }
 

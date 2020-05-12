@@ -574,17 +574,17 @@ public abstract class BaseDTO<T> {
                     params = new Object[valueFields.size() + condFields.size()];
                     int k = 0;
                     for (; k < valueFields.size(); k++) {
-                        FieldValue FieldValue = valueFields.get(k);
-                        query.append(columnOfProp(FieldValue.prop)).append(" = ?,");
-                        params[k] = FieldValue.value;
+                        FieldValue fieldValue = valueFields.get(k);
+                        query.append(columnOfProp(fieldValue.prop)).append(" = ?,");
+                        params[k] = fieldValue.value;
                     }
-                    query.deleteCharAt(query.length());
+                    query.deleteCharAt(query.length() - 1);
 
                     query.append(" WHERE ");
                     for (int i = 0; i < condFields.size(); i++) {
-                        FieldValue FieldValue = condFields.get(i);
-                        query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
-                        params[k + i] = FieldValue.value;
+                        FieldValue fieldValue = condFields.get(i);
+                        query.append(columnOfProp(fieldValue.prop)).append(" = ? AND ");
+                        params[k + i] = fieldValue.value;
                     }
                     query.delete(query.length() - 5, query.length());
 
@@ -601,8 +601,8 @@ public abstract class BaseDTO<T> {
                         queryVal.append("?,");
                         params[i] = FieldValue.value;
                     }
-                    query.deleteCharAt(query.length());
-                    queryVal.deleteCharAt(queryVal.length());
+                    query.deleteCharAt(query.length() - 1);
+                    queryVal.deleteCharAt(queryVal.length() - 1);
 
                     query.append(") VALUES (");
                     query.append(queryVal).append(")");
@@ -630,7 +630,7 @@ public abstract class BaseDTO<T> {
          *
          * @return 参数
          */
-        public Object getParams() {
+        public Object[] getParams() {
             return params;
         }
 
