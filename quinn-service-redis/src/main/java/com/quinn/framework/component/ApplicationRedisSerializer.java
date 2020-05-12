@@ -1,6 +1,5 @@
 package com.quinn.framework.component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quinn.framework.component.serializer.JsonApplicationSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
@@ -14,10 +13,6 @@ public class ApplicationRedisSerializer extends JsonApplicationSerializer implem
 
     public ApplicationRedisSerializer() {
         super();
-    }
-
-    public ApplicationRedisSerializer(ObjectMapper objectMapper) {
-        super(objectMapper);
     }
 
 }

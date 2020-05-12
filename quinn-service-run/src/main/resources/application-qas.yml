@@ -17,5 +17,5 @@ com:
     redis:
       host: 127.0.0.1
       port: 6379
-      password: ENC(216902373776ACD3EA504C86A1EC67E9)
+      password: ENC(F1B4781AF70446F7A539E012B451CC9D)
       database: 1
