@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Qunhua.Liao
  * @since 2020-04-08
  */
-public class DefaultIdGenerateAbleServiceImpl implements IdGenerateAbleService {
+public class UuidGenerateAbleServiceImpl implements IdGenerateAbleService {
 
     @Override
     public BaseResult generateId(IdGenerateAble idGenerateAble) {

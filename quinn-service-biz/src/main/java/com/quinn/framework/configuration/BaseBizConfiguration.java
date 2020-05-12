@@ -10,7 +10,7 @@ import com.quinn.framework.service.IdGenerateAbleService;
 import com.quinn.framework.service.ParameterAbleService;
 import com.quinn.framework.service.impl.DefaultAuditAbleServiceImpl;
 import com.quinn.framework.service.impl.DefaultCacheAbleServiceImpl;
-import com.quinn.framework.service.impl.DefaultIdGenerateAbleServiceImpl;
+import com.quinn.framework.service.impl.UuidGenerateAbleServiceImpl;
 import com.quinn.framework.service.impl.DefaultParameterAbleServiceImpl;
 import com.quinn.util.base.factory.PrefixThreadFactory;
 import com.quinn.util.licence.model.ApplicationInfo;
@@ -72,7 +72,7 @@ public class BaseBizConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = {"idGenerateAbleService"})
     public IdGenerateAbleService idGenerateAbleService() {
-        return new DefaultIdGenerateAbleServiceImpl();
+        return new UuidGenerateAbleServiceImpl();
     }
 
     @Bean
