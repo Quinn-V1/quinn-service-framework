@@ -1,13 +1,12 @@
 package com.quinn.framework.controller;
 
-import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.framework.util.RequestUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
-import com.quinn.util.base.util.DateUtil;
+import com.quinn.util.constant.NumberConstant;
+import com.quinn.util.licence.model.ApplicationInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -51,7 +51,7 @@ public class ApplicationController extends AbstractController {
      * @throws Exception
      */
     @PostMapping(value = "/shutdown", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "优雅停机", notes = "注意:此接口只能在应用本机(127.0.0.1)调用, 调用成功后应用将拒绝新服务直到当前所有服务线程执行完毕后关闭")
+    @ApiOperation(value = "优雅停机", notes = "只能在应用(127.0.0.1)调用, 调用成功后应用将拒绝新服务直到当前所有服务线程执行完毕后关闭")
     public void shutdown(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 
         if (isAccessAllowed(httpServletRequest)) {
@@ -65,7 +65,8 @@ public class ApplicationController extends AbstractController {
             while (true) {
                 long nRemaining = applicationInfo.getRemainRequestCount().longValue();
 
-                if (nRemaining == 1 || System.currentTimeMillis() - startTime > DateUtil.ONE_MINUTE) {
+                if (nRemaining == NumberConstant.INT_ONE
+                        || System.currentTimeMillis() - startTime > NumberConstant.TIME_MILL_ONE_MINUTE) {
                     writer.println("Application have been shutdown");
                     writer.flush();
                     applicationInfo.stopping();
@@ -75,7 +76,7 @@ public class ApplicationController extends AbstractController {
                 }
 
                 try {
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(NumberConstant.INT_FIVE);
                 } catch (InterruptedException e) {
                     LOGGER.error("Error occurs when sleep", e);
                 }
@@ -83,7 +84,8 @@ public class ApplicationController extends AbstractController {
         } else {
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
             httpServletResponse.setContentType("text/html;charset=utf-8");
-            httpServletResponse.getWriter().write("Shutdown commands can only be accessed from localhost or intranet by passing magic code<br/>");
+            httpServletResponse.getWriter().write("Shutdown commands can only be accessed from localhost" +
+                    " or intranet by passing magic code<br/>");
             httpServletResponse.getWriter().flush();
         }
     }
@@ -91,8 +93,8 @@ public class ApplicationController extends AbstractController {
     /**
      * 是否有权限操作
      *
-     * @param request   请求对象
-     * @return          是否有权限
+     * @param request 请求对象
+     * @return 是否有权限
      */
     private boolean isAccessAllowed(HttpServletRequest request) {
         return "127.0.0.1".equals(request.getRemoteAddr()) || (RequestUtil.isRequestFromIntranet(request)
@@ -108,7 +110,8 @@ public class ApplicationController extends AbstractController {
             LOGGER.info("Graceful shut down will be done after 3 seconds");
             try {
                 TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) { }
+            } catch (InterruptedException e) {
+            }
             LOGGER.info("Application has been shut down");
             System.exit(0);
         }
