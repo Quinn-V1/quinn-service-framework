@@ -3,7 +3,7 @@ package com.quinn.framework.listener;
 import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
-import com.quinn.util.base.util.IpUtil;
+import com.quinn.util.base.IpUtil;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.context.WebServerInitializedEvent;

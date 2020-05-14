@@ -1,16 +1,13 @@
 package com.quinn.framework.component.intercept;
 
 import com.quinn.framework.api.EntityServiceInterceptor;
-import com.quinn.framework.api.entityflag.CacheAble;
 import com.quinn.framework.api.entityflag.ParameterAble;
 import com.quinn.framework.api.methodflag.MethodFlag;
 import com.quinn.framework.api.methodflag.ReadFlag;
 import com.quinn.framework.component.EntityServiceInterceptorChain;
-import com.quinn.framework.service.CacheAbleService;
 import com.quinn.framework.service.ParameterAbleService;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.StringUtil;
-import com.quinn.util.constant.enums.MessageLevelEnum;
+
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 

@@ -2,15 +2,8 @@ package com.quinn.framework.component.configcollector;
 
 import com.quinn.framework.api.ConfigInfoCollector;
 import com.quinn.framework.util.PropertiesUtil;
-import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.util.StringUtil;
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.core.io.ClassPathResource;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * ClassPath下默认文件查找

@@ -40,7 +40,7 @@ public class StrategyLoadListener implements ApplicationListener<ContextRefreshe
         Map<String, StrategyBean> strategyBeans = event.getApplicationContext()
                 .getBeansOfType(StrategyBean.class);
 
-        if (beansOfType != null) {
+        if (strategyBeans != null) {
             MethodBeanStrategy.addStrategyBeanMap(strategyBeans);
         }
 

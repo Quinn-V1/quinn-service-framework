@@ -1,7 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.util.AesEncoder;
+import com.quinn.util.base.AesEncoder;
 import com.quinn.util.constant.OrderedConstant;
 
 /**

@@ -1,7 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.util.base.exception.BaseBusinessException;
-import com.quinn.util.base.util.StreamUtil;
+import com.quinn.util.base.StreamUtil;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.lang.Nullable;

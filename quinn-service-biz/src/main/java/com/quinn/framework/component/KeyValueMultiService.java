@@ -7,7 +7,7 @@ import com.quinn.framework.model.PageInfo;
 import com.quinn.framework.service.BaseEntityService;
 import com.quinn.util.base.api.KeyValue;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.ExceptionEnum;
 

@@ -3,7 +3,7 @@ package com.quinn.framework.service;
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.framework.api.cache.CacheCommonService;
 import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 import javax.annotation.Resource;
 import org.springframework.data.redis.core.RedisCallback;

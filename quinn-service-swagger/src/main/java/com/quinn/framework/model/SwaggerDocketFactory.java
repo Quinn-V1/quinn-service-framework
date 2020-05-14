@@ -1,7 +1,7 @@
 package com.quinn.framework.model;
 
 import com.google.common.base.Predicates;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.FactoryBean;

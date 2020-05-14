@@ -72,6 +72,7 @@
         <dependency>
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-swagger</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- dependencies blow is must for this web -->

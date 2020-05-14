@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.BaseBusinessException;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 
 import java.io.UnsupportedEncodingException;

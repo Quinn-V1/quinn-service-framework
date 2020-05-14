@@ -2,7 +2,7 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.EntityServiceInterceptor;
 import com.quinn.framework.model.methodinvorker.AbstractMethodInvoker;
-import com.quinn.util.base.util.ClassUtil;
+import com.quinn.util.base.ClassUtil;
 
 import java.util.ArrayList;
 import java.util.List;

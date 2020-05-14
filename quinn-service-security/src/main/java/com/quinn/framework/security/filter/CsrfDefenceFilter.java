@@ -1,6 +1,6 @@
 package com.quinn.framework.security.filter;
 
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.*;

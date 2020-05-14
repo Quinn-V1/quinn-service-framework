@@ -1,7 +1,7 @@
 package com.quinn.framework.component.file;
 
 import com.quinn.util.base.api.FileAdapter;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

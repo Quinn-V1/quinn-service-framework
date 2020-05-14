@@ -1,7 +1,7 @@
 package com.quinn.framework.entity.dto;
 
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.enums.OrderByTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

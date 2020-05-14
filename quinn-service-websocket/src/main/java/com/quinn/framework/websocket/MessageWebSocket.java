@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.comoponent.WebSocketHandler;
 import com.quinn.framework.model.WebSocketMessage;
 import com.quinn.framework.util.enums.WebSocketCommandOuter;
-import com.quinn.util.base.util.BaseUtil;
+import com.quinn.util.base.BaseUtil;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import org.springframework.stereotype.Component;
 

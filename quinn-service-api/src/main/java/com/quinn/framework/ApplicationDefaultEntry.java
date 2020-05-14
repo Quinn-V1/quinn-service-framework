@@ -2,23 +2,14 @@ package com.quinn.framework;
 
 import com.quinn.framework.api.CustomApplicationListener;
 import com.quinn.framework.component.BaseConfigInfoReWriter;
-import com.quinn.framework.component.configcollector.BaseConfigInfoCollector;
-import com.quinn.framework.model.PriorityProperties;
 import com.quinn.framework.model.SpringApplicationFactory;
 import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.util.CollectionUtil;
-import com.quinn.util.base.util.StringUtil;
-import com.quinn.util.constant.CharConstant;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.licence.model.ApplicationInfo;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;

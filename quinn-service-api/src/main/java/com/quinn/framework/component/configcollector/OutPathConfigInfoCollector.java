@@ -3,14 +3,10 @@ package com.quinn.framework.component.configcollector;
 import com.quinn.framework.api.ConfigInfoCollector;
 import com.quinn.framework.util.PropertiesUtil;
 import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.util.StringUtil;
-import org.springframework.core.io.ClassPathResource;
+import com.quinn.util.base.StringUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * 外部配置文件查找

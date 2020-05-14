@@ -1,10 +1,10 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.util.enums.CallableParameterDirectionEnum;
-import com.quinn.framework.util.enums.CallableTypeEnum;
-import com.quinn.framework.util.enums.JdbcTypeEnum;
-import com.quinn.util.base.util.CollectionUtil;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.constant.CharConstant;
+import com.quinn.util.database.enums.CallableParameterDirectionEnum;
+import com.quinn.util.database.enums.CallableTypeEnum;
+import com.quinn.util.database.enums.JdbcTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 

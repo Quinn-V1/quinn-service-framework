@@ -1,6 +1,6 @@
 package com.quinn.framework.util;
 
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.HttpHeadersConstant;
 import com.quinn.util.constant.RegexConstant;
 

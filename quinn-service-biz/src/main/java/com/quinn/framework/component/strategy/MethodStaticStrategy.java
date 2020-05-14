@@ -3,6 +3,7 @@ package com.quinn.framework.component.strategy;
 import com.quinn.framework.api.strategy.*;
 import com.quinn.framework.model.strategy.StaticMethodParam;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.enums.ExceptionEnum;
@@ -74,10 +75,7 @@ public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam>
     public Object execute(StaticMethodParam staticMethodParam) {
         StaticMethodInvoker staticMethodInvoker = STATIC_METHOD_INVOKER_MAP.get(staticMethodParam.getUrl());
         if (staticMethodInvoker == null) {
-            return BaseResult.fail()
-                    .buildMessage(ExceptionEnum.STRATEGY_NOT_SUPPORTED.name(), 1, 0)
-                    .addParamI8n(ExceptionEnum.STRATEGY_NOT_SUPPORTED.paramNames[0], staticMethodParam.getUrl())
-                    .result();
+            throw new ParameterShouldNotEmpty();
         }
 
         return staticMethodInvoker.revoke(staticMethodParam.getJsonParam());

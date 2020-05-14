@@ -1,9 +1,5 @@
 package com.quinn.framework.service;
 
-import com.quinn.util.base.model.BaseResult;
-
-import java.util.List;
-
 /**
  * 自有查询业务接口
  *

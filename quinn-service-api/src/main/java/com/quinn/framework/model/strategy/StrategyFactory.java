@@ -8,8 +8,8 @@ import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.exception.UnSupportedStrategyException;
 import com.quinn.util.base.model.AsyncSuccess;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.BaseUtil;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.enums.ExceptionEnum;
 
 import java.util.HashMap;

@@ -5,7 +5,7 @@ import com.quinn.framework.api.ParamResolver;
 import com.quinn.util.constant.enums.ParamTypeEnum;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.CollectionUtil;
+import com.quinn.util.base.CollectionUtil;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

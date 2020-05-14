@@ -3,7 +3,7 @@ package com.quinn.framework.service;
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.util.licence.model.ApplicationInfo;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;

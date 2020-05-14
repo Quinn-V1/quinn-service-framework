@@ -1,9 +1,6 @@
 package com.quinn.framework.component.configcollector;
 
 import com.quinn.framework.api.ConfigInfoCollector;
-import com.quinn.framework.model.PriorityProperties;
-import com.quinn.util.base.util.CollectionUtil;
-import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 import java.util.*;
 

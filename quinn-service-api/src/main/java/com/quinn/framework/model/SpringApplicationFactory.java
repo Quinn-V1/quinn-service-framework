@@ -3,7 +3,7 @@ package com.quinn.framework.model;
 import com.quinn.framework.api.SpringApplicationDecorator;
 import com.quinn.framework.component.configcollector.BaseConfigInfoCollector;
 import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.util.CollectionUtil;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.constant.CharConstant;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;

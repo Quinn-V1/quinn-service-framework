@@ -3,8 +3,7 @@ package com.quinn.framework.model.strategy;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
-import com.quinn.util.base.api.MethodInvokerOneParam;
-import com.quinn.util.base.util.CollectionUtil;
+import com.quinn.util.base.CollectionUtil;
 import lombok.Getter;
 import lombok.Setter;
 

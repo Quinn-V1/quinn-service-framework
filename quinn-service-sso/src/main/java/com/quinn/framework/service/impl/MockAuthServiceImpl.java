@@ -6,7 +6,7 @@ import com.quinn.framework.model.MockTokenInfo;
 import com.quinn.framework.service.AuthService;
 import com.quinn.framework.util.enums.AuthExceptionEnum;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.enums.ProfileEnum;
 import org.springframework.beans.factory.annotation.Value;
 

@@ -3,7 +3,9 @@ package com.quinn.framework.component.strategy;
 import com.quinn.framework.api.strategy.*;
 import com.quinn.framework.model.strategy.BeanMethodParam;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.StringConstant;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -38,7 +40,13 @@ public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
     public static void addStrategyBeanMap(Map<String, StrategyBean> strategyBeanMap) {
         for (Map.Entry<String, StrategyBean> entry : strategyBeanMap.entrySet()) {
             StrategyBean bean = entry.getValue();
-            Method[] methods = bean.getClass().getSuperclass().getMethods();
+            Method[] methods;
+            if (bean.getClass().getSimpleName().contains(StringConstant.CHAR_DOLLAR)) {
+                methods = bean.getClass().getSuperclass().getMethods();
+            } else {
+                methods = bean.getClass().getMethods();
+            }
+
             for (Method method : methods) {
                 Strategy declaredAnnotation = method.getDeclaredAnnotation(Strategy.class);
                 if (declaredAnnotation == null) {
@@ -82,7 +90,7 @@ public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
         StrategyBean bean = STRATEGY_BEAN_MAP.get(beanMethodParam.getUrl());
         BeanMethodInvoker beanMethodInvoker = BEAN_METHOD_INVOKER_MAP.get(beanMethodParam.getUrl());
         if (bean == null && beanMethodInvoker == null) {
-            return BaseResult.fail();
+            throw new ParameterShouldNotEmpty();
         }
 
         return beanMethodInvoker.revoke(bean, beanMethodParam.getJsonParam());

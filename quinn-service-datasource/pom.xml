@@ -31,6 +31,12 @@
             </exclusions>
         </dependency>
 
+        <!-- support database-util of this framework -->
+        <dependency>
+            <groupId>com.quinn.util</groupId>
+            <artifactId>quinn-util-database</artifactId>
+        </dependency>
+
         <!-- support db op with mybatis -->
         <dependency>
             <groupId>org.mybatis</groupId>

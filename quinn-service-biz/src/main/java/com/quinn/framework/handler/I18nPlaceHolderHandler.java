@@ -1,7 +1,7 @@
 package com.quinn.framework.handler;
 
 import com.quinn.util.base.handler.DefaultPlaceholderHandler;
-import com.quinn.util.base.util.I18nUtil;
+import com.quinn.util.base.I18nUtil;
 import com.quinn.util.constant.StringConstant;
 
 import java.util.Map;

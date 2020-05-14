@@ -4,7 +4,7 @@ import com.quinn.framework.component.BaseConfigInfoReWriter;
 import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.annotation.Resource;

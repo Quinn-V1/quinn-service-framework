@@ -2,8 +2,7 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.file.FileInfoAdapter;
 import com.quinn.framework.api.file.FilePathStrategy;
-import com.quinn.util.base.util.FileUtil;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.FileUtil;
 import com.quinn.util.constant.DateFormatConstant;
 
 import java.io.File;

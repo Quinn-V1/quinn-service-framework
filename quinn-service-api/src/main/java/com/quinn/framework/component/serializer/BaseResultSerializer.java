@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.quinn.util.base.handler.MultiI18nMsgResolver;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.util.StringUtil;
+import com.quinn.util.base.StringUtil;
 
 import java.io.IOException;
 

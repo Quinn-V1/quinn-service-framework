@@ -1,9 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.ConfigInfoReWriter;
-import com.quinn.framework.model.PriorityProperties;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.base.util.StringUtil;
 
 import java.util.*;
 
