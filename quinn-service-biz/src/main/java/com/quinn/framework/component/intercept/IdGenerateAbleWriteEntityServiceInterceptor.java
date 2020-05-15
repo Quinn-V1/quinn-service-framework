@@ -6,6 +6,7 @@ import com.quinn.framework.api.methodflag.InsertFlag;
 import com.quinn.framework.api.methodflag.MethodFlag;
 import com.quinn.framework.component.EntityServiceInterceptorChain;
 import com.quinn.framework.service.IdGenerateAbleService;
+import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.model.BaseResult;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,9 @@ public class IdGenerateAbleWriteEntityServiceInterceptor implements EntityServic
         Object object = result.getData();
         if (result.isSuccess() && t instanceof IdGenerateAble) {
             IdGenerateAble idGenerateAble = (IdGenerateAble) object;
-            idGenerateAbleService.generateId(idGenerateAble);
+            if (NumberUtil.isEmptyInFrame(idGenerateAble.getId())) {
+                idGenerateAbleService.generateId(idGenerateAble);
+            }
         }
     }
 

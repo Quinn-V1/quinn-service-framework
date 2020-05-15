@@ -9,9 +9,16 @@ package com.quinn.framework.api.entityflag;
 public interface IdGenerateAble {
 
     /**
+     * 获取ID
+     *
+     * @return 系统主键
+     */
+    Long getId();
+
+    /**
      * 设置ID
      *
-     * @param id    ID
+     * @param id ID
      */
     void setId(Long id);
 
