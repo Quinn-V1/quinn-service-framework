@@ -36,8 +36,8 @@ public class RedisAllServiceImpl extends AbstractRedisService implements CacheAl
     }
 
     @Override
-    public String get(final String key) {
-        return get(key, String.class);
+    public <T> T get(final String key) {
+        return doGet(key);
     }
 
     @Override
@@ -204,8 +204,6 @@ public class RedisAllServiceImpl extends AbstractRedisService implements CacheAl
             return flag;
         });
     }
-
-
 
     @Override
     public boolean unLock(String key) {

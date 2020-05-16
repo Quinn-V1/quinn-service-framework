@@ -2,12 +2,13 @@ package com.quinn.framework.service;
 
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.framework.api.cache.CacheCommonService;
-import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.constant.StringConstant;
-import javax.annotation.Resource;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import javax.annotation.Resource;
 
 /**
  * Redis缓存操作基础类
@@ -86,6 +87,24 @@ public abstract class AbstractRedisService implements CacheCommonService {
                 }
             }
             return 1L;
+        });
+    }
+
+    /**
+     * 取值，实现方法
+     *
+     * @param key 键
+     * @param <T> 返回泛型
+     * @return 值
+     */
+    protected <T> T doGet(String key) {
+        return (T) redisTemplate.execute((RedisCallback) redisConnection -> {
+            byte[] value = redisConnection.get(StringUtil.getBytes(wrapperKey(key)));
+            if (value != null) {
+                T realValue = (T) redisSerializer.deserialize(value);
+                return realValue;
+            }
+            return null;
         });
     }
 
