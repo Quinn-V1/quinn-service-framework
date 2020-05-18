@@ -92,7 +92,7 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
      *
      * @param data 实体数据
      * @return 更新是否成功（包着旧数据
-     *
+     * <p>
      * ）
      */
     BaseResult<VO> update(VO data);
@@ -100,11 +100,11 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
     /**
      * 更新之后操作
      *
-     * @param result  新业务数据
-     * @param oldData 旧业务数据
+     * @param result  旧业务数据(结果)
+     * @param newData 新业务数据
      * @return 后置操作是否成功
      */
-    default BaseResult<VO> afterUpdate(BaseResult<VO> result, VO oldData) {
+    default BaseResult<VO> afterUpdate(BaseResult<VO> result, VO newData) {
         return result;
     }
 

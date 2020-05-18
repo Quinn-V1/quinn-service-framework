@@ -2,14 +2,14 @@ package com.quinn.framework.model.strategy;
 
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
+import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.exception.UnSupportedStrategyException;
 import com.quinn.util.base.model.AsyncSuccess;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.BaseUtil;
-import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.enums.ExceptionEnum;
 
 import java.util.HashMap;
@@ -123,7 +123,7 @@ public class StrategyFactory {
                     }
 
                     String paramName = entry.getKey();
-                    if (BaseUtil.execIfNotEmpty(paramValue, null)) {
+                    if (BaseUtil.isEmpty(paramValue)) {
                         if (paramItem.isMustFlag()) {
                             throw new ParameterShouldNotEmpty().getMessageProp()
                                     .addParam(ExceptionEnum.PARAM_SHOULD_NOT_NULL.paramNames, paramName)

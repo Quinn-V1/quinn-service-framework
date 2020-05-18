@@ -156,6 +156,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             return result;
         }
 
+        // 旧数据
         VO vo = result.getData();
         BaseResult res = beforeUpdate(vo, data);
         if (!res.isSuccess()) {
@@ -184,7 +185,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                 }
             }
         });
-        return afterUpdate(result, data);
+
+        return afterUpdate(result, getByDO(data).getData());
     }
 
     @Override
