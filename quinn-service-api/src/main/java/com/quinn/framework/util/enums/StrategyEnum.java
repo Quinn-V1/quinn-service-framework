@@ -20,4 +20,7 @@ public enum StrategyEnum {
     // 静态方法
     METHOD_STATIC,
 
+    // 参数直接取值
+    PARAM_VALUE,
+
 }
