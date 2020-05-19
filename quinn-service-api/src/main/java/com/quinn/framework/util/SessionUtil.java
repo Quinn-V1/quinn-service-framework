@@ -293,4 +293,32 @@ public class SessionUtil {
         content.remove();
     }
 
+    /**
+     * 是否有角色
+     *
+     * @param roleKey
+     * @return 有角色：true
+     */
+    public static boolean hasRole(String roleKey) {
+        return true;
+    }
+
+    /**
+     * 是否有超级管理员
+     *
+     * @return 是超级管理员：true
+     */
+    public static boolean isSuperAdmin() {
+        return true;
+    }
+
+    /**
+     * 是否有租户管理员
+     *
+     * @return 是租户管理员：true
+     */
+    public static boolean isOrgAdmin() {
+        return true;
+    }
+
 }

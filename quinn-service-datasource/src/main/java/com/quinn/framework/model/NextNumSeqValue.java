@@ -33,4 +33,16 @@ public class NextNumSeqValue {
      */
     private int seqStep;
 
+    /**
+     * 获取所有序列
+     *
+     * @return 序列值
+     */
+    public long[] seqValues() {
+        long[] result = new long[seqNum];
+        for (int i = 0; i < seqNum; i++) {
+            result[i] = seqValue + seqStep * i;
+        }
+        return result;
+    }
 }
