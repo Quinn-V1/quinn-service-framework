@@ -186,7 +186,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             }
         });
 
-        return afterUpdate(result, getByDO(data).getData());
+        return afterUpdate(result, data);
     }
 
     @Override
