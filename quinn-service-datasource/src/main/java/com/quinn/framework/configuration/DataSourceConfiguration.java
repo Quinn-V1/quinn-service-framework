@@ -75,6 +75,7 @@ public class DataSourceConfiguration {
         txMap.put("get*", readOnlyTx);
         txMap.put("select*", readOnlyTx);
         txMap.put("query*", readOnlyTx);
+        txMap.put("page*", readOnlyTx);
 
         // 需要事务
         RuleBasedTransactionAttribute requiredTx = new RuleBasedTransactionAttribute(
