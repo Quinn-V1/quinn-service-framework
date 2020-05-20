@@ -2,6 +2,7 @@ package com.quinn.framework.model;
 
 import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.util.SessionUtil;
+import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.constant.enums.MessageLevelEnum;
@@ -72,6 +73,9 @@ public class BatchUpdateInfo<T extends BaseDO> {
             for (T t : newList) {
                 String dataKey = t.dataKey();
                 if (oldKeys.containsKey(dataKey)) {
+                    if (NumberUtil.isEmptyInFrame(t.getId())) {
+                        t.setId(oldKeys.get(dataKey).getId());
+                    }
                     t.prepareForUpdate(userKey, allFlag);
                 } else {
                     t.prepareForInsert(userKey, orgKey);
