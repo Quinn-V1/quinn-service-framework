@@ -77,7 +77,9 @@ public class BatchUpdateInfo<T extends BaseDO> {
                         t.setId(oldKeys.get(dataKey).getId());
                     }
                     t.prepareForUpdate(userKey, allFlag);
+                    oldKeys.remove(dataKey);
                 } else {
+                    t.setId(null);
                     t.prepareForInsert(userKey, orgKey);
                 }
                 oldValues.remove(dataKey);

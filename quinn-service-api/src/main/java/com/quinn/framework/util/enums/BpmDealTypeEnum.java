@@ -61,4 +61,16 @@ public enum BpmDealTypeEnum {
         this.code = code;
     }
 
+    /**
+     * 处理类型是否被支持
+     *
+     * @param dealTypeCodes 处理类型（选项位存储）
+     * @param dealType      处理类型
+     * @return 是否支持
+     */
+    public static boolean dealTypeSupport(Integer dealTypeCodes, String dealType) {
+        int code = BpmDealTypeEnum.valueOf(dealType).code;
+        return (dealTypeCodes & code) > 0;
+    }
+
 }
