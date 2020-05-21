@@ -37,4 +37,14 @@ public enum BpmTodoTypeEnum {
         this.defaultDealType = defaultDealType;
     }
 
+    /**
+     * 待办是否为审批类型
+     *
+     * @param todoType 待办类型
+     * @return 是否为审批类型
+     */
+    public static boolean isAudit(String todoType) {
+        return todoType.startsWith(AUDIT.name());
+    }
+
 }
