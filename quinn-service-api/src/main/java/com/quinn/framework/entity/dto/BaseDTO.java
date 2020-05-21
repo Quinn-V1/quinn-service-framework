@@ -328,7 +328,7 @@ public abstract class BaseDTO<T> {
      * @return 自由删除对象
      */
     public FreeUpdate freeIDelete(int condSize) {
-        return new FreeUpdate(UpdateTypeEnum.DELETE).valueSize(condSize);
+        return new FreeUpdate(UpdateTypeEnum.DELETE).condSize(condSize);
     }
 
     /**
