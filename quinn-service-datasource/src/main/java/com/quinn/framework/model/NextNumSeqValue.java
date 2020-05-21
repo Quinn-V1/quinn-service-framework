@@ -1,5 +1,6 @@
 package com.quinn.framework.model;
 
+import com.quinn.util.constant.NumberConstant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +25,7 @@ public class NextNumSeqValue {
     private int seqNum;
 
     /**
-     * 开始值
+     * 开始值【如果开始值是0，说明此次序列值获取失败】
      */
     private long seqValue;
 
@@ -39,6 +40,10 @@ public class NextNumSeqValue {
      * @return 序列值
      */
     public long[] seqValues() {
+        if (seqStep == 0) {
+            seqStep = NumberConstant.INT_ONE;
+        }
+
         long[] result = new long[seqNum];
         for (int i = 0; i < seqNum; i++) {
             result[i] = seqValue + seqStep * i;
