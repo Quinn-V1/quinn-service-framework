@@ -1,6 +1,8 @@
 package com.quinn.framework.model;
 
+import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.TokenInfo;
+import com.quinn.util.base.model.BaseResult;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +14,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class MockTokenInfo implements TokenInfo {
+public class DefaultTokenInfo implements TokenInfo {
 
     /**
      * 令牌类型
@@ -28,5 +30,20 @@ public class MockTokenInfo implements TokenInfo {
      * 密码
      */
     private String credentials;
+
+    /**
+     * 附加信息
+     */
+    private JSONObject extraProps;
+
+    @Override
+    public BaseResult validate() {
+        return BaseResult.SUCCESS;
+    }
+
+    @Override
+    public Object attr(String name) {
+        return extraProps == null ? null : extraProps.get(name);
+    }
 
 }

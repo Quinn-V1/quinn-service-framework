@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @Setter
 @Getter
-public class MockAuthInfo implements AuthInfo {
+public class DefaultAuthInfo implements AuthInfo {
 
     /**
      * 用户名（可以在多个顶层组织下面：每个组织下面有不同权限）
@@ -37,6 +37,11 @@ public class MockAuthInfo implements AuthInfo {
     @Override
     public Object getCredentials() {
         return username;
+    }
+
+    @Override
+    public Object attr(String name) {
+        return null;
     }
 
 }

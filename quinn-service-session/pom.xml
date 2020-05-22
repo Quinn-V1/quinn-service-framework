@@ -20,7 +20,12 @@
     <dependencies>
         <dependency>
             <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-api</artifactId>
+            <artifactId>quinn-service-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
         </dependency>
     </dependencies>
 

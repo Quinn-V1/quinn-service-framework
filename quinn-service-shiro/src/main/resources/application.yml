@@ -1,0 +1,17 @@
+com:
+  quinn-service:
+    filter:
+      config:
+        filter-items:
+          - key: test
+            filter-name: pathMatchPermissionFilter
+            url-pattens:
+              - /update/
+              - /save/
+              - /delete/
+          - key: foo
+            filter-name: pathMatchPermissionFilter
+            url-pattens:
+              - /page/
+              - /list/
+              - /get/

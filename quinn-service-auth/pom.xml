@@ -12,15 +12,15 @@
     </parent>
 
     <groupId>com.quinn.framework</groupId>
-    <artifactId>quinn-service-licence</artifactId>
+    <artifactId>quinn-service-auth</artifactId>
     <version>1.0.0</version>
-    <name>quinn-service-licence</name>
-    <description>Quinn服务框架：许可证</description>
+    <name>quinn-service-auth</name>
+    <description>Quinn服务框架：登录验证</description>
 
     <dependencies>
         <dependency>
             <groupId>com.quinn.util</groupId>
-            <artifactId>quinn-util-constant</artifactId>
+            <artifactId>quinn-util-base</artifactId>
         </dependency>
     </dependencies>
 

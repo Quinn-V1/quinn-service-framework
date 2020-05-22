@@ -1,14 +1,16 @@
 package com.quinn.framework.component.serializer;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.ApplicationSerializer;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.BaseBusinessException;
-import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * 基础Json序列化对象
@@ -47,22 +49,28 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             return null;
         }
 
+        String value;
         try {
-            String s = new String(data, StringConstant.SYSTEM_DEFAULT_CHARSET);
-            if (!s.startsWith(StringConstant.CHAR_OPEN_BRACE) || !s.endsWith(StringConstant.CHAR_CLOSE_BRACE)) {
-                return s;
+            value = new String(data, StringConstant.SYSTEM_DEFAULT_CHARSET);
+            if (!value.startsWith(StringConstant.CHAR_OPEN_BRACE) || !value.endsWith(StringConstant.CHAR_CLOSE_BRACE)) {
+                return value;
             }
-
-            JSONObject object = JSONObject.parseObject(s);
-            String className = object.getString(REDIS_SERIALIZER_PROPERTY);
-            if (StringUtil.isEmpty(className)) {
-                return object;
-            }
-
-            return object.toJavaObject(Class.forName(className));
         } catch (Exception e) {
-            throw new BaseBusinessException().buildParam("deserialize exception", 1, 1)
+            throw new BaseBusinessException()
+                    .buildParam("deserialize exception", 1, 1)
                     .exception();
+        }
+
+        JSONObject object = JSONObject.parseObject(value);
+        String className = object.getString(REDIS_SERIALIZER_PROPERTY);
+        if (StringUtil.isEmpty(className)) {
+            return object;
+        }
+
+        try {
+            return object.toJavaObject(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            return object;
         }
     }
 
@@ -76,11 +84,17 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             String s = new String(data, StringConstant.SYSTEM_DEFAULT_CHARSET);
             if (BaseConverter.isPrimitive(tpl)) {
                 return BaseConverter.staticConvert(s, tpl);
+            } else if (Map.class.isAssignableFrom(tpl)) {
+                return (T) JSONObject.parseObject(s);
+            } else if (JSONArray.class == tpl) {
+                return (T) JSONArray.parseArray(s);
             }
 
             return JSONObject.parseObject(s, tpl);
         } catch (Exception e) {
-            throw new BaseBusinessException().buildParam("deserialize exception", 1, 1).exception();
+            throw new BaseBusinessException()
+                    .buildParam("deserialize exception", 1, 1)
+                    .exception();
         }
     }
 

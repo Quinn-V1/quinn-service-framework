@@ -1,7 +1,9 @@
 package com.quinn.framework.api;
 
+import com.quinn.util.base.model.BaseResult;
+
 /**
- * 令牌信息：登录时传入
+ * 令牌信息：登录时传入（外）
  *
  * @author Qunhua.Liao
  * @since 2020-04-13
@@ -16,6 +18,13 @@ public interface TokenInfo {
     String getTokenType();
 
     /**
+     * 内部校验
+     *
+     * @return 校验结果
+     */
+    BaseResult validate();
+
+    /**
      * 获取令牌明文(用户名)
      *
      * @return 令牌明文（用户名）
@@ -28,5 +37,13 @@ public interface TokenInfo {
      * @return 令牌密文（密码）
      */
     Object getCredentials();
+
+    /**
+     * 附加属性
+     *
+     * @param name 属性名称
+     * @return 属性
+     */
+    Object attr(String name);
 
 }

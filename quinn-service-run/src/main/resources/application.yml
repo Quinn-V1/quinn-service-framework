@@ -67,6 +67,45 @@ com:
       keys:
         namespace: "ming_cloud:"
         normalize: true
+    filter:
+      config:
+        filter-items:
+          - key: anon
+            url-pattens:
+              - /
+              - /login
+              - /logout
+              - /has-right
+              - /wechart
+              - /favicon.ico
+              - /css/**
+              - /js/**
+              - /image/**
+              - /images/**
+              - /resources/**
+              - /static/**
+              - /cds/**
+              - /anon/**
+              - /users/session/**
+              - /csrf
+              - /swagger**
+              - /swagger-resources/**
+              - /v2/api-docs/**
+              - /webjars/**
+              - /error
+              - /configuration/**
+              - /druid/**
+              - /sso/**
+              - /url/**
+              - /restful/**
+          - key: intranet
+            filter-name: intranetFilter
+            url-pattens:
+              - /framework/**
+          - key: pathMatch
+            filter-name: pathMatchPermissionFilter
+            url-pattens:
+              - /**
 
 fdfs:
   so-timeout: 1501
