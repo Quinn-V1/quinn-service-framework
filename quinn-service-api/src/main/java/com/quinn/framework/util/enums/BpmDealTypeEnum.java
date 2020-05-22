@@ -26,7 +26,7 @@ public enum BpmDealTypeEnum {
     // 系统自动
     AUTO(2),
 
-    // 系统专办
+    // 系统转办
     ASSIGN_SYS(2 << 1),
 
     // 人工同意

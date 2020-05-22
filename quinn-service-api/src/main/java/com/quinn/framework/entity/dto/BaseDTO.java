@@ -187,14 +187,27 @@ public abstract class BaseDTO<T> {
      * 添加排序字段
      *
      * @param prop  属性名
-     * @param alias 别名
      * @param order 排序
      */
-    public void addOrderBy(String prop, String alias, String order) {
+    public void addOrderBy(String prop, String order) {
         if (orderFields == null) {
             orderFields = new ArrayList<>();
         }
-        orderFields.add(new OrderField(prop, alias, order));
+        orderFields.add(new OrderField(prop, order, null));
+    }
+
+    /**
+     * 添加排序字段
+     *
+     * @param prop  属性名
+     * @param alias 别名
+     * @param order 排序
+     */
+    public void addOrderBy(String prop, String order, String alias) {
+        if (orderFields == null) {
+            orderFields = new ArrayList<>();
+        }
+        orderFields.add(new OrderField(prop, order, alias));
     }
 
     /**

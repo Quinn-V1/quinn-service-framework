@@ -3,15 +3,39 @@ com:
     filter:
       config:
         filter-items:
-          - key: test
+          - key: anon
+            url-pattens:
+              - /
+              - /login
+              - /logout
+              - /has-right
+              - /wechart
+              - /favicon.ico
+              - /css/**
+              - /js/**
+              - /image/**
+              - /images/**
+              - /resources/**
+              - /static/**
+              - /cds/**
+              - /anon/**
+              - /users/session/**
+              - /csrf
+              - /swagger**
+              - /swagger-resources/**
+              - /v2/api-docs/**
+              - /webjars/**
+              - /error
+              - /configuration/**
+              - /druid/**
+              - /sso/**
+              - /url/**
+              - /restful/**
+          - key: intranet
+            filter-name: intranetFilter
+            url-pattens:
+              - /framework/**
+          - key: pathMatch
             filter-name: pathMatchPermissionFilter
             url-pattens:
-              - /update/
-              - /save/
-              - /delete/
-          - key: foo
-            filter-name: pathMatchPermissionFilter
-            url-pattens:
-              - /page/
-              - /list/
-              - /get/
+              - /**

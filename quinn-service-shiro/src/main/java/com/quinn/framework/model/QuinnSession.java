@@ -14,30 +14,25 @@ import java.util.Map;
  */
 public class QuinnSession extends SimpleSession implements Serializable {
 
+    public QuinnSession() {
+        super();
+        this.setChanged(true);
+    }
+
+    public QuinnSession(String host) {
+        super(host);
+        this.setChanged(true);
+    }
+
+    /**
+     * 是否变更
+     */
     private boolean isChanged = false;
 
-    public enum OnlineStatusEnum {
-
-        // 在线状态
-        ON_LINE("在线"),
-
-        // 隐身状态
-        HIDDEN("隐身"),
-
-        // 强制退出
-        FORCE_LOGOUT("强制退出");
-
-        private final String info;
-
-        OnlineStatusEnum(String info) {
-            this.info = info;
-        }
-
-        public String getInfo() {
-            return info;
-        }
-
-    }
+    /**
+     * 用户登录时系统IP
+     */
+    private String systemHost;
 
     /**
      * 用户浏览器类型
@@ -48,21 +43,6 @@ public class QuinnSession extends SimpleSession implements Serializable {
      * 在线状态
      */
     private OnlineStatusEnum status = OnlineStatusEnum.ON_LINE;
-
-    /**
-     * 用户登录时系统IP
-     */
-    private String systemHost;
-
-    public QuinnSession() {
-        super();
-        this.setChanged(true);
-    }
-
-    public QuinnSession(String host) {
-        super(host);
-        this.setChanged(true);
-    }
 
     @Override
     public void setId(Serializable id) {
@@ -174,6 +154,29 @@ public class QuinnSession extends SimpleSession implements Serializable {
 
     public void setSystemHost(String systemHost) {
         this.systemHost = systemHost;
+    }
+
+    public enum OnlineStatusEnum {
+
+        // 在线状态
+        ON_LINE("在线"),
+
+        // 隐身状态
+        HIDDEN("隐身"),
+
+        // 强制退出
+        FORCE_LOGOUT("强制退出");
+
+        private final String info;
+
+        OnlineStatusEnum(String info) {
+            this.info = info;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
     }
 
 }

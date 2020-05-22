@@ -25,7 +25,7 @@ public class OrderField {
     public OrderField() {
     }
 
-    public OrderField(String prop, String alias, String order) {
+    public OrderField(String prop, String order, String alias) {
         if (StringUtil.isEmpty(prop)) {
             throw new ParameterShouldNotEmpty();
         }
