@@ -4,6 +4,7 @@ import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.DataConverter;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.constant.NumberConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
@@ -16,6 +17,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Shiro 缓存简易实现（redis）
+ *
+ * @author Qunhua.Liao
+ * @since 2020-05-22
+ */
 public class QuinnCache<K, V> implements Cache<K, V> {
 
     private CacheAllService cacheAllService;
@@ -30,13 +37,14 @@ public class QuinnCache<K, V> implements Cache<K, V> {
         if (cacheAllService == null) {
             throw new IllegalArgumentException("cacheBaseService cannot be null.");
         }
+
         this.cacheAllService = cacheAllService;
 
-        if (prefix != null && !"".equals(prefix)) {
+        if (StringUtil.isNotEmpty(prefix)) {
             this.keyPrefix = prefix;
         }
 
-        if (expire != -1) {
+        if (expire > NumberConstant.INT_ZERO) {
             this.expire = expire;
         }
 
@@ -142,6 +150,12 @@ public class QuinnCache<K, V> implements Cache<K, V> {
         return cacheAllService.values(this.keyPrefix + "*");
     }
 
+    /**
+     * 生成缓存的Key
+     *
+     * @param key AuthorizingRealm.getAuthorizationCacheKey 得到的Key
+     * @return 存入Redis 的Key (加上前缀)
+     */
     private String getCacheKey(K key) {
         if (key == null) {
             return null;
@@ -149,6 +163,12 @@ public class QuinnCache<K, V> implements Cache<K, V> {
         return this.keyPrefix + getStringKey(key);
     }
 
+    /**
+     * 解析原始Key，得到字符串 Key
+     *
+     * @param key AuthorizingRealm.getAuthorizationCacheKey 得到的Key
+     * @return 字符串Key
+     */
     private String getStringKey(K key) {
         String realKey;
         DataConverter converter = BaseConverter.getInstance(key.getClass());
@@ -160,9 +180,15 @@ public class QuinnCache<K, V> implements Cache<K, V> {
         return realKey;
     }
 
+    /**
+     * AuthorizingRealm.getAuthorizationCacheKey 如果是个复杂对象
+     *
+     * @param key 复杂对象key
+     * @return 根据 PrincipalIdField（权限信息属性）获取字符串Key
+     */
     private String getKeyFromPrincipalIdField(Object key) {
         String realKey;
-        Object principalObject = null;
+        Object principalObject;
         if (key instanceof PrincipalCollection) {
             principalObject = ((PrincipalCollection) key).getPrimaryPrincipal();
         } else {
@@ -172,7 +198,8 @@ public class QuinnCache<K, V> implements Cache<K, V> {
         Method pincipalIdGetter = null;
         Method[] methods = principalObject.getClass().getMethods();
         for (Method m : methods) {
-            boolean isThisMethod = m.getName().equals("get" + this.principalIdFieldName.substring(0, 1).toUpperCase() + this.principalIdFieldName.substring(1));
+            boolean isThisMethod = m.getName().equals("get" + this.principalIdFieldName.substring(0, 1).toUpperCase()
+                    + this.principalIdFieldName.substring(1));
             if (isThisMethod) {
                 pincipalIdGetter = m;
                 break;
@@ -201,19 +228,4 @@ public class QuinnCache<K, V> implements Cache<K, V> {
         return realKey;
     }
 
-    public String getKeyPrefix() {
-        return keyPrefix;
-    }
-
-    public void setKeyPrefix(String keyPrefix) {
-        this.keyPrefix = keyPrefix;
-    }
-
-    public String getPrincipalIdFieldName() {
-        return principalIdFieldName;
-    }
-
-    public void setPrincipalIdFieldName(String principalIdFieldName) {
-        this.principalIdFieldName = principalIdFieldName;
-    }
 }

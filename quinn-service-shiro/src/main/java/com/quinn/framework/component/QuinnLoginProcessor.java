@@ -1,4 +1,4 @@
-package com.quinn.framework.service.impl;
+package com.quinn.framework.component;
 
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.LoginProcessor;

@@ -1,5 +1,6 @@
 package com.quinn.framework.component;
 
+import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.SessionKey;
@@ -18,6 +19,11 @@ import java.io.Serializable;
  * @since 2020-05-21
  */
 public class QuinnSessionManager extends DefaultWebSessionManager {
+
+    @Override
+    protected void doValidate(Session session) throws InvalidSessionException {
+        System.out.println(session);
+    }
 
     @Override
     protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {

@@ -18,26 +18,21 @@ import java.util.Set;
 public class DefaultAuthInfo implements AuthInfo {
 
     /**
+     * 用户编码
+     */
+    private String principal;
+
+    /**
      * 用户名（可以在多个顶层组织下面：每个组织下面有不同权限）
      */
-    private String username;
+    private String credentials;
 
     /**
      * 角色列表：key为顶层组织；value为当前组织下所有角色
-     *
+     * <p>
      * 之所以不维护功能列表：是因为功能和角色关联，如果角色变动，来修改这个，影响太大
      */
-    private Map<String, Set<String>> roles;
-
-    @Override
-    public Object getPrincipals() {
-        return roles;
-    }
-
-    @Override
-    public Object getCredentials() {
-        return username;
-    }
+    private Map<String, Set<String>> principals;
 
     @Override
     public Object attr(String name) {

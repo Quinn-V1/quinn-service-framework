@@ -3,6 +3,8 @@ package com.quinn.framework.api;
 import com.quinn.util.base.api.ClassDivAble;
 
 /**
+ * 证书认证对比器
+ *
  * @author Qunhua.Liao
  * @since 2020-05-21
  */

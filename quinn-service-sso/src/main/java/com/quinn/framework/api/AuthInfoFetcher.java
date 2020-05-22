@@ -16,4 +16,11 @@ public interface AuthInfoFetcher<T extends TokenInfo, A extends AuthInfo> {
      */
     A fetch(T t);
 
+    /**
+     * 作用令牌类型
+     *
+     * @return 令牌类型
+     */
+    String tokenType();
+
 }

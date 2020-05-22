@@ -9,10 +9,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @author Qunhua.Liao
  * @since 2020-04-06
  */
-public class ApplicationRedisSerializer extends JsonApplicationSerializer implements RedisSerializer {
-
-    public ApplicationRedisSerializer() {
-        super();
-    }
+public class JsonApplicationRedisSerializer extends JsonApplicationSerializer implements RedisSerializer {
 
 }

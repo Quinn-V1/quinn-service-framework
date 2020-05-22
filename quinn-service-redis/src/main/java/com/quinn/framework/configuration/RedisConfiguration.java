@@ -2,7 +2,8 @@ package com.quinn.framework.configuration;
 
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.framework.api.cache.CacheAllService;
-import com.quinn.framework.component.ApplicationRedisSerializer;
+import com.quinn.framework.component.ByteApplicationRedisSerializer;
+import com.quinn.framework.component.JsonApplicationRedisSerializer;
 import com.quinn.framework.service.RedisAllServiceImpl;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
@@ -141,9 +142,14 @@ public class RedisConfiguration {
         return redisTemplate;
     }
 
-    @Bean("applicationSerializer")
-    public ApplicationSerializer applicationSerializer() {
-        return new ApplicationRedisSerializer();
+    @Bean("jsonApplicationRedisSerializer")
+    public ApplicationSerializer jsonApplicationRedisSerializer() {
+        return new JsonApplicationRedisSerializer();
+    }
+
+    @Bean("byteApplicationRedisSerializer")
+    public ApplicationSerializer byteApplicationRedisSerializer() {
+        return new ByteApplicationRedisSerializer();
     }
 
     @Bean(name = {"cacheAllService", "cacheCommonService", "cacheLockService", "cacheCounterService"})
@@ -151,7 +157,16 @@ public class RedisConfiguration {
             RedisTemplate redisTemplate
     ) {
         RedisAllServiceImpl redisBaseService =
-                new RedisAllServiceImpl(redisTemplate, applicationSerializer(), cacheName, keysNamespace);
+                new RedisAllServiceImpl(redisTemplate, jsonApplicationRedisSerializer(), cacheName, keysNamespace);
+        return redisBaseService;
+    }
+
+    @Bean("sessionCacheAllService")
+    public CacheAllService sessionCacheAllService(
+            RedisTemplate redisTemplate
+    ) {
+        RedisAllServiceImpl redisBaseService =
+                new RedisAllServiceImpl(redisTemplate, byteApplicationRedisSerializer(), cacheName, keysNamespace);
         return redisBaseService;
     }
 

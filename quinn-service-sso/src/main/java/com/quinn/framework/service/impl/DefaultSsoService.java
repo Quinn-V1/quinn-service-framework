@@ -6,6 +6,8 @@ import com.quinn.framework.api.LoginPrevProcessor;
 import com.quinn.framework.api.LoginProcessor;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.framework.service.SsoService;
+import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @Service
 public class DefaultSsoService implements SsoService {
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DefaultSsoService.class);
 
     @Value("${spring.profile.active:prd}")
     private String activeProfile;
@@ -55,6 +59,7 @@ public class DefaultSsoService implements SsoService {
         try {
             authInfo = loginProcessor.login(token);
         } catch (RuntimeException e) {
+            LOGGER.errorError("login error", e);
             exception = e;
         } finally {
             // 后置增强（日志、Cookie、其他）

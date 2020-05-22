@@ -1,5 +1,6 @@
-package com.quinn.framework.model;
+package com.quinn.framework.component;
 
+import com.quinn.framework.model.QuinnFilterItem;
 import com.quinn.util.base.StringUtil;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -30,8 +31,14 @@ public class QuinnFilterConfig implements ApplicationContextAware, InitializingB
     @Resource
     private SecurityManager securityManager;
 
+    /**
+     * Spring 容器
+     */
     private ApplicationContext applicationContext;
 
+    /**
+     * 配置条目
+     */
     private List<QuinnFilterItem> filterItems;
 
     /**

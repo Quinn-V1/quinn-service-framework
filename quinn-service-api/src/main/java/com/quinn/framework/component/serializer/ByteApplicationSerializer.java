@@ -1,9 +1,10 @@
-package com.quinn.framework.component;
+package com.quinn.framework.component.serializer;
 
-import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.util.base.StreamUtil;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.SerializationException;
+import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.util.constant.StringConstant;
+import lombok.SneakyThrows;
 import org.springframework.lang.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -12,12 +13,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * 对象序列化器
+ * 字节序列化
  *
  * @author Qunhua.Liao
- * @since 2020-04-06
+ * @since 2020-05-22
  */
-public class BaseObjectRedisSerializer implements RedisSerializer {
+public class ByteApplicationSerializer implements ApplicationSerializer {
 
     @Nullable
     @Override
@@ -43,7 +44,7 @@ public class BaseObjectRedisSerializer implements RedisSerializer {
 
     @Nullable
     @Override
-    public Object deserialize(@Nullable byte[] data) throws SerializationException {
+    public Object deserialize(@Nullable byte[] data) {
         if (data == null) {
             return null;
         }
@@ -61,4 +62,22 @@ public class BaseObjectRedisSerializer implements RedisSerializer {
         }
     }
 
+    @Override
+    @SneakyThrows
+    public String serializeToStr(Object o) {
+        byte[] data = serialize(o);
+        return new String(data, StringConstant.SYSTEM_DEFAULT_CHARSET);
+    }
+
+    @Override
+    public <T> T deserialize(byte[] data, Class<T> tpl) {
+        return (T) deserialize(data);
+    }
+
+    @Override
+    @SneakyThrows
+    public <T> T deserializeFromStr(String data, Class<T> tpl) {
+        byte[] bytes = data.getBytes(StringConstant.SYSTEM_DEFAULT_CHARSET);
+        return deserialize(bytes, tpl);
+    }
 }

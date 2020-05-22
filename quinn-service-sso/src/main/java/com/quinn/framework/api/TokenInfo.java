@@ -2,13 +2,15 @@ package com.quinn.framework.api;
 
 import com.quinn.util.base.model.BaseResult;
 
+import java.io.Serializable;
+
 /**
  * 令牌信息：登录时传入（外）
  *
  * @author Qunhua.Liao
  * @since 2020-04-13
  */
-public interface TokenInfo {
+public interface TokenInfo extends Serializable {
 
     /**
      * 获取令牌类型（用户名密码、微信、手机、外部系统-单点登录）

@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-api</artifactId>
+            <artifactId>quinn-service-biz</artifactId>
         </dependency>
 
         <dependency>

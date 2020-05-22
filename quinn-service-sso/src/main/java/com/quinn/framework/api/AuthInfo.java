@@ -1,12 +1,14 @@
 package com.quinn.framework.api;
 
+import java.io.Serializable;
+
 /**
  * 权限信息：校验通过后的权限信息（内）
  *
  * @author Qunhua.Liao
  * @since 2020-04-13
  */
-public interface AuthInfo {
+public interface AuthInfo extends Serializable {
 
     /**
      * 授权信息

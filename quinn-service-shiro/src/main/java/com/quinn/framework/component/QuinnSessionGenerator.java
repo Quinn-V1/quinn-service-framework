@@ -25,7 +25,8 @@ public class QuinnSessionGenerator implements SessionIdGenerator {
 
     @Override
     public Serializable generateId(Session session) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes)
+                RequestContextHolder.getRequestAttributes()).getRequest();
         return RequestUtil.getCookieValue(request, sessionIdCookieName);
     }
 }

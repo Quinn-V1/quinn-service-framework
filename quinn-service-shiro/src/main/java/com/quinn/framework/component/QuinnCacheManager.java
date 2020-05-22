@@ -8,6 +8,12 @@ import org.apache.shiro.cache.CacheManager;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * 简易缓存管理器
+ *
+ * @author Quinn.Liao
+ * @since 2020-05-22
+ */
 public class QuinnCacheManager implements CacheManager {
 
     private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>();

@@ -93,6 +93,12 @@ public class QuinnSession extends SimpleSession implements Serializable {
     }
 
     @Override
+    public Object getAttribute(Object key) {
+        Object attribute = super.getAttribute(key);
+        return attribute;
+    }
+
+    @Override
     public void stop() {
         super.stop();
         this.setChanged(true);
