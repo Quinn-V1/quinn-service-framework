@@ -48,6 +48,10 @@ public class QuinnLoginProcessor implements LoginProcessor {
     @Override
     public List<StringKeyValue> listMyTenant() {
         Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated()) {
+            throw new BaseBusinessException();
+        }
+
         Object principal = subject.getPrincipal();
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
         return MultiAuthInfoFetcher.listMyTenant(authInfo);
@@ -56,6 +60,10 @@ public class QuinnLoginProcessor implements LoginProcessor {
     @Override
     public void setMyCurrentTenant(String tenantCode) {
         Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated()) {
+            throw new BaseBusinessException();
+        }
+
         Object principal = subject.getPrincipal();
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
         if (!MultiAuthInfoFetcher.hasTenant(authInfo, tenantCode)) {

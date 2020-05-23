@@ -1,6 +1,7 @@
 package com.quinn.framework.filter;
 
 import com.quinn.framework.api.DynamicFilter;
+import com.quinn.util.base.exception.BaseBusinessException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
@@ -30,10 +31,13 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
 
         Subject subject = SecurityUtils.getSubject();
         boolean authenticated = subject.isAuthenticated();
-        System.out.println(authenticated);
 
-        System.out.println(request.getServletPath());
-        System.out.println(request.getContextPath());
+        if (!authenticated) {
+            // FIXME
+            throw new BaseBusinessException();
+        }
+
+        subject.checkPermission(request.getServletPath());
 
         filterChain.doFilter(request, response);
     }

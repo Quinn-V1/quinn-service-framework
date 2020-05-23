@@ -3,6 +3,7 @@ package com.quinn.framework.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class DefaultPermission {
+public class DefaultPermission implements Serializable {
 
     /**
      * 租户编码
@@ -34,7 +35,7 @@ public class DefaultPermission {
     /**
      * 路径
      */
-    protected Map<String, Set<String>> permissionMaps;
+    protected Map<String, Set<String>> permissionsMap;
 
     /**
      * 指定类型角色
@@ -56,10 +57,10 @@ public class DefaultPermission {
      * @return 权限列表
      */
     public Set<String> permissionOf(String functionType) {
-        if (permissionMaps == null) {
+        if (permissionsMap == null) {
             return null;
         }
-        return permissionMaps.get(functionType);
+        return permissionsMap.get(functionType);
     }
 
 }

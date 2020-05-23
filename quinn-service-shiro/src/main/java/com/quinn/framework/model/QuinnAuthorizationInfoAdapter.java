@@ -20,7 +20,7 @@ public class QuinnAuthorizationInfoAdapter extends DefaultPermission implements 
         setKey(srcPermission.getKey());
         setName(srcPermission.getName());
         setRolesMap(srcPermission.getRolesMap());
-        setPermissionMaps(srcPermission.getPermissionMaps());
+        setPermissionsMap(srcPermission.getPermissionsMap());
     }
 
     @Override

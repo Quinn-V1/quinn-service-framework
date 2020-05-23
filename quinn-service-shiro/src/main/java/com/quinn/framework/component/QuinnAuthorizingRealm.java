@@ -49,7 +49,7 @@ public class QuinnAuthorizingRealm extends AuthorizingRealm {
         Object principal = this.getAvailablePrincipal(principalCollection);
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
         DefaultPermission defaultPermission = MultiAuthInfoFetcher.fetchPermissions(authInfo);
-        return new QuinnAuthorizationInfoAdapter(defaultPermission);
+        return defaultPermission == null ? null : new QuinnAuthorizationInfoAdapter(defaultPermission);
     }
 
     @Override

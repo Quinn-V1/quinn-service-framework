@@ -77,7 +77,6 @@ public abstract class AbstractRedisService implements CacheCommonService {
         String wKey = wrapperKey(key);
         redisTemplate.execute((RedisCallback) redisConnection -> {
             byte[] val = redisSerializer.serialize(value);
-            ;
             byte[] keyBytes = StringUtil.getBytes(wKey);
 
             if (val != null) {
