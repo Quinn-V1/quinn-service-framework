@@ -1,0 +1,2 @@
+com.quinn.framework.filter.PathMatchPermissionFilter
+com.quinn.framework.filter.QuinnIntranetFilter

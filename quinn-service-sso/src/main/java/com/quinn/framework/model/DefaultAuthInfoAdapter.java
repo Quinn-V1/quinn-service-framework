@@ -10,30 +10,55 @@ import com.quinn.framework.api.AuthInfo;
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-public class DefaultAuthInfoAdapter implements AuthInfo {
+public class DefaultAuthInfoAdapter implements AuthInfo<JSONObject> {
 
     /**
      * 权限信息
      */
-    private JSONObject principal;
+    private JSONObject realInfo;
 
     public DefaultAuthInfoAdapter(Object principal) {
-        this.principal = (JSONObject) JSON.toJSON(principal);
+        this.realInfo = (JSONObject) JSON.toJSON(principal);
+    }
+
+    @Override
+    public JSONObject realInfo() {
+        return realInfo;
+    }
+
+    @Override
+    public void ofRealInfo(JSONObject jsonObject) {
+        this.realInfo = jsonObject;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return realInfo.get("principal");
     }
 
     @Override
     public Object getPrincipals() {
-        return principal.get("principals");
+        return realInfo.get("principals");
     }
 
     @Override
     public Object getCredentials() {
-        return principal.get("credentials");
+        return realInfo.get("credentials");
+    }
+
+    @Override
+    public String getCurrentTenantCode() {
+        return realInfo.getString("currentTenantCode");
+    }
+
+    @Override
+    public void setCurrentTenantCode(String tenantCode) {
+        realInfo.put("currentTenantCode", tenantCode);
     }
 
     @Override
     public Object attr(String name) {
-        return principal.get(name);
+        return realInfo.get(name);
     }
 
 }

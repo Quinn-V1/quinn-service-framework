@@ -1,5 +1,9 @@
 package com.quinn.framework.api;
 
+import com.quinn.util.base.model.StringKeyValue;
+
+import java.util.List;
+
 /**
  * 登录核心逻辑处理器
  *
@@ -22,5 +26,19 @@ public interface LoginProcessor {
      * @return 和登录后的动作相关的一些信息
      */
     Object logout();
+
+    /**
+     * 我的租户列表
+     *
+     * @return 租户列表
+     */
+    List<StringKeyValue> listMyTenant();
+
+    /**
+     * 设置我的当前租户
+     *
+     * @param tenantCode 租户编码
+     */
+    void setMyCurrentTenant(String tenantCode);
 
 }

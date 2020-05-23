@@ -1,14 +1,13 @@
 package com.quinn.framework.service.impl;
 
-import com.quinn.framework.api.AuthInfo;
-import com.quinn.framework.api.LoginPostProcessor;
-import com.quinn.framework.api.LoginPrevProcessor;
-import com.quinn.framework.api.LoginProcessor;
+import com.quinn.framework.api.*;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.framework.service.SsoService;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.StringKeyValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +87,23 @@ public class DefaultSsoService implements SsoService {
             return (BaseResult) o;
         }
         return BaseResult.success(o);
+    }
+
+    @Override
+    public BaseResult listMyTenant() {
+        List<StringKeyValue> result = loginProcessor.listMyTenant();
+        if (CollectionUtil.isEmpty(result)) {
+            // FIXME 正确消息
+            return BaseResult.fail();
+        }
+
+        return BaseResult.success(result);
+    }
+
+    @Override
+    public BaseResult setMyCurrentTenant(String tenantCode) {
+        loginProcessor.setMyCurrentTenant(tenantCode);
+        return BaseResult.SUCCESS;
     }
 
     @Override

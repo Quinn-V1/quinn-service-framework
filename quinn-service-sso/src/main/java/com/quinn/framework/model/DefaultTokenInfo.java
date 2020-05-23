@@ -46,6 +46,11 @@ public class DefaultTokenInfo implements TokenInfo {
     private String credentials;
 
     /**
+     * 密码
+     */
+    private String tenantCode;
+
+    /**
      * 附加信息
      */
     private JSONObject extraProps;

@@ -2,10 +2,13 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.TokenInfo;
-import com.quinn.framework.model.DefaultAuthInfoAdapter;
+import com.quinn.framework.model.AuthInfoFactory;
+import com.quinn.framework.model.DefaultPermission;
+import com.quinn.framework.model.QuinnAuthorizationInfoAdapter;
 import com.quinn.framework.util.ModelTransferUtil;
 import com.quinn.framework.util.MultiAuthInfoFetcher;
 import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.util.base.model.BaseResult;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -33,24 +36,27 @@ public class QuinnAuthorizingRealm extends AuthorizingRealm {
             throws AuthenticationException {
 
         TokenInfo tokenInfo = ModelTransferUtil.authenticationTokenToTokenInfo(authenticationToken);
-        AuthInfo authInfo = MultiAuthInfoFetcher.fetch(tokenInfo);
+        BaseResult<AuthInfo> authInfo = MultiAuthInfoFetcher.fetchInfo(tokenInfo);
         if (authInfo == null) {
             // FIXME 抛出正确异常
-            throw new BaseBusinessException();
+            throw new BaseBusinessException(authInfo.getMessage());
         }
-
-        return new SimpleAuthenticationInfo(authInfo, tokenInfo.getCredentials(), getName());
+        return new SimpleAuthenticationInfo(authInfo.getData(), tokenInfo.getCredentials(), getName());
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return new SimpleAuthorizationInfo();
+        Object principal = this.getAvailablePrincipal(principalCollection);
+        AuthInfo authInfo = AuthInfoFactory.generate(principal);
+        DefaultPermission defaultPermission = MultiAuthInfoFetcher.fetchPermissions(authInfo);
+        return new QuinnAuthorizationInfoAdapter(defaultPermission);
     }
 
     @Override
     protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
         Object principal = super.getAvailablePrincipal(principals);
-        return new DefaultAuthInfoAdapter(principal).getPrincipals();
+        AuthInfo generate = AuthInfoFactory.generate(principal);
+        return generate.authCacheKey();
     }
 
 }

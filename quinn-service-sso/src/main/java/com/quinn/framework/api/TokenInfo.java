@@ -1,6 +1,7 @@
 package com.quinn.framework.api;
 
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.StringConstant;
 
 import java.io.Serializable;
 
@@ -47,5 +48,14 @@ public interface TokenInfo extends Serializable {
      * @return 属性
      */
     Object attr(String name);
+
+    /**
+     * 获取顶层组织
+     *
+     * @return 顶层组织
+     */
+    default String getTenantCode() {
+        return StringConstant.NONE_OF_DATA;
+    }
 
 }

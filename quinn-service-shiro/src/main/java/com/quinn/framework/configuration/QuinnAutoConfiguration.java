@@ -153,15 +153,15 @@ public class QuinnAutoConfiguration {
         return securityManager;
     }
 
-    @Bean
-    public Filter pathMatchPermissionFilter() {
-        return new PathMatchPermissionFilter();
-    }
-
-    @Bean
-    public Filter intranetFilter() {
-        return new QuinnIntranetFilter();
-    }
+//    @Bean
+//    public Filter pathMatchPermissionFilter() {
+//        return new PathMatchPermissionFilter();
+//    }
+//
+//    @Bean
+//    public Filter intranetFilter() {
+//        return new QuinnIntranetFilter();
+//    }
 
     @Bean
     @ConditionalOnMissingBean(ShiroFilterFactoryBean.class)

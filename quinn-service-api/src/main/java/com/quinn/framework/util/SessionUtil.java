@@ -51,6 +51,11 @@ public class SessionUtil {
     public static final String SESSION_KEY_REQUEST = "SESSION_KEY_REQUEST";
 
     /**
+     * 会话信息键：请求
+     */
+    public static final String SESSION_KEY_CURR_TENANT = "SESSION_KEY_CURR_TENANT";
+
+    /**
      * 会话信息默认值：用户ID
      */
     public static final Long DEFAULT_SYSTEM_USER_ID = NumberConstant.NONE_OF_DATA_ID;

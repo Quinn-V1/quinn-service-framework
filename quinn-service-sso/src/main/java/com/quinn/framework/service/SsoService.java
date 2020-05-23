@@ -32,6 +32,21 @@ public interface SsoService {
     BaseResult logout();
 
     /**
+     * 我的租户列表
+     *
+     * @return 我的租户列表
+     */
+    BaseResult listMyTenant();
+
+    /**
+     * 设置我的当前租户
+     *
+     * @param tenantCode 租户编码
+     * @return 设置是否成功
+     */
+    BaseResult setMyCurrentTenant(String tenantCode);
+
+    /**
      * 添加前置登录增强
      *
      * @param loginPrevProcessors 前置增强器

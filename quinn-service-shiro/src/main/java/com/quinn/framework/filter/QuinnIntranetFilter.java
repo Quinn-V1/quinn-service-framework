@@ -1,5 +1,6 @@
 package com.quinn.framework.filter;
 
+import com.quinn.framework.api.DynamicFilter;
 import com.quinn.framework.util.RequestUtil;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
  * @author Qunhua.Liao
  * @since 2020-05-22
  */
-public class QuinnIntranetFilter extends AnonymousFilter {
+public class QuinnIntranetFilter extends AnonymousFilter implements DynamicFilter {
 
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -32,4 +33,8 @@ public class QuinnIntranetFilter extends AnonymousFilter {
         }
     }
 
+    @Override
+    public String name() {
+        return "intranet";
+    }
 }

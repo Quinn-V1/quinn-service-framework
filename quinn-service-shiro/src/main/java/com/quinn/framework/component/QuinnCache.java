@@ -195,23 +195,23 @@ public class QuinnCache<K, V> implements Cache<K, V> {
             principalObject = key;
         }
 
-        Method pincipalIdGetter = null;
+        Method principalIdGetter = null;
         Method[] methods = principalObject.getClass().getMethods();
         for (Method m : methods) {
             boolean isThisMethod = m.getName().equals("get" + this.principalIdFieldName.substring(0, 1).toUpperCase()
                     + this.principalIdFieldName.substring(1));
             if (isThisMethod) {
-                pincipalIdGetter = m;
+                principalIdGetter = m;
                 break;
             }
         }
-        if (pincipalIdGetter == null) {
+        if (principalIdGetter == null) {
             // FIXME
             throw new RuntimeException("");
         }
 
         try {
-            Object idObj = pincipalIdGetter.invoke(principalObject);
+            Object idObj = principalIdGetter.invoke(principalObject);
             if (idObj == null) {
                 // FIXME
                 throw new RuntimeException("");

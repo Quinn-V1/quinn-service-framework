@@ -3,15 +3,13 @@ package com.quinn.framework.model;
 import com.quinn.framework.api.TokenInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 
-import java.io.Serializable;
-
 /**
  * Shiro 令牌适配器
  *
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-public class QuinnTokenAdapter implements AuthenticationToken, Serializable {
+public class QuinnTokenAdapter implements AuthenticationToken {
 
     /**
      * 真实令牌
