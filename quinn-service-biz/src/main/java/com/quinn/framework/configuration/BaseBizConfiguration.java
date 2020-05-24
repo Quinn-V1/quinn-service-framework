@@ -3,6 +3,8 @@ package com.quinn.framework.configuration;
 import com.quinn.framework.api.file.FileHandler;
 import com.quinn.framework.api.file.StorageService;
 import com.quinn.framework.component.LocalStorageServiceImpl;
+import com.quinn.framework.component.LoggerExtendSlf4jGenerator;
+import com.quinn.framework.component.PropertiesFileMessageResolver;
 import com.quinn.framework.component.file.DemoFileHandler;
 import com.quinn.framework.service.AuditAbleService;
 import com.quinn.framework.service.CacheAbleService;
@@ -10,12 +12,18 @@ import com.quinn.framework.service.IdGenerateAbleService;
 import com.quinn.framework.service.ParameterAbleService;
 import com.quinn.framework.service.impl.DefaultAuditAbleServiceImpl;
 import com.quinn.framework.service.impl.DefaultCacheAbleServiceImpl;
-import com.quinn.framework.service.impl.UuidGenerateAbleServiceImpl;
 import com.quinn.framework.service.impl.DefaultParameterAbleServiceImpl;
+import com.quinn.framework.service.impl.UuidGenerateAbleServiceImpl;
+import com.quinn.util.base.api.LoggerGenerator;
+import com.quinn.util.base.api.MessageResolver;
 import com.quinn.util.base.factory.PrefixThreadFactory;
+import com.quinn.util.base.handler.PlaceholderHandler;
+import com.quinn.util.constant.StringConstant;
 import com.quinn.util.licence.model.ApplicationInfo;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +52,9 @@ public class BaseBizConfiguration {
 
     @Value("${com.quinn-service.strategy.thread.queen-size:10}")
     private int queenSize;
+
+    @Value("${com.quinn-service.i18n.baseName:classpath*:i18n/msg}")
+    private String baseNames;
 
     @Bean
     @ConditionalOnMissingBean(name = {"applicationInfo"})
@@ -98,6 +109,22 @@ public class BaseBizConfiguration {
     public ExecutorService strategyExecutorService() {
         return new ThreadPoolExecutor(coreTheadSize, maxThreadSize, 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(queenSize), new PrefixThreadFactory("strategy-pool-"));
+    }
+
+    @Bean
+    @ConditionalOnClass(value = {Logger.class})
+    public LoggerGenerator loggerExtendSlf4jGenerator() {
+        return new LoggerExtendSlf4jGenerator();
+    }
+
+    @Bean("messagePlaceholderHandler")
+    public PlaceholderHandler messagePlaceholderHandler() {
+        return new PlaceholderHandler();
+    }
+
+    @Bean("propertiesFileMessageResolver")
+    public MessageResolver propertiesFileMessageResolver(PlaceholderHandler messagePlaceholderHandler) {
+        return new PropertiesFileMessageResolver(messagePlaceholderHandler, baseNames.split(StringConstant.CHAR_COMMA));
     }
 
 }

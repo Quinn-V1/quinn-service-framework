@@ -44,43 +44,43 @@ public class RedisConfiguration {
     @Value("${com.quinn-service.redis.database:0}")
     private int database;
 
-    @Value("${com.quinn-service.redis.maxActive:8}")
+    @Value("${com.quinn-service.redis.max-active:8}")
     private int maxActive;
 
-    @Value("${com.quinn-service.redis.maxIdle:8}")
+    @Value("${com.quinn-service.redis.max-idle:8}")
     private int maxIdle;
 
-    @Value("${com.quinn-service.redis.maxWait:-1}")
+    @Value("${com.quinn-service.redis.max-wait:-1}")
     private long maxWait;
 
-    @Value("${com.quinn-service.redis.minIdle:0}")
+    @Value("${com.quinn-service.redis.min-idle:0}")
     private int minIdle;
 
     @Value("${com.quinn-service.redis.timeout:2000}")
     private int timeout;
 
-    @Value("${com.quinn-service.redis.cache.name:}")
+    @Value("${com.quinn-service.redis.cache-name:}")
     private String cacheName;
 
-    @Value("${com.quinn-service.redis.keys.namespace:}")
+    @Value("${com.quinn-service.redis.keys-namespace:}")
     private String keysNamespace;
 
-    @Value("${com.quinn-service.redis.keys.normalize:true}")
+    @Value("${com.quinn-service.redis.keys-normalize:true}")
     private boolean keysNormalize;
 
     @Value("${com.quinn-service.redis.hosts:}")
     private String hosts;
 
-    @Value("${com.quinn-service.redis.hosts.type:sentinel}")
+    @Value("${com.quinn-service.redis.hosts-type:sentinel}")
     private String hostsType;
 
-    @Value("${com.quinn-service.redis.sentinel.master:masterName}")
+    @Value("${com.quinn-service.redis.sentinel-master:masterName}")
     private String sentinelMaster;
 
-    @Value("${com.quinn-service.redis.cluster.maxRedirects:3}")
+    @Value("${com.quinn-service.redis.cluster-max-redirects:3}")
     private int maxRedirects;
 
-    @Value("${com.quinn-service.redis.metrics.report.interval:300}")
+    @Value("${com.quinn-service.redis.metrics-report-interval:300}")
     private int reportInterval;
 
     @Bean

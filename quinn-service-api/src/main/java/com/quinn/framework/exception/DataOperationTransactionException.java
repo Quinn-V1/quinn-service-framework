@@ -1,6 +1,6 @@
 package com.quinn.framework.exception;
 
-import com.quinn.util.constant.enums.ExceptionEnum;
+import com.quinn.util.base.enums.ExceptionEnum;
 
 /**
  * 数据操作事务异常

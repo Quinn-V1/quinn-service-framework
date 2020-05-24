@@ -1,16 +1,16 @@
 package com.quinn.framework.listener;
 
-import com.quinn.util.licence.model.ApplicationInfo;
+import com.quinn.util.base.IpUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
-import com.quinn.util.base.IpUtil;
-import javax.annotation.Resource;
+import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public class WebServerEnvListener implements ApplicationListener<WebServerInitia
     @Value("${server.address:}")
     private String serverAddress;
 
-    @Value("${server.port:}")
+    @Value("${server.port:8080}")
     private Integer serverPort;
 
     @Value("${server.servlet.context-path:}")
@@ -64,7 +64,14 @@ public class WebServerEnvListener implements ApplicationListener<WebServerInitia
         }
 
         applicationInfo.setHost(host);
+
+        int port = event.getWebServer().getPort();
+        if (serverPort.intValue() != port) {
+            LOGGER.error("Server port not equals evn web server port");
+        }
+
         applicationInfo.setPort(event.getWebServer().getPort());
+
         if (!StringUtils.isEmpty(applicationName)) {
             applicationInfo.setApplicationName(applicationName);
         } else {

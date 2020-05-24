@@ -3,7 +3,8 @@ package com.quinn.framework.component.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.quinn.util.base.handler.MultiI18nMsgResolver;
+import com.quinn.framework.util.SessionUtil;
+import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.enums.NotifyEnum;
@@ -31,12 +32,13 @@ public class BatchResultSerializer extends JsonSerializer<BatchResult> {
         if (data != null) {
             if (data.allSuccess()) {
                 gen.writeStringField("message",
-                        MultiI18nMsgResolver.resolve(NotifyEnum.ALL_DATA_PASSED.name()));
+                        MultiMessageResolver.resolve(SessionUtil.getLocale(), NotifyEnum.ALL_DATA_PASSED.name()));
             } else {
                 StringBuilder query = new StringBuilder();
                 List<BatchResult.BatchItem> failItems = data.getFailItems();
                 for (BatchResult.BatchItem item : failItems) {
-                    query.append(MultiI18nMsgResolver.resolveMessageProp(item.getMessageProp()))
+                    query.append(MultiMessageResolver.resolveMessageProp(
+                            SessionUtil.getLocale(), item.getMessageProp()))
                             .append(CharConstant.LINE_BREAK);
                 }
             }

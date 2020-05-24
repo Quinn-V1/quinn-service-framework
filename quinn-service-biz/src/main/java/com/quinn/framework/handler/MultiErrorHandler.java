@@ -29,10 +29,10 @@ public class MultiErrorHandler {
     /**
      * 处理错误
      *
-     * @param e         错误
-     * @param request   请求
-     * @param response  响应
-     * @return          处理结果
+     * @param e        错误
+     * @param request  请求
+     * @param response 响应
+     * @return 处理结果
      */
     public static BaseResult handleError(Exception e, HttpServletRequest request, HttpServletResponse response) {
         Class exceptionClass = e.getClass();
@@ -70,7 +70,7 @@ public class MultiErrorHandler {
     /**
      * 添加处理器
      *
-     * @param values
+     * @param values 添加处理器
      */
     public static void addHandlers(Collection<ErrorHandler> values) {
         for (ErrorHandler handler : values) {

@@ -10,7 +10,7 @@ import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.exception.UnSupportedStrategyException;
 import com.quinn.util.base.model.AsyncSuccess;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.constant.enums.ExceptionEnum;
+import com.quinn.util.base.enums.ExceptionEnum;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,10 @@
 package com.quinn.framework.component;
 
 import com.quinn.util.base.api.LoggerExtend;
-import com.quinn.util.base.api.PlaceholderHandler;
+import com.quinn.util.base.handler.MultiMessageResolver;
 import org.slf4j.Logger;
+
+import java.util.Locale;
 
 /**
  * 扩展至Sl4f的日志
@@ -17,14 +19,8 @@ public class LoggerExtendSlf4j implements LoggerExtend {
      */
     private Logger logger;
 
-    /**
-     * 消息解析器
-     */
-    private PlaceholderHandler placeholderHandler;
-
-    LoggerExtendSlf4j(Logger logger, PlaceholderHandler placeholderHandler) {
+    LoggerExtendSlf4j(Logger logger) {
         this.logger = logger;
-        this.placeholderHandler = placeholderHandler;
     }
 
     @Override
@@ -33,14 +29,9 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     }
 
     @Override
-    public void setPlaceholderHandler(PlaceholderHandler placeholderHandler) {
-        this.placeholderHandler = placeholderHandler;
-    }
-
-    @Override
     public void trace(String format, Object... args) {
         if (logger.isTraceEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.trace(message);
         }
     }
@@ -48,7 +39,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void traceError(String format, Throwable error, Object... args) {
         if (logger.isTraceEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.trace(message, error);
         }
     }
@@ -56,7 +47,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void debug(String format, Object... args) {
         if (logger.isDebugEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.debug(message);
         }
     }
@@ -64,7 +55,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void debugError(String format, Throwable error, Object... args) {
         if (logger.isDebugEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.debug(message, error);
         }
     }
@@ -72,7 +63,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void info(String format, Object... args) {
         if (logger.isInfoEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.info(message);
         }
     }
@@ -80,7 +71,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void infoError(String format, Throwable error, Object... args) {
         if (logger.isInfoEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.info(message, error);
         }
     }
@@ -88,7 +79,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void warn(String format, Object... args) {
         if (logger.isWarnEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.warn(message);
         }
     }
@@ -96,7 +87,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void warnError(String format, Throwable error, Object... args) {
         if (logger.isWarnEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.warn(message, error);
         }
     }
@@ -104,7 +95,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void error(String format, Object... args) {
         if (logger.isErrorEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.error(message);
         }
     }
@@ -112,7 +103,7 @@ public class LoggerExtendSlf4j implements LoggerExtend {
     @Override
     public void errorError(String format, Throwable error, Object... args) {
         if (logger.isErrorEnabled()) {
-            String message = placeholderHandler.parseStringWithArray(format, args);
+            String message = MultiMessageResolver.resolve(Locale.getDefault(), format, args);
             logger.error(message, error);
         }
     }

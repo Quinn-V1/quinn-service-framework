@@ -6,7 +6,7 @@ import com.quinn.util.base.factory.LicenceClassLoader;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.LicenceInfo;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.ExceptionEnum;
+import com.quinn.util.base.enums.ExceptionEnum;
 import com.quinn.util.constant.enums.LicenceExceptionType;
 import com.quinn.util.constant.enums.SystemExitTypeEnum;
 import com.quinn.util.licence.model.ApplicationInfo;

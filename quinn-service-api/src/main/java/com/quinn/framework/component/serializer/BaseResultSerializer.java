@@ -3,7 +3,8 @@ package com.quinn.framework.component.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.quinn.util.base.handler.MultiI18nMsgResolver;
+import com.quinn.framework.util.SessionUtil;
+import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.StringUtil;
 
@@ -29,7 +30,7 @@ public class BaseResultSerializer extends JsonSerializer<BaseResult> {
         }
 
         if (value.getMessageProp() != null) {
-            String msg = MultiI18nMsgResolver.resolveMessageProp(value.getMessageProp());
+            String msg = MultiMessageResolver.resolveMessageProp(SessionUtil.getLocale(), value.getMessageProp());
             if (StringUtil.isEmpty(msg)) {
                 gen.writeStringField("message", value.getMessage());
             } else {

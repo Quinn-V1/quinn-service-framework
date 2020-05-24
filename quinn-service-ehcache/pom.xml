@@ -12,15 +12,20 @@
     </parent>
 
     <groupId>com.quinn.framework</groupId>
-    <artifactId>quinn-service-i18n</artifactId>
+    <artifactId>quinn-service-ehcache</artifactId>
     <version>1.0.0</version>
-    <name>quinn-service-i18n</name>
-    <description>Quinn服务框架：国际化处理</description>
+    <name>quinn-service-ehcache</name>
+    <description>Quinn服务框架：本地缓存</description>
 
     <dependencies>
         <dependency>
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
         </dependency>
     </dependencies>
 

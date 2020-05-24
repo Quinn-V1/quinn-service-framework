@@ -31,7 +31,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import static com.quinn.util.constant.enums.ExceptionEnum.*;
+import static com.quinn.util.base.enums.ExceptionEnum.*;
 
 /**
  * 基础实体类业务实现层
@@ -504,6 +504,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             }
 
             if (res.getData().size() > 0) {
+                // FIXME
                 return BaseResult.fail("多条数据");
             }
             return BaseResult.success(res.getData().get(0));

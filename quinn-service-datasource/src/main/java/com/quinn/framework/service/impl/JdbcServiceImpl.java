@@ -18,7 +18,7 @@ import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
-import com.quinn.util.constant.enums.ExceptionEnum;
+import com.quinn.util.base.enums.ExceptionEnum;
 import javax.annotation.Resource;
 
 import com.quinn.util.database.enums.CallableTypeEnum;
@@ -33,7 +33,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quinn.util.constant.enums.ExceptionEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
+import static com.quinn.util.base.enums.ExceptionEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
 
 /**
  * 数据库直接操作层

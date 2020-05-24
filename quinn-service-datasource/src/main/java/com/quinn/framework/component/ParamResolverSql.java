@@ -3,7 +3,7 @@ package com.quinn.framework.component;
 import com.quinn.framework.api.ParamResolver;
 import com.quinn.util.constant.enums.ParamTypeEnum;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.base.handler.DefaultPlaceholderHandler;
+import com.quinn.util.base.handler.PlaceholderHandler;
 import com.quinn.util.base.model.BaseResult;
 import javax.annotation.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,7 +45,7 @@ public class ParamResolverSql implements ParamResolver {
         }
 
         List<Object> params = new ArrayList<>();
-        sql = DefaultPlaceholderHandler.defaultInstance().parseSqlParamMapToList(sql, params, messageParam);
+        sql = PlaceholderHandler.defaultInstance().parseSqlParamMapToList(sql, params, messageParam);
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, params.toArray(new Object[params.size()]));
         if (CollectionUtils.isEmpty(maps)) {

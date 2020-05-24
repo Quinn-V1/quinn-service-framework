@@ -23,9 +23,9 @@
 <!--        <module>quinn-service-auth</module>-->
         <module>quinn-service-biz</module>
         <module>quinn-service-datasource</module>
+        <module>quinn-service-ehcache</module>
         <module>quinn-service-email</module>
         <module>quinn-service-file-fast</module>
-<!--        <module>quinn-service-i18n</module>-->
         <module>quinn-service-jasypt</module>
         <module>quinn-service-redis</module>
         <module>quinn-service-server</module>
