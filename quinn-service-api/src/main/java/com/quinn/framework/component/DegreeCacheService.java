@@ -67,7 +67,7 @@ public class DegreeCacheService<T> {
      * @param heatRate 热度
      */
     public void set(String key, T value, int heatRate) {
-        for (int i = degreeCaches.size(); i > -1; i--) {
+        for (int i = degreeCaches.size() - 1; i > -1; i--) {
             DegreeCache degreeCache = degreeCaches.get(i);
             if (degreeCache.heatRate > heatRate) {
                 break;
@@ -78,6 +78,7 @@ public class DegreeCacheService<T> {
 
     /**
      * 添加缓存服务
+     * 热度越高越靠前（取值越容易）
      *
      * @param heatRate     热度阈值
      * @param cacheService 缓存服务
