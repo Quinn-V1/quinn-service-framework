@@ -4,7 +4,6 @@ import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.NumberConstant;
 import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 import java.util.*;
@@ -28,14 +27,9 @@ public class EhCacheAllServiceImpl implements CacheAllService {
      */
     private Cache cache;
 
-    public EhCacheAllServiceImpl(CacheManager ehCacheManager, String name) {
+    public EhCacheAllServiceImpl(Cache cache, String name) {
         this.name = name;
-        this.cache = ehCacheManager.getCache(name);
-
-        if (this.cache == null) {
-            ehCacheManager.addCache(name);
-            this.cache = ehCacheManager.getCache(name);
-        }
+        this.cache = cache;
     }
 
     @Override

@@ -33,12 +33,6 @@
             <artifactId>quinn-service-file-fast</artifactId>
         </dependency>
 
-        <!-- dependencies blow supports redis-cache -->
-        <dependency>
-            <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-redis</artifactId>
-        </dependency>
-
         <!-- dependencies blow supports database connect mysql -->
         <dependency>
             <groupId>com.alibaba</groupId>

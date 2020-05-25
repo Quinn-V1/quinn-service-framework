@@ -32,7 +32,14 @@ public abstract class BaseDTO<T> {
 
         // 默认查找有效数据
         dataVersionFrom = 1;
+
+        useCache = true;
     }
+
+    /**
+     * 是否使用缓存
+     */
+    private Boolean useCache;
 
     /**
      * 期望结果数：如果确定只找一个结果，加一个limit 2
@@ -253,6 +260,13 @@ public abstract class BaseDTO<T> {
      * 逆向解析数据编码
      */
     public boolean dataKey(String dataKey) {
+        return dataKey(dataKey, StringConstant.CHAR_COLON);
+    }
+
+    /**
+     * 逆向解析数据编码
+     */
+    public boolean dataKey(String dataKey, String delimiter) {
         this.id = BaseConverter.staticConvert(dataKey, Long.class);
         return true;
     }
@@ -264,13 +278,20 @@ public abstract class BaseDTO<T> {
         if (entityClass == null) {
             return null;
         }
-        return entityClass.getSimpleName() + ":" + dataKey();
+        return entityClass.getSimpleName() + StringConstant.CHAR_COLON + dataKey();
     }
 
     /**
      * 逆向解析缓存键
      */
     public void cacheKey(String cacheKey) {
+        cacheKey(cacheKey, StringConstant.CHAR_COLON);
+    }
+
+    /**
+     * 逆向解析缓存键
+     */
+    public void cacheKey(String cacheKey, String delimiter) {
         if (entityClass != null) {
             cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + 1);
         }
@@ -279,7 +300,7 @@ public abstract class BaseDTO<T> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ":" + dataKey();
+        return this.getClass().getSimpleName() + StringConstant.CHAR_COLON + dataKey();
     }
 
     /**

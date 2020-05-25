@@ -40,7 +40,7 @@ public class PropertiesFileMessageResolver extends AbstractMessageResolver {
 
     @Override
     public int priority() {
-        return OrderedConstant.HIGHER_V2;
+        return OrderedConstant.MEDIUM;
     }
 
     /**

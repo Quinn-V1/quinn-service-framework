@@ -2,6 +2,8 @@ package com.quinn.framework.model;
 
 import com.quinn.framework.util.RequestUtil;
 import com.quinn.util.constant.HttpHeadersConstant;
+import com.quinn.util.constant.StringConstant;
+import com.quinn.util.licence.model.ApplicationInfo;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SessionContext;
@@ -38,7 +40,7 @@ public class QuinnSessionFactory implements SessionFactory {
 
             session.setHost(RequestUtil.getRealIpAddr(request));
             session.setUserAgent(request.getHeader(HttpHeadersConstant.USER_AGENT));
-            session.setSystemHost(request.getLocalAddr() + ":" + request.getLocalPort());
+            session.setSystemHost(ApplicationInfo.getAppKey());
         }
         return session;
     }

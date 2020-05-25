@@ -5,6 +5,7 @@ import com.quinn.framework.api.ErrorHandler;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.StringConstant;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,7 +68,7 @@ public class DefaultErrorHandler implements ErrorHandler {
      * @param result    结果
      */
     public void generateMessage(Exception e, BaseResult result) {
-        result.setMessage(e.getClass().getName() + ":" + e.getMessage());
+        result.setMessage(e.getClass().getName() + StringConstant.DELIMITER_OF_DATA_KEY + e.getMessage());
     }
 
 }

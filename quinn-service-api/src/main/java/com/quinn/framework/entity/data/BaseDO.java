@@ -3,6 +3,7 @@ package com.quinn.framework.entity.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.api.entityflag.IdGenerateAble;
 import com.quinn.util.constant.NumberConstant;
+import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -180,6 +181,6 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     }
 
     public String cacheKey() {
-        return this.getClass().getSimpleName() + ":" + dataKey();
+        return this.getClass().getSimpleName() + StringConstant.DELIMITER_OF_DATA_KEY + dataKey();
     }
 }

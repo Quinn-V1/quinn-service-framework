@@ -8,5 +8,4 @@ package com.quinn.framework.api.cache;
  */
 public interface CacheAllService extends CacheCommonService, CacheCounterService, CacheLockService {
 
-
 }

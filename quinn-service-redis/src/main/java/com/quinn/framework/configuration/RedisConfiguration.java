@@ -2,12 +2,14 @@ package com.quinn.framework.configuration;
 
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.framework.api.cache.CacheAllService;
+import com.quinn.framework.api.cache.CacheServiceManager;
 import com.quinn.framework.component.ByteApplicationRedisSerializer;
 import com.quinn.framework.component.JsonApplicationRedisSerializer;
-import com.quinn.framework.service.RedisAllServiceImpl;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.framework.component.RedisCacheServiceManager;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.constant.StringConstant;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,56 +34,53 @@ import java.util.List;
 @Configuration
 public class RedisConfiguration {
 
-    @Value("${com.quinn-service.redis.host:127.0.0.1}")
+    @Value("${com.quinn-service.cache.redis.host:127.0.0.1}")
     private String host;
 
-    @Value("${com.quinn-service.redis.port:6379}")
+    @Value("${com.quinn-service.cache.redis.port:6379}")
     private int port;
 
-    @Value("${com.quinn-service.redis.password:}")
+    @Value("${com.quinn-service.cache.redis.password:}")
     private String password;
 
-    @Value("${com.quinn-service.redis.database:0}")
+    @Value("${com.quinn-service.cache.redis.database:0}")
     private int database;
 
-    @Value("${com.quinn-service.redis.max-active:8}")
+    @Value("${com.quinn-service.cache.redis.max-active:8}")
     private int maxActive;
 
-    @Value("${com.quinn-service.redis.max-idle:8}")
+    @Value("${com.quinn-service.cache.redis.max-idle:8}")
     private int maxIdle;
 
-    @Value("${com.quinn-service.redis.max-wait:-1}")
+    @Value("${com.quinn-service.cache.redis.max-wait:-1}")
     private long maxWait;
 
-    @Value("${com.quinn-service.redis.min-idle:0}")
+    @Value("${com.quinn-service.cache.redis.min-idle:0}")
     private int minIdle;
 
-    @Value("${com.quinn-service.redis.timeout:2000}")
-    private int timeout;
-
-    @Value("${com.quinn-service.redis.cache-name:}")
-    private String cacheName;
-
-    @Value("${com.quinn-service.redis.keys-namespace:}")
+    @Value("${com.quinn-service.cache.redis.keys-namespace:}")
     private String keysNamespace;
 
-    @Value("${com.quinn-service.redis.keys-normalize:true}")
-    private boolean keysNormalize;
-
-    @Value("${com.quinn-service.redis.hosts:}")
+    @Value("${com.quinn-service.cache.redis.hosts:}")
     private String hosts;
 
-    @Value("${com.quinn-service.redis.hosts-type:sentinel}")
+    @Value("${com.quinn-service.cache.redis.hosts-type:sentinel}")
     private String hostsType;
 
-    @Value("${com.quinn-service.redis.sentinel-master:masterName}")
+    @Value("${com.quinn-service.cache.redis.sentinel-master:masterName}")
     private String sentinelMaster;
 
-    @Value("${com.quinn-service.redis.cluster-max-redirects:3}")
+    @Value("${com.quinn-service.cache.redis.cluster-max-redirects:3}")
     private int maxRedirects;
 
-    @Value("${com.quinn-service.redis.metrics-report-interval:300}")
+    @Value("${com.quinn-service.cache.redis.timeout:2000}")
+    private int timeout;
+
+    @Value("${com.quinn-service.cache.redis.metrics-report-interval:300}")
     private int reportInterval;
+
+    @Value("${com.quinn-service.cache.redis.keys-normalize:true}")
+    private boolean keysNormalize;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -101,7 +100,7 @@ public class RedisConfiguration {
         if (StringUtil.isNotEmpty(hosts)) {
             List<RedisNode> hostAndPorts = parseRedisNodes(hosts);
             if (CollectionUtils.isEmpty(hostAndPorts)) {
-                throw new IllegalArgumentException("Invalid property configuration [com.quinn-service.redis.hosts]");
+                throw new IllegalArgumentException("Invalid property configuration [com.quinn-service.cache.redis.hosts]");
             }
             if (ConfigConstant.REDIS_DEPLOY_TYPE_CLUSTER.equalsIgnoreCase(hostsType)) {
                 RedisSentinelConfiguration sentinelConfiguration = new RedisSentinelConfiguration();
@@ -152,22 +151,28 @@ public class RedisConfiguration {
         return new ByteApplicationRedisSerializer();
     }
 
-    @Bean(name = {"cacheAllService", "cacheCommonService", "cacheLockService", "cacheCounterService"})
-    public CacheAllService cacheAllService(
-            RedisTemplate redisTemplate
+    @Bean("redisCacheServiceManager")
+    public CacheServiceManager redisCacheServiceManager(
+            RedisTemplate redisTemplate,
+            @Qualifier("jsonApplicationRedisSerializer") ApplicationSerializer jsonApplicationRedisSerializer
     ) {
-        RedisAllServiceImpl redisBaseService =
-                new RedisAllServiceImpl(redisTemplate, jsonApplicationRedisSerializer(), cacheName, keysNamespace);
-        return redisBaseService;
+        return new RedisCacheServiceManager(redisTemplate, jsonApplicationRedisSerializer);
     }
 
-    @Bean("sessionCacheAllService")
-    public CacheAllService sessionCacheAllService(
-            RedisTemplate redisTemplate
+    @Bean("redisCacheAllService")
+    public CacheAllService cacheAllService(
+            @Qualifier("redisCacheServiceManager") CacheServiceManager redisCacheServiceManager
     ) {
-        RedisAllServiceImpl redisBaseService =
-                new RedisAllServiceImpl(redisTemplate, byteApplicationRedisSerializer(), cacheName, keysNamespace);
-        return redisBaseService;
+        return redisCacheServiceManager.getCacheService("redisCacheAllService", keysNamespace);
+    }
+
+    @Bean("redisByteCacheAllService")
+    public CacheAllService redisByteCacheAllService(
+            @Qualifier("redisCacheServiceManager") CacheServiceManager redisCacheServiceManager,
+            @Qualifier("byteApplicationRedisSerializer") ApplicationSerializer byteApplicationRedisSerializer
+    ) {
+        return redisCacheServiceManager.getCacheService(byteApplicationRedisSerializer,
+                "sessionCacheAllService", keysNamespace);
     }
 
     /**

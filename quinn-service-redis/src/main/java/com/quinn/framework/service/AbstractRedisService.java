@@ -165,7 +165,7 @@ public abstract class AbstractRedisService implements CacheCommonService {
      * @return 加工键
      */
     protected String wrapperKey(String key) {
-        return keyNamespace + key;
+        return name + StringConstant.CHAR_COLON + keyNamespace + key;
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class AbstractRedisService implements CacheCommonService {
      * @return 原始键
      */
     protected String cleanKey(String key) {
-        return key.replaceFirst(keyNamespace, StringConstant.STRING_EMPTY);
+        return key.substring(name.length() + keyNamespace.length() + 1);
     }
 
 }
