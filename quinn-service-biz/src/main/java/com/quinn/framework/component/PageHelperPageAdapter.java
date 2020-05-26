@@ -7,7 +7,7 @@ import com.quinn.framework.entity.dto.PageDTO;
 import com.quinn.framework.model.PageInfo;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.enums.ExceptionEnum;
+import com.quinn.util.base.enums.CommMessageEnum;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,7 @@ public class PageHelperPageAdapter implements PageAdapter<Page> {
         if (condition.getPageNum() == null || condition.getPageSize() == null
                 || condition.getPageSize().intValue() == 0) {
             return BaseResult.build(false)
-                    .buildMessage(ExceptionEnum.PARAM_PAGE_NOT_PROVIDED.name(), 1, 0)
+                    .buildMessage(CommMessageEnum.PARAM_PAGE_NOT_PROVIDED.name(), 1, 0)
                     .addParam("paramName", "pageNum or pageSize")
                     .result()
                     ;
@@ -58,7 +58,7 @@ public class PageHelperPageAdapter implements PageAdapter<Page> {
 
         if (pageNum == null || pageSize == null || pageSize.intValue() == 0) {
             return BaseResult.build(false)
-                    .buildMessage(ExceptionEnum.PARAM_PAGE_NOT_PROVIDED.name(), 1, 0)
+                    .buildMessage(CommMessageEnum.PARAM_PAGE_NOT_PROVIDED.name(), 1, 0)
                     .addParam("paramName", "pageNum or pageSize")
                     .result()
                     ;

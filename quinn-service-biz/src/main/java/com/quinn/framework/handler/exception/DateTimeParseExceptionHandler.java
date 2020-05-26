@@ -2,7 +2,7 @@ package com.quinn.framework.handler.exception;
 
 import com.quinn.framework.model.DefaultErrorHandler;
 import com.quinn.util.base.model.BaseResult;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @author Qunhua.Liao
  * @since 2020-04-29
  */
-@Service("dateTimeParseExceptionHandler")
+@Component("dateTimeParseExceptionHandler")
 public class DateTimeParseExceptionHandler extends DefaultErrorHandler {
 
     private static final Pattern PATTERN = Pattern.compile("(Text ')(.*)(' could not be parsed at index )(\\d*)");

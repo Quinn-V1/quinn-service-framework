@@ -1,10 +1,15 @@
 package com.quinn.framework.filter;
 
 import com.quinn.framework.api.DynamicFilter;
-import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.framework.exception.OverAuthorizedAccessException;
+import com.quinn.framework.exception.UnauthorizedException;
+import com.quinn.framework.handler.MultiErrorHandler;
+import com.quinn.framework.util.enums.AuthExceptionEnum;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,12 +37,24 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
         Subject subject = SecurityUtils.getSubject();
         boolean authenticated = subject.isAuthenticated();
 
+        // 是否登录
         if (!authenticated) {
-            // FIXME
-            throw new BaseBusinessException();
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            MultiErrorHandler.handleError(new UnauthorizedException(), request, response);
+            return;
         }
 
-        subject.checkPermission(request.getServletPath());
+        // 是否有权限访问
+        String path = request.getServletPath();
+        try {
+            subject.checkPermission(path);
+        } catch (AuthorizationException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            MultiErrorHandler.handleError(new OverAuthorizedAccessException()
+                            .addParam(AuthExceptionEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path).exception()
+                    , request, response);
+            return;
+        }
 
         filterChain.doFilter(request, response);
     }

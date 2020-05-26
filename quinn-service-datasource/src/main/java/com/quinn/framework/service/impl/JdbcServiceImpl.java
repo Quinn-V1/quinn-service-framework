@@ -18,7 +18,7 @@ import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
-import com.quinn.util.base.enums.ExceptionEnum;
+import com.quinn.util.base.enums.CommMessageEnum;
 import javax.annotation.Resource;
 
 import com.quinn.util.database.enums.CallableTypeEnum;
@@ -33,7 +33,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quinn.util.base.enums.ExceptionEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
+import static com.quinn.util.base.enums.CommMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
 
 /**
  * 数据库直接操作层
@@ -72,8 +72,8 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
-                    .buildMessage(ExceptionEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(ExceptionEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "sql")
+                    .buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "sql")
                     .result();
         }
 
@@ -121,8 +121,8 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
         T t = jdbcTemplate.queryForObject(sql, params, clazz);
         if (t == null) {
             return BaseResult.fail()
-                    .buildMessage(ExceptionEnum.RESULT_NOT_FOUND.name(), 0, 1)
-                    .addParam(ExceptionEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
+                    .buildMessage(CommMessageEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                    .addParam(CommMessageEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
                     .result()
                     ;
         }
@@ -134,8 +134,8 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
         List<T> list = jdbcTemplate.queryForList(sql, params, clazz);
         if (CollectionUtil.isEmpty(list)) {
             return BaseResult.fail()
-                    .buildMessage(ExceptionEnum.RESULT_NOT_FOUND.name(), 0, 1)
-                    .addParam(ExceptionEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
+                    .buildMessage(CommMessageEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                    .addParam(CommMessageEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
                     .result()
                     ;
         }
