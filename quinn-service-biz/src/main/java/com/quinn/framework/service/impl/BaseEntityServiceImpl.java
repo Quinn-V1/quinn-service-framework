@@ -17,6 +17,8 @@ import com.quinn.framework.model.PageInfo;
 import com.quinn.framework.model.methodinvorker.*;
 import com.quinn.framework.service.BaseEntityService;
 import com.quinn.framework.util.SessionUtil;
+import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.enums.DataOperateTypeEnum;
@@ -240,13 +242,17 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             public void invoke() {
                 Page<VO> select = baseMapper.select(getData());
                 if (CollectionUtils.isEmpty(select)) {
+                    String dataKey = getData().dataKey();
+                    dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
                             .buildMessage(DATA_OPERATION_MISS_HINT.name(), 2, 1)
                             .addParam(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.name())
                             .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], TOClass.getSimpleName())
-                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
+                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], dataKey)
                     ;
                 } else if (select.size() > 1) {
+                    String dataKey = getData().dataKey();
+                    dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
                             .buildMessage(RESULT_NOT_UNIQUE.name(), 2, 1)
                             .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0], TOClass.getSimpleName())

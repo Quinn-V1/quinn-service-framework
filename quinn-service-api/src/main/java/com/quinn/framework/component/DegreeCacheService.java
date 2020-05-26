@@ -39,10 +39,6 @@ public class DegreeCacheService<T> {
         }
 
         HeatRateObject<T> value = backup.invoke(key);
-        if (value == null) {
-            return null;
-        }
-
         set(key, value.getData(), value.getHeatRate());
         return value.getData();
     }
