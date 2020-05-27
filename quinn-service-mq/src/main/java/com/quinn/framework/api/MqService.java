@@ -11,13 +11,25 @@ import com.quinn.util.base.model.BaseResult;
 public interface MqService {
 
     /**
-     * 信息发送(exchangeType:direct)
+     * 信息发送
      *
-     * @param queueName queueName名称
-     * @param data      发送数据对象
+     * @param exchangeType 交换器类型
+     * @param exchangeName 交换器名称
+     * @param routingKey   路由规则
+     * @param queueNames   队列名称
      * @return 发送结果
      */
-    BaseResult send(String queueName, Object data);
+    MqTarget createTarget(String exchangeType, String exchangeName, String routingKey,
+                          String... queueNames);
+
+    /**
+     * 信息发送(exchangeType:direct)
+     *
+     * @param data       发送数据对象
+     * @param queueNames queueName名称
+     * @return 发送结果
+     */
+    BaseResult sendDirect(Object data, String... queueNames);
 
     /**
      * 信息发送
@@ -26,7 +38,19 @@ public interface MqService {
      * @param data   数据对象
      * @return 发送结果
      */
-    BaseResult send(MqTarget target, Object data);
+    BaseResult send(Object data, MqTarget target);
+
+    /**
+     * 发送消息
+     *
+     * @param data         数据
+     * @param exchangeType 交换器类型
+     * @param exchangeName 绑定交换器名
+     * @param routingKey   路由Key
+     * @param queueNames   队列名
+     * @return 发送结果
+     */
+    BaseResult send(Object data, String exchangeType, String exchangeName, String routingKey, String... queueNames);
 
     /**
      * 注册消费者

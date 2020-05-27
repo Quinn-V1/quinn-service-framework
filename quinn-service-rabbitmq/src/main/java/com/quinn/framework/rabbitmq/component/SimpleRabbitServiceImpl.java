@@ -4,12 +4,13 @@ import com.quinn.framework.api.ConcurrentMqListener;
 import com.quinn.framework.api.MqListener;
 import com.quinn.framework.api.MqService;
 import com.quinn.framework.api.MqTarget;
+import com.quinn.framework.util.enums.ExchangeTypeEnum;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.api.LoggerExtend;
-import com.quinn.util.base.exception.BaseBusinessException;
-import com.quinn.util.base.factory.LoggerExtendFactory;
+import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.exception.DataStyleNotMatchException;
+import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.model.BaseResult;
-import org.springframework.amqp.AmqpException;
+import com.quinn.util.constant.StringConstant;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -18,6 +19,7 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
@@ -33,9 +35,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class SimpleRabbitServiceImpl implements MqService {
 
-    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(SimpleRabbitServiceImpl.class);
-
-    protected static final long DEFAULT_SLEEP_MILLIS = 30;
+    @Value("${com.quinn-service.mq.rabbitmq.receive-interval:30}")
+    private long receiveInterval;
 
     @Resource
     @Qualifier("mqExecutorService")
@@ -74,6 +75,106 @@ public class SimpleRabbitServiceImpl implements MqService {
     }
 
     @Override
+    public RabbitMqMessageTarget createTarget(String exchangeType, String exchangeName, String routingKey,
+                                              String... queueNames) {
+        return RabbitMqMessageTarget.createTarget(exchangeType, exchangeName, routingKey, queueNames);
+    }
+
+    @Override
+    public BaseResult sendDirect(Object data, String... queueNames) {
+        return send(data, ExchangeTypeEnum.DIRECT.name(), StringConstant.ALL_OF_DATA, null, queueNames);
+    }
+
+    @Override
+    public BaseResult send(Object data, MqTarget target) {
+        if (!(target instanceof RabbitMqMessageTarget)) {
+            throw new DataStyleNotMatchException()
+                    .addParamI8n(CommMessageEnum.DATA_STYLE_NOT_MATCHED.paramNames[0], RabbitMqMessageTarget.class)
+                    .addParam(CommMessageEnum.DATA_STYLE_NOT_MATCHED.paramNames[1], data)
+                    .exception()
+                    ;
+        }
+
+        RabbitMqMessageTarget rabbitMQMessageTarget = (RabbitMqMessageTarget) target;
+        return send(data, rabbitMQMessageTarget.getExchangeType(), rabbitMQMessageTarget.getExchangeName(),
+                rabbitMQMessageTarget.getRoutingKey(), rabbitMQMessageTarget.getQueueNames());
+    }
+
+    @Override
+    public BaseResult send(Object data, String exchangeType, String exchangeName, String routingKey,
+                           String... queueNames) {
+
+        if (StringUtil.isEmpty(exchangeName)) {
+            throw new ParameterShouldNotEmpty()
+                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], exchangeName)
+                    .exception()
+                    ;
+        }
+
+        this.declareExchangeAndQueue(exchangeType, exchangeName, routingKey, queueNames);
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, data);
+
+        return BaseResult.SUCCESS;
+    }
+
+    /**
+     * 声明简单队列（监听过程中）
+     *
+     * @param queueName 队列名
+     */
+    private void ensureQueueDeclared(String queueName) {
+        if (!declaredQueues.contains(queueName)) {
+            Queue queue = new Queue(queueName);
+            queue.setAdminsThatShouldDeclare(rabbitAdmin);
+            rabbitAdmin.declareQueue(queue);
+            declaredQueues.add(queueName);
+        }
+    }
+
+    /**
+     * 声明复杂队列（发送过程中）
+     *
+     * @param exchangeName 交换器名
+     * @param exchangeType 交换器类型
+     * @param routingKey   路由名
+     * @param queueNames   队列名
+     */
+    private void declareExchangeAndQueue(String exchangeType, String exchangeName,
+                                         String routingKey, String... queueNames) {
+        if (queueNames != null && queueNames.length > 0) {
+            for (String queueName : queueNames) {
+                String key = exchangeName + StringConstant.CHAR_VERTICAL_BAR + queueName;
+
+                if (!declaredExchangeAndQueues.contains(key)) {
+                    Queue queue = new Queue(queueName);
+                    queue.setAdminsThatShouldDeclare(rabbitAdmin);
+                    rabbitAdmin.declareQueue(queue);
+
+                    // FANOUT 同 default
+                    switch (exchangeType) {
+                        case "TOPIC":
+                            TopicExchange topicExchange = new TopicExchange(exchangeName);
+                            rabbitAdmin.declareExchange(topicExchange);
+                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(routingKey));
+                            break;
+                        case "DIRECT":
+                            DirectExchange directExchange = new DirectExchange(exchangeName);
+                            rabbitAdmin.declareExchange(directExchange);
+                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(directExchange).with(routingKey));
+                            break;
+                        default:
+                            FanoutExchange exchange = new FanoutExchange(exchangeName);
+                            rabbitAdmin.declareExchange(exchange);
+                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange));
+                            break;
+                    }
+                    declaredExchangeAndQueues.add(key);
+                }
+            }
+        }
+    }
+
+    @Override
     public BaseResult listen(final MqListener listener) {
         int concurrent = 1;
         if (listener instanceof ConcurrentMqListener) {
@@ -90,18 +191,7 @@ public class SimpleRabbitServiceImpl implements MqService {
         this.ensureQueueDeclared(targetQueue);
 
         // 注册监听接口
-        MessageListenerAdapter adapter = new MessageListenerAdapter(new Object() {
-            @SuppressWarnings("unused")
-            public void handleMessage(Object message) {
-                try {
-                    listener.handleMessage(message);
-                } catch (Exception e) {
-                    LOGGER.error("MQ listener handle method exception " + e.getMessage(), e);
-                } finally {
-                }
-            }
-        });
-
+        MessageListenerAdapter adapter = new MessageListenerAdapter(listener);
         if (messageConverter != null) {
             adapter.setMessageConverter(messageConverter);
         }
@@ -126,7 +216,7 @@ public class SimpleRabbitServiceImpl implements MqService {
         }
 
         container.start();
-        return new BaseResult();
+        return BaseResult.SUCCESS;
     }
 
     @Override
@@ -141,13 +231,13 @@ public class SimpleRabbitServiceImpl implements MqService {
                     }
 
                     try {
-                        TimeUnit.MILLISECONDS.sleep(DEFAULT_SLEEP_MILLIS);
+                        TimeUnit.MILLISECONDS.sleep(receiveInterval);
                     } catch (InterruptedException e) {
                     }
                 }
             });
         }
-        return new BaseResult();
+        return BaseResult.SUCCESS;
     }
 
     @Override
@@ -155,104 +245,5 @@ public class SimpleRabbitServiceImpl implements MqService {
         container.removeQueueNames(listener.getTargetName());
         declaredQueues.remove(listener.getTargetName());
         return BaseResult.SUCCESS;
-    }
-
-    @Override
-    public BaseResult send(String queueName, Object data) {
-        return send(queueName, queueName, RabbitMqMessageTarget.ExchangeTypeEnum.DIRECT, data, new String[]{queueName});
-    }
-
-    @Override
-    public BaseResult send(MqTarget target, Object data) {
-        if (!(target instanceof RabbitMqMessageTarget)) {
-            throw new BaseBusinessException();
-        }
-
-        RabbitMqMessageTarget rabbitMQMessageTarget = (RabbitMqMessageTarget) target;
-        return send(rabbitMQMessageTarget.getExchangeName(), rabbitMQMessageTarget.getRoutingKey(),
-                rabbitMQMessageTarget.getExchangeTypeEnum(), data, rabbitMQMessageTarget.getQueueNames());
-    }
-
-    /**
-     * 发送消息
-     *
-     * @param exchangeName 绑定交换器名
-     * @param routingKey   路由Key
-     * @param exchangeType 交换器类型
-     * @param data         数据
-     * @param queueNames   队列名
-     * @return 发送结果
-     */
-    protected BaseResult send(String exchangeName, String routingKey,
-                              RabbitMqMessageTarget.ExchangeTypeEnum exchangeType, Object data, String... queueNames) {
-        if (StringUtil.isEmpty(exchangeName)) {
-            throw new IllegalArgumentException("exchange or routingKey must not be null");
-        }
-
-        this.declareExchangeAndQueue(exchangeName, exchangeType, routingKey, queueNames);
-
-        try {
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, data);
-        } catch (AmqpException e) {
-            LOGGER.error("RabbitMQ send exception" + e.getMessage(), e);
-            throw e;
-        } finally {
-        }
-        return BaseResult.SUCCESS;
-    }
-
-    /**
-     * 声明简单队列（监听过程中）
-     *
-     * @param queueName 队列名
-     */
-    private void ensureQueueDeclared(String queueName) {
-        if (!declaredQueues.contains(queueName)) {
-            Queue queue = new Queue(queueName);
-            queue.setAdminsThatShouldDeclare(rabbitAdmin);
-            rabbitAdmin.declareQueue(queue);
-            declaredQueues.add(queueName);
-        }
-    }
-
-    /**
-     * 声明复杂队列（发送过程中）
-     *
-     * @param exchangeName     交换器名
-     * @param exchangeTypeEnum 交换器类型
-     * @param routingKey       路由名
-     * @param queueNames       队列名
-     */
-    private void declareExchangeAndQueue(String exchangeName, RabbitMqMessageTarget.ExchangeTypeEnum exchangeTypeEnum,
-                                         String routingKey, String... queueNames) {
-        if (queueNames != null && queueNames.length > 0) {
-            for (String queueName : queueNames) {
-                if (!declaredExchangeAndQueues.contains(exchangeName + "|" + queueName)) {
-                    Queue queue = new Queue(queueName);
-                    queue.setAdminsThatShouldDeclare(rabbitAdmin);
-                    rabbitAdmin.declareQueue(queue);
-
-                    // FANOUT 同 default
-                    switch (exchangeTypeEnum) {
-                        case TOPIC:
-                            TopicExchange topicExchange = new TopicExchange(exchangeName);
-                            rabbitAdmin.declareExchange(topicExchange);
-                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(routingKey));
-                            break;
-                        case DIRECT:
-                            DirectExchange directExchange = new DirectExchange(exchangeName);
-                            rabbitAdmin.declareExchange(directExchange);
-                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(directExchange).with(routingKey));
-                            break;
-                        default:
-                            FanoutExchange exchange = new FanoutExchange(exchangeName);
-                            rabbitAdmin.declareExchange(exchange);
-                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange));
-                            break;
-                    }
-                    declaredExchangeAndQueues.add(exchangeName + "|" + queueName);
-                }
-            }
-        }
     }
 }

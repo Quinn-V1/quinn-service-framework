@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.quinn.framework</groupId>
-    <artifactId>quinn-service-ehcache</artifactId>
+    <artifactId>quinn-service-file-miniio</artifactId>
     <version>1.0.0</version>
-    <name>quinn-service-ehcache</name>
-    <description>Quinn服务框架：本地缓存</description>
+    <name>quinn-service-file-miniio</name>
+    <description>Quinn服务框架：文件操作MINIIO</description>
 
     <dependencies>
         <dependency>
@@ -24,13 +24,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-mq</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
         </dependency>
     </dependencies>
 

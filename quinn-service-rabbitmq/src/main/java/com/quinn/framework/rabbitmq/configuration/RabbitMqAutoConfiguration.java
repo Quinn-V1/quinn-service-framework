@@ -24,6 +24,12 @@ import java.util.Iterator;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+/**
+ * RabbitMQ 自动配置类
+ *
+ * @author Qunhua.Liao
+ * @since 2020-05-27
+ */
 @Configuration
 public class RabbitMqAutoConfiguration implements ApplicationContextAware, InitializingBean {
 
@@ -34,35 +40,35 @@ public class RabbitMqAutoConfiguration implements ApplicationContextAware, Initi
      */
     private final static int SERIALIZE_TYPE_JACKSON = 2;
 
-    @Value("${com.quinn-service.rabbitmq.autoListen:true}")
+    @Value("${com.quinn-service.mq.rabbitmq.auto-listen:true}")
     private boolean autoListen;
 
-    @Value("${com.quinn-service.rabbitmq.host:127.0.0.1}")
+    @Value("${com.quinn-service.mq.rabbitmq.thread-pool-size:2}")
+    private int coreTheadSize;
+
+    @Value("${com.quinn-service.mq.rabbitmq.host:127.0.0.1}")
     private String host;
 
-    @Value("${com.quinn-service.rabbitmq.port:5672}")
+    @Value("${com.quinn-service.mq.rabbitmq.port:5672}")
     private int port;
 
-    @Value("${com.quinn-service.rabbitmq.username:guest}")
-    private String username;
-
-    @Value("${com.quinn-service.rabbitmq.password:guest}")
-    private String password;
-
-    @Value("${com.quinn-service.rabbitmq.serialize.type:1}")
-    private int serializationType;
-
-    @Value("${com.quinn-service.rabbitmq.addresses:}")
+    @Value("${com.quinn-service.mq.rabbitmq.addresses:}")
     private String addresses;
 
-    @Value("${com.quinn-service.rabbitmq.vhost:/}")
-    private String vhost;
+    @Value("${com.quinn-service.mq.rabbitmq.username:guest}")
+    private String username;
 
-    @Value("${com.quinn-service.rabbitmq.maxChannels:25}")
+    @Value("${com.quinn-service.mq.rabbitmq.password:guest}")
+    private String password;
+
+    @Value("${com.quinn-service.mq.rabbitmq.virtual-host:/}")
+    private String virtualHost;
+
+    @Value("${com.quinn-service.mq.rabbitmq.serialize-type:1}")
+    private int serializationType;
+
+    @Value("${com.quinn-service.mq.rabbitmq.max-channels:25}")
     private int maxChannels;
-
-    @Value("${com.quinn-service.rabbitmq.thread-pool-size:2}")
-    private int coreTheadSize;
 
     @Bean
     public ConnectionFactory rabbitConnectionFactory() {
@@ -71,7 +77,7 @@ public class RabbitMqAutoConfiguration implements ApplicationContextAware, Initi
         cf.setPassword(password);
         cf.setUsername(username);
         cf.setPort(port);
-        cf.setVirtualHost(vhost);
+        cf.setVirtualHost(virtualHost);
         cf.setAddresses(addresses);
         cf.setChannelCacheSize(maxChannels);
         return cf;
@@ -98,7 +104,8 @@ public class RabbitMqAutoConfiguration implements ApplicationContextAware, Initi
             RabbitTemplate rabbitTemplate,
             RabbitAdmin admin) {
         if (serializationType == SERIALIZE_TYPE_JACKSON) {
-            return new SimpleRabbitServiceImpl(rabbitConnectionFactory, rabbitTemplate, admin, new Jackson2JsonMessageConverter());
+            return new SimpleRabbitServiceImpl(rabbitConnectionFactory, rabbitTemplate, admin,
+                    new Jackson2JsonMessageConverter());
         } else {
             return new SimpleRabbitServiceImpl(rabbitConnectionFactory, rabbitTemplate, admin);
         }

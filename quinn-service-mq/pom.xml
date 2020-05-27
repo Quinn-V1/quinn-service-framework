@@ -12,22 +12,17 @@
     </parent>
 
     <groupId>com.quinn.framework</groupId>
-    <artifactId>quinn-service-sdk</artifactId>
+    <artifactId>quinn-service-mq</artifactId>
     <version>1.0.0</version>
-    <name>quinn-service-sdk</name>
-    <description>Quinn服务框架：服务接口暴露层</description>
+    <name>quinn-service-mq</name>
+    <description>Quinn服务框架：消息队列接口层</description>
 
     <dependencies>
         <dependency>
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-api</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-openfeign</artifactId>-->
-<!--        </dependency>-->
-</dependencies>
+    </dependencies>
 
     <build>
         <resources>
