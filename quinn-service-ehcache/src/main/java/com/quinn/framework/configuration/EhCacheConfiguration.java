@@ -33,7 +33,7 @@ public class EhCacheConfiguration {
         return cacheManager;
     }
 
-    @Bean("ehCacheManager")
+    @Bean("ehCacheServiceManager")
     public CacheServiceManager ehCacheServiceManager(CacheManager ehCacheManager) {
         return new EhCacheServiceManager(ehCacheManager);
     }

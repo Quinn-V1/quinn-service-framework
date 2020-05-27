@@ -97,8 +97,8 @@ public class RabbitMqAutoConfiguration implements ApplicationContextAware, Initi
         return admin;
     }
 
-    @Bean
     @Autowired
+    @Bean(name = {"rabbitMQService", "mqService"})
     public MqService rabbitMQService(
             ConnectionFactory rabbitConnectionFactory,
             RabbitTemplate rabbitTemplate,

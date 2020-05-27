@@ -17,8 +17,11 @@ import javax.annotation.Resource;
  * @author Qunhua.Liao
  * @since 2020-05-27
  */
-@Component
 public class MqWriteEntityServiceInterceptor implements EntityServiceInterceptor {
+
+    public MqWriteEntityServiceInterceptor(MqService mqService) {
+        this.mqService = mqService;
+    }
 
     @Value("com.quinn-service.cache-able-mq.exchange-name:")
     private String exchangeName;
