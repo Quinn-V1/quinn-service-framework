@@ -28,6 +28,7 @@
         <module>quinn-service-file-miniio</module>
         <module>quinn-service-jasypt</module>
         <module>quinn-service-mq</module>
+        <module>quinn-service-rabbitmq</module>
         <module>quinn-service-redis</module>
         <module>quinn-service-server</module>
         <module>quinn-service-security</module>

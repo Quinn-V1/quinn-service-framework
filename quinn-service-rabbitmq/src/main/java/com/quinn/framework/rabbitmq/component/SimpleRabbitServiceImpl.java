@@ -82,7 +82,10 @@ public class SimpleRabbitServiceImpl implements MqService {
 
     @Override
     public BaseResult sendDirect(Object data, String... queueNames) {
-        return send(data, ExchangeTypeEnum.DIRECT.name(), StringConstant.ALL_OF_DATA, null, queueNames);
+        for (String queueName : queueNames) {
+            send(data, ExchangeTypeEnum.DIRECT.name(), queueName, queueName, queueName);
+        }
+        return BaseResult.SUCCESS;
     }
 
     @Override

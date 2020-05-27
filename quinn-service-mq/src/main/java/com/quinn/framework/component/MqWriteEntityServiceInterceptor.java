@@ -26,8 +26,8 @@ public class MqWriteEntityServiceInterceptor implements EntityServiceInterceptor
     @Value("com.quinn-service.cache-able-mq.exchange-name:")
     private String exchangeName;
 
-    @Value("com.quinn-service.cache-able-mq.queen-name:")
-    private String[] queenNames;
+    @Value("com.quinn-service.cache-able-mq.queue-name:")
+    private String[] queueNames;
 
     @Resource
     private MqService mqService;

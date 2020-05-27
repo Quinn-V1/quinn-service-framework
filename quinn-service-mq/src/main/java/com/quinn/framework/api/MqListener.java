@@ -1,7 +1,5 @@
 package com.quinn.framework.api;
 
-import com.quinn.util.base.model.BaseResult;
-
 /**
  * 消息队列监听器（被动方）
  *
@@ -22,7 +20,7 @@ public interface MqListener {
      * @param message 消息体
      * @return 处理结果
      */
-    BaseResult handleMessage(Object message);
+    void handleMessage(Object message);
 
     /**
      * 获取消息监听对象

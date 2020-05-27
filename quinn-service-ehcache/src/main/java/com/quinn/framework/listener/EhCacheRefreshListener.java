@@ -1,9 +1,10 @@
 package com.quinn.framework.listener;
 
-import com.quinn.framework.api.MqListener;
+import com.quinn.framework.api.AbstractMqListener;
 import com.quinn.framework.api.cache.CacheServiceManager;
-import com.quinn.util.base.model.BaseResult;
+import com.quinn.framework.api.entityflag.CacheAble;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,26 +16,26 @@ import javax.annotation.Resource;
  * @since 2020-05-27
  */
 @Component
-public class EhCacheRefreshListener implements MqListener {
+public class EhCacheRefreshListener extends AbstractMqListener<CacheAble> {
+
+    @Value("${com.quinn-service.cache.ehcache.refresh-mq-name:eh-cache-refresh-listener}")
+    private String queueName;
+
+    @Value("${com.quinn-service.cache.ehcache.keys-namespace:}")
+    private String keysNamespace;
 
     @Resource
     @Qualifier("ehCacheServiceManager")
     private CacheServiceManager ehCacheServiceManager;
 
     @Override
-    public BaseResult handleMessage(Object message) {
-        System.out.println(message);
-        return BaseResult.SUCCESS;
+    public void doHandleMessage(CacheAble object) {
+        ehCacheServiceManager.refresh("ehCacheAllService", keysNamespace, object.cacheKey(), object);
     }
 
     @Override
-    public String getTargetName() {
-        return "eh-cache-refresh-listener";
+    public void afterPropertiesSet() {
+        setTargetName(queueName);
+        setListenerMode(ACK_MODE_AUTO);
     }
-
-    @Override
-    public int getListenerMode() {
-        return ACK_MODE_AUTO;
-    }
-
 }

@@ -1,13 +1,16 @@
 package com.quinn.framework.controller;
 
-import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.licence.model.ApplicationInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 框架：状态查询
@@ -28,20 +31,20 @@ public class MonitorController extends AbstractController {
 
     @GetMapping("visit-times")
     @ApiOperation("访问次数")
-    BaseResult<String> visitTimes() {
-        return BaseResult.build(true).ofData(applicationInfo.getVisitTimes());
+    BaseResult<LongAdder> visitTimes() {
+        return BaseResult.success(applicationInfo.getVisitTimes());
     }
 
     @GetMapping("remain-request")
     @ApiOperation("持有请求数量")
-    BaseResult<String> remainRequests() {
-        return BaseResult.build(true).ofData(applicationInfo.getRemainRequestCount());
+    BaseResult<AtomicInteger> remainRequests() {
+        return BaseResult.success(applicationInfo.getRemainRequestCount());
     }
 
     @GetMapping("session-count")
     @ApiOperation("会话数量")
-    BaseResult<String> sessionCount() {
-        return BaseResult.build(true).ofData(applicationInfo.getSessionCount());
+    BaseResult<AtomicInteger> sessionCount() {
+        return BaseResult.success(applicationInfo.getSessionCount());
     }
 
 }

@@ -30,14 +30,14 @@ public class StatusRestfulController extends AbstractController {
             @ApiParam(name = "param", value = "参数", required = true)
             @RequestParam(name = "param") String param
     ) {
-        return BaseResult.build(true).ofData(param);
+        return BaseResult.success(param);
     }
 
     @GetMapping(value = "now-restful")
     @ApiOperation(value = "查询当前时间")
     public BaseResult<String> nowRestful(
     ) {
-        return BaseResult.build(true).ofData(BaseConverter.staticToString(LocalDateTime.now()));
+        return BaseResult.success(BaseConverter.staticToString(LocalDateTime.now()));
     }
 
 }

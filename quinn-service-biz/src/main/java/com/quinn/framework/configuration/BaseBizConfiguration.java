@@ -50,8 +50,8 @@ public class BaseBizConfiguration {
     @Value("${com.quinn-service.strategy.thread.max-size:10}")
     private int maxThreadSize;
 
-    @Value("${com.quinn-service.strategy.thread.queen-size:10}")
-    private int queenSize;
+    @Value("${com.quinn-service.strategy.thread.queue-size:10}")
+    private int queueSize;
 
     @Value("${com.quinn-service.i18n.baseName:classpath*:i18n/msg}")
     private String baseNames;
@@ -108,7 +108,7 @@ public class BaseBizConfiguration {
     @ConditionalOnMissingBean(name = {"strategyExecutorService"})
     public ExecutorService strategyExecutorService() {
         return new ThreadPoolExecutor(coreTheadSize, maxThreadSize, 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(queenSize), new PrefixThreadFactory("strategy-pool-"));
+                new LinkedBlockingQueue<>(queueSize), new PrefixThreadFactory("strategy-pool-"));
     }
 
     @Bean

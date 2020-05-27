@@ -2,6 +2,7 @@ package com.quinn.framework.entity.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.api.entityflag.IdGenerateAble;
+import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
@@ -21,6 +22,21 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public abstract class BaseDO implements Serializable, IdGenerateAble {
+
+    /**
+     * 缓存主键分割符
+     */
+    public static final String CACHE_KEY_DELIMITER = BaseDTO.CACHE_KEY_DELIMITER;
+
+    /**
+     * 数据主键分割符
+     */
+    public static final String DATA_KEY_DELIMITER = BaseDTO.DATA_KEY_DELIMITER;
+
+    /**
+     * 属性主键分割符
+     */
+    public static final String PROPERTY_DELIMITER = BaseDTO.PROPERTY_DELIMITER;
 
     /**
      * 系统主键
@@ -181,6 +197,6 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     }
 
     public String cacheKey() {
-        return this.getClass().getSimpleName() + StringConstant.DELIMITER_OF_DATA_KEY + dataKey();
+        return this.getClass().getSimpleName() + DATA_KEY_DELIMITER + dataKey();
     }
 }

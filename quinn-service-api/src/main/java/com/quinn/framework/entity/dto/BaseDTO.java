@@ -26,6 +26,21 @@ import java.util.List;
 @Getter
 public abstract class BaseDTO<T> {
 
+    /**
+     * 缓存主键分割符
+     */
+    public static final String CACHE_KEY_DELIMITER = StringConstant.CHAR_COLON + StringConstant.CHAR_COLON;
+
+    /**
+     * 数据主键分割符
+     */
+    public static final String DATA_KEY_DELIMITER = StringConstant.CHAR_COLON;
+
+    /**
+     * 属性主键分割符
+     */
+    public static final String PROPERTY_DELIMITER = StringConstant.CHAR_POUND_SIGN;
+
     {
         // 默认不做查询条数限制
         limit = -1;
@@ -260,7 +275,7 @@ public abstract class BaseDTO<T> {
      * 逆向解析数据编码
      */
     public boolean dataKey(String dataKey) {
-        return dataKey(dataKey, StringConstant.CHAR_COLON);
+        return dataKey(dataKey, DATA_KEY_DELIMITER);
     }
 
     /**
@@ -278,14 +293,14 @@ public abstract class BaseDTO<T> {
         if (entityClass == null) {
             return null;
         }
-        return entityClass.getSimpleName() + StringConstant.CHAR_COLON + dataKey();
+        return entityClass.getSimpleName() + CACHE_KEY_DELIMITER + dataKey();
     }
 
     /**
      * 逆向解析缓存键
      */
     public void cacheKey(String cacheKey) {
-        cacheKey(cacheKey, StringConstant.CHAR_COLON);
+        cacheKey(cacheKey, DATA_KEY_DELIMITER);
     }
 
     /**
@@ -293,14 +308,14 @@ public abstract class BaseDTO<T> {
      */
     public void cacheKey(String cacheKey, String delimiter) {
         if (entityClass != null) {
-            cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + 1);
+            cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + CACHE_KEY_DELIMITER.length());
         }
-        dataKey(cacheKey);
+        dataKey(cacheKey, delimiter);
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + StringConstant.CHAR_COLON + dataKey();
+        return this.cacheKey();
     }
 
     /**

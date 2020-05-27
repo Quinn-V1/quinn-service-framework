@@ -2,6 +2,7 @@ package com.quinn.framework.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quinn.framework.api.ErrorHandler;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
@@ -68,7 +69,7 @@ public class DefaultErrorHandler implements ErrorHandler {
      * @param result    结果
      */
     public void generateMessage(Exception e, BaseResult result) {
-        result.setMessage(e.getClass().getName() + StringConstant.DELIMITER_OF_DATA_KEY + e.getMessage());
+        result.setMessage(e.getClass().getName() + StringConstant.CHAR_COLON + e.getMessage());
     }
 
 }

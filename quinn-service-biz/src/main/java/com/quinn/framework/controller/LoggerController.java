@@ -51,7 +51,7 @@ public class LoggerController extends AbstractController {
     @GetMapping(value = "query")
     @ApiOperation(value = "查询日志配置")
     public BaseResult queryLogLevel(@RequestParam String loggerName) {
-        return BaseResult.build(true).ofData(findLoggerContext().getLogger(loggerName).getEffectiveLevel().toString());
+        return BaseResult.success(findLoggerContext().getLogger(loggerName).getEffectiveLevel().toString());
     }
 
     /**

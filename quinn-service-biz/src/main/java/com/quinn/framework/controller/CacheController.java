@@ -5,10 +5,10 @@ import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * 缓存操作
@@ -31,7 +31,7 @@ public class CacheController extends AbstractController {
             @ApiParam(name = "key", value = "缓存键", required = true)
             @RequestParam(name = "key") String key
     ) {
-        return BaseResult.build(true).ofData(cacheAllService.get(key));
+        return BaseResult.success(cacheAllService.get(key));
     }
 
     @DeleteMapping(value = "delete")
@@ -63,7 +63,7 @@ public class CacheController extends AbstractController {
             @ApiParam(name = "pattern", value = "缓存键样式")
             @RequestParam(name = "pattern", required = false) String pattern
     ) {
-        return BaseResult.build(true).ofData(cacheAllService.keys(pattern));
+        return BaseResult.success(cacheAllService.keys(pattern));
     }
 
 }

@@ -41,7 +41,7 @@ public class ConfigurationController extends AbstractController {
         runtimeConfigurations.putAll(applicationInfo.getApplicationProperties());
 
         BaseConfigInfoReWriter.decryptProperties(runtimeConfigurations);
-        return BaseResult.build(true).ofData(runtimeConfigurations);
+        return BaseResult.success(runtimeConfigurations);
     }
 
     @GetMapping(value = "namespaces")
@@ -57,13 +57,13 @@ public class ConfigurationController extends AbstractController {
                 }
             }
         }
-        return BaseResult.build(true).ofData(ret);
+        return BaseResult.success(ret);
     }
 
     @GetMapping(value = "metadata")
     @ApiOperation("查询配置元数据")
     public BaseResult getApplicationConfigurationMetadata() {
-        return BaseResult.build(true).ofData(applicationInfo.getConfigMetadataMap());
+        return BaseResult.success(applicationInfo.getConfigMetadataMap());
     }
 
 }

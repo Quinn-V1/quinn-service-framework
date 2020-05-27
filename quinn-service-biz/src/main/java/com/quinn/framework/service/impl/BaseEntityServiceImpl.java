@@ -374,7 +374,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             BaseResult<VO> res = update(list.get(i).prepareForUpdate(SessionUtil.getUserKey(), allFlag));
             if (!res.isSuccess() && transaction) {
                 throw new DataOperationTransactionException(res.getMessage())
-                        .getMessageProp()
                         .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.UPDATE.name())
                         .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], TOClass.getName())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], list.size())

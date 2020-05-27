@@ -113,7 +113,7 @@ public class EmailSender implements MessageSender {
             testContent = "这是一封测试邮件";
         }
 
-        return BaseResult.build(true).ofData(this);
+        return BaseResult.success(this);
     }
 
     /**
