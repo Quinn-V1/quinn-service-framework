@@ -50,6 +50,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
             subject.checkPermission(path);
         } catch (AuthorizationException e) {
             MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.FORBIDDEN.value())
+                    .buildParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.name(), 1, 0)
                     .addParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path)
                     .exception(), request, response);
             return;
