@@ -3,7 +3,13 @@ package com.quinn.framework.component;
 import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.DataConverter;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.util.base.exception.KeyInfoMissException;
+import com.quinn.util.base.exception.MethodNotFoundException;
+import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.constant.NumberConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.cache.Cache;
@@ -31,11 +37,13 @@ public class QuinnCache<K, V> implements Cache<K, V> {
 
     private int expire = 0;
 
-    private String principalIdFieldName = "principal";
+    private String principalIdFieldName = ConfigConstant.DEFAULT_PRINCIPAL_ID_FIELD_NAME;
 
     public QuinnCache(CacheAllService cacheAllService, String prefix, int expire, String principalIdFieldName) {
         if (cacheAllService == null) {
-            throw new IllegalArgumentException("cacheBaseService cannot be null.");
+            throw new ParameterShouldNotEmpty()
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "cacheAllService")
+                    .exception();
         }
 
         this.cacheAllService = cacheAllService;
@@ -197,32 +205,40 @@ public class QuinnCache<K, V> implements Cache<K, V> {
 
         Method principalIdGetter = null;
         Method[] methods = principalObject.getClass().getMethods();
+
+        String methodName = "get" + this.principalIdFieldName.substring(0, 1).toUpperCase()
+                + this.principalIdFieldName.substring(1);
+
         for (Method m : methods) {
-            boolean isThisMethod = m.getName().equals("get" + this.principalIdFieldName.substring(0, 1).toUpperCase()
-                    + this.principalIdFieldName.substring(1));
+            boolean isThisMethod = m.getName().equals(methodName);
             if (isThisMethod) {
                 principalIdGetter = m;
                 break;
             }
         }
+
         if (principalIdGetter == null) {
-            // FIXME
-            throw new RuntimeException("");
+            throw new MethodNotFoundException()
+                    .addParam(CommonMessageEnum.METHOD_NOT_FOUND.paramNames[0], methodName)
+                    .addParam(CommonMessageEnum.METHOD_NOT_FOUND.paramNames[1],
+                            principalObject.getClass().getSimpleName())
+                    .exception()
+                    ;
         }
 
         try {
             Object idObj = principalIdGetter.invoke(principalObject);
             if (idObj == null) {
-                // FIXME
-                throw new RuntimeException("");
+                throw new KeyInfoMissException()
+                        .addParam(CommonMessageEnum.KEY_INFO_MISS.paramNames[0], methodName)
+                        .addParam(CommonMessageEnum.KEY_INFO_MISS.paramNames[1],
+                                principalObject.getClass().getSimpleName())
+                        .exception()
+                        ;
             }
             realKey = idObj.toString();
-        } catch (IllegalAccessException e) {
-            // FIXME
-            throw new RuntimeException("");
-        } catch (InvocationTargetException e) {
-            // FIXME
-            throw new RuntimeException("");
+        } catch (Exception e) {
+            throw new BaseBusinessException(e);
         }
 
         return realKey;

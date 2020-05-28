@@ -1,6 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.cache.CacheAllService;
+import com.quinn.util.base.constant.ConfigConstant;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
@@ -28,7 +29,7 @@ public class QuinnCacheManager implements CacheManager {
 
     private String keyPrefix = DEFAULT_CACHE_KEY_PREFIX;
 
-    public static final String DEFAULT_PRINCIPAL_ID_FIELD_NAME = "principal";
+    public static final String DEFAULT_PRINCIPAL_ID_FIELD_NAME = ConfigConstant.DEFAULT_PRINCIPAL_ID_FIELD_NAME;
 
     private String principalIdFieldName = DEFAULT_PRINCIPAL_ID_FIELD_NAME;
 

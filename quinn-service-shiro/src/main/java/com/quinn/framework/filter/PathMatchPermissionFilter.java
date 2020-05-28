@@ -53,6 +53,8 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
                     .addParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path)
                     .exception(), request, response);
             return;
+        } catch (Exception e) {
+            MultiErrorHandler.handleError(e, request, response);
         }
 
         filterChain.doFilter(request, response);

@@ -3,6 +3,7 @@ package com.quinn.framework.model;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.AuthInfo;
+import com.quinn.util.base.constant.ConfigConstant;
 
 /**
  * Shiro 权限对象适配器
@@ -33,7 +34,7 @@ public class DefaultAuthInfoAdapter implements AuthInfo<JSONObject> {
 
     @Override
     public Object getPrincipal() {
-        return realInfo.get("principal");
+        return realInfo.get(ConfigConstant.DEFAULT_PRINCIPAL_ID_FIELD_NAME);
     }
 
     @Override
