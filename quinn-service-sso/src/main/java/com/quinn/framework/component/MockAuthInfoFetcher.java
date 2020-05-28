@@ -9,6 +9,7 @@ import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.framework.util.enums.TokenTypeEnum;
 import com.quinn.util.base.BaseUtil;
 import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
@@ -43,19 +44,34 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
                 Map<String, DefaultPermission> principals = authInfo.getPrincipals();
                 BaseResult result = BaseResult.success(authInfo);
 
-                if (CollectionUtil.isEmpty(principals)) {
-                    result.ofLevel(MessageLevelEnum.WARN)
-                            .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
-                    ;
-                } else if (principals.size() == 1) {
-                    authInfo.setCurrentTenantCode(principals.keySet().iterator().next());
+                String tenantCode = tokenInfo.getTenantCode();
+                if (!StringUtil.isEmptyInFrame(tenantCode)) {
+                    if (CollectionUtil.isEmpty(principals)) {
+                        result.ofLevel(MessageLevelEnum.WARN)
+                                .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
+                        ;
+                    } else if (principals.containsKey(tenantCode)) {
+                        authInfo.setCurrentTenantCode(tenantCode);
+                    } else {
+                        result.ofLevel(MessageLevelEnum.WARN)
+                                .buildMessage(AuthMessageEnum.ERROR_TENANT.name(), 1, 0)
+                                .addParam(AuthMessageEnum.ERROR_TENANT.paramNames[0], tenantCode)
+                        ;
+                    }
                 } else {
-                    result.ofLevel(MessageLevelEnum.WARN)
-                            .buildMessage(AuthMessageEnum.MULTI_TENANT.name(), 1, 0)
-                            .addParam(AuthMessageEnum.MULTI_TENANT.paramNames[0], principals.size())
-                    ;
+                    if (CollectionUtil.isEmpty(principals)) {
+                        result.ofLevel(MessageLevelEnum.WARN)
+                                .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
+                        ;
+                    } else if (principals.size() == 1) {
+                        authInfo.setCurrentTenantCode(principals.keySet().iterator().next());
+                    } else {
+                        result.ofLevel(MessageLevelEnum.WARN)
+                                .buildMessage(AuthMessageEnum.MULTI_TENANT.name(), 1, 0)
+                                .addParam(AuthMessageEnum.MULTI_TENANT.paramNames[0], principals.size())
+                        ;
+                    }
                 }
-
                 return result;
             }
         }

@@ -1,6 +1,7 @@
 package com.quinn.framework.service.impl;
 
 import com.quinn.framework.api.*;
+import com.quinn.framework.exception.AuthInfoNotFoundException;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.framework.service.SsoService;
 import com.quinn.util.base.CollectionUtil;
@@ -57,6 +58,9 @@ public class DefaultSsoService implements SsoService {
         RuntimeException exception = null;
         try {
             authInfo = loginProcessor.login(token);
+            if (authInfo == null) {
+                throw new AuthInfoNotFoundException();
+            }
         } catch (RuntimeException e) {
             LOGGER.errorError("login error", e);
             exception = e;
@@ -73,8 +77,8 @@ public class DefaultSsoService implements SsoService {
             }
         }
 
-        if (authInfo == null) {
-            return BaseResult.fail();
+        if (exception != null) {
+            throw exception;
         }
 
         return BaseResult.success(authInfo);

@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/sso/*")
 @Api(tags = {"0ZY090系统：权限认证"})
-public class SsoController {
+public class SsoController extends AbstractController {
 
     @Resource
     private SsoService ssoService;

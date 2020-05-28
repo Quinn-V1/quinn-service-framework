@@ -1,6 +1,6 @@
 package com.quinn.framework.controller;
 
-import com.quinn.framework.handler.MultiErrorHandler;
+import com.quinn.framework.util.MultiErrorHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;

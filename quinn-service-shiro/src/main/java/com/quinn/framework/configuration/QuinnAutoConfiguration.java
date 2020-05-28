@@ -46,7 +46,7 @@ public class QuinnAutoConfiguration {
     @Value("${com.quinn-service.session.cookie-name:SESSIONID}")
     private String sessionIdCookieName;
 
-    @Value("${com.quinn-service.session.principal-field-name:userKey}")
+    @Value("${com.quinn-service.session.principal-field-name:principal}")
     private String principalIdFieldName;
 
     @Value("${com.quinn-service.session.error-max-limit:5}")
@@ -152,16 +152,6 @@ public class QuinnAutoConfiguration {
         securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
-
-//    @Bean
-//    public Filter pathMatchPermissionFilter() {
-//        return new PathMatchPermissionFilter();
-//    }
-//
-//    @Bean
-//    public Filter intranetFilter() {
-//        return new QuinnIntranetFilter();
-//    }
 
     @Bean
     @ConditionalOnMissingBean(ShiroFilterFactoryBean.class)

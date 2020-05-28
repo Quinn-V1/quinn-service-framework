@@ -18,7 +18,7 @@ import java.io.PrintWriter;
  * @author Qunhua.Liao
  * @since 2020-04-09
  */
-public class DefaultErrorHandler implements ErrorHandler {
+public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T> {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DefaultErrorHandler.class);
 
@@ -39,7 +39,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     @Override
-    public BaseResult handleError(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResult handleError(T e, HttpServletRequest request, HttpServletResponse response) {
         BaseResult result = new BaseResult();
         response.setHeader("Content-Type", "application/json;charset=utf-8");
         response.setContentType("application/json;charset=utf-8");
@@ -68,7 +68,7 @@ public class DefaultErrorHandler implements ErrorHandler {
      * @param e         错误
      * @param result    结果
      */
-    public void generateMessage(Exception e, BaseResult result) {
+    public void generateMessage(T e, BaseResult result) {
         result.setMessage(e.getClass().getName() + StringConstant.CHAR_COLON + e.getMessage());
     }
 

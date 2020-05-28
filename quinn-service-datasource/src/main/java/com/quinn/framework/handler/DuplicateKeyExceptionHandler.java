@@ -16,12 +16,12 @@ import java.util.regex.Pattern;
  * @since 2020-04-09
  */
 @Component("duplicateKeyExceptionHandler")
-public class DuplicateKeyExceptionHandler extends DefaultErrorHandler {
+public class DuplicateKeyExceptionHandler extends DefaultErrorHandler<DuplicateKeyException> {
 
     private static final Pattern PATTERN = Pattern.compile("(Duplicate entry ')(.*)(' for key ')(.*)(')");
 
     @Override
-    public void generateMessage(Exception e, BaseResult result) {
+    public void generateMessage(DuplicateKeyException e, BaseResult result) {
         Matcher matcher = PATTERN.matcher(e.getMessage());
         if (matcher.find()) {
             result.setMessage("索引" + matcher.group(4) + "【" + matcher.group(2) + "】重复");

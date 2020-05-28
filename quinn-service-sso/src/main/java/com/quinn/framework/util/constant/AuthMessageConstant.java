@@ -1,6 +1,7 @@
 package com.quinn.framework.util.constant;
 
 import com.quinn.util.constant.CommonParamName;
+import static com.quinn.framework.util.constant.AuthParamName.*;
 
 /**
  * 权限相关常量
@@ -9,21 +10,6 @@ import com.quinn.util.constant.CommonParamName;
  * @since 2020-04-13
  */
 public interface AuthMessageConstant {
-
-    /**
-     * 参数名：环境
-     */
-    String PARAM_NAME_PROFILE = "profile";
-
-    /**
-     * 参数名：校验类型
-     */
-    String PARAM_NAME_AUTH_TYPE = "authType";
-
-    /**
-     * 参数名：校验类型
-     */
-    String PARAM_NAME_FUNCTION_KEY = "functionKey";
 
     /**
      * 校验类型不支持异常描述
@@ -45,6 +31,11 @@ public interface AuthMessageConstant {
      * 当前用户未分配租户
      */
     String DESC_NO_TENANT = "当前用户未分配租户";
+
+    /**
+     * 当前用户未分配租户【${tenantCode}】
+     */
+    String DESC_ERROR_TENANT = "当前用户未分配租户【${" + PARAM_NAME_TENANT_CODE + "}】";
 
     /**
      * 当前用户存在多【${dataSize}】个租户

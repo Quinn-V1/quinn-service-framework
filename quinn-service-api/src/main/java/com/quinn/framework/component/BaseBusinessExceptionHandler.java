@@ -1,4 +1,4 @@
-package com.quinn.framework.handler.exception;
+package com.quinn.framework.component;
 
 import com.quinn.framework.model.DefaultErrorHandler;
 import com.quinn.framework.util.SessionUtil;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
  * @since 2020-05-26
  */
 @Component("baseBusinessExceptionHandler")
-public class BaseBusinessExceptionHandler extends DefaultErrorHandler {
+public class BaseBusinessExceptionHandler<T extends BaseBusinessException> extends DefaultErrorHandler<T> {
 
     @Override
-    public void generateMessage(Exception e, BaseResult result) {
+    public void generateMessage(T e, BaseResult result) {
         String message = MultiMessageResolver.resolveMessageProp(SessionUtil.getLocale(),
-                ((BaseBusinessException) e).getMessageProp());
+                e.getMessageProp());
         result.setMessage(StringUtil.isEmpty(message) ? e.getMessage() : message);
     }
 

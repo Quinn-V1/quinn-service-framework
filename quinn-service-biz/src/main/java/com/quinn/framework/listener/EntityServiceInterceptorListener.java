@@ -2,7 +2,7 @@ package com.quinn.framework.listener;
 
 import com.quinn.framework.api.ErrorHandler;
 import com.quinn.framework.api.EntityServiceInterceptor;
-import com.quinn.framework.handler.MultiErrorHandler;
+import com.quinn.framework.util.MultiErrorHandler;
 import com.quinn.framework.service.BaseEntityService;
 import com.quinn.util.base.ClassUtil;
 import com.quinn.util.base.CollectionUtil;

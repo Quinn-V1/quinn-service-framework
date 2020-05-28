@@ -1,6 +1,5 @@
 package com.quinn.framework.exception;
 
-import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.exception.BaseBusinessException;
 
 /**
@@ -11,9 +10,10 @@ import com.quinn.util.base.exception.BaseBusinessException;
  */
 public class UnauthorizedException extends BaseBusinessException {
 
-    {
-        buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.name(), 0, 0);
-    }
+    /**
+     * 状态码
+     */
+    private int statusCode;
 
     public UnauthorizedException() {
         super();
@@ -27,4 +27,12 @@ public class UnauthorizedException extends BaseBusinessException {
         super(message, throwable);
     }
 
+    public UnauthorizedException ofStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+        return this;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
 }

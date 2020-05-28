@@ -15,12 +15,12 @@ import java.util.regex.Pattern;
  * @since 2020-04-29
  */
 @Component("dateTimeParseExceptionHandler")
-public class DateTimeParseExceptionHandler extends DefaultErrorHandler {
+public class DateTimeParseExceptionHandler extends DefaultErrorHandler<DateTimeParseException> {
 
     private static final Pattern PATTERN = Pattern.compile("(Text ')(.*)(' could not be parsed at index )(\\d*)");
 
     @Override
-    public void generateMessage(Exception e, BaseResult result) {
+    public void generateMessage(DateTimeParseException e, BaseResult result) {
         Matcher matcher = PATTERN.matcher(e.getMessage());
         if (matcher.find()) {
             result.setMessage("日期【" + matcher.group(2) + "】格式错误，位置【" + matcher.group(4) + "】");

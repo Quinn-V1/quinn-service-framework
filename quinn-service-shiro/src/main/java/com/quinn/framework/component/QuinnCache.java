@@ -31,7 +31,7 @@ public class QuinnCache<K, V> implements Cache<K, V> {
 
     private int expire = 0;
 
-    private String principalIdFieldName = "userKey";
+    private String principalIdFieldName = "principal";
 
     public QuinnCache(CacheAllService cacheAllService, String prefix, int expire, String principalIdFieldName) {
         if (cacheAllService == null) {

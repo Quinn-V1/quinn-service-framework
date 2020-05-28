@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Qunhua.Liao
  * @since 2020-04-09
  */
-public interface ErrorHandler extends ClassDivAble {
+public interface ErrorHandler<T extends Exception> extends ClassDivAble {
 
     /**
      * 处理异常
@@ -22,6 +22,6 @@ public interface ErrorHandler extends ClassDivAble {
      * @param response  响应
      * @return
      */
-    BaseResult handleError(Exception e, HttpServletRequest request, HttpServletResponse response);
+    BaseResult handleError(T e, HttpServletRequest request, HttpServletResponse response);
 
 }

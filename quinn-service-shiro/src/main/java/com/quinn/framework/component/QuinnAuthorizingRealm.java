@@ -39,7 +39,7 @@ public class QuinnAuthorizingRealm extends AuthorizingRealm {
         TokenInfo tokenInfo = ModelTransferUtil.authenticationTokenToTokenInfo(authenticationToken);
         BaseResult<AuthInfo> authInfo = MultiAuthInfoFetcher.fetchInfo(tokenInfo);
         if (!authInfo.isSuccess()) {
-            throw new AuthInfoNotFoundException().getMessageProp().ofPrevProp(authInfo.getMessageProp()).exception();
+            throw new AuthInfoNotFoundException().buildParam(authInfo.getMessageProp()).exception();
         }
         return new SimpleAuthenticationInfo(authInfo.getData(), tokenInfo.getCredentials(), getName());
     }

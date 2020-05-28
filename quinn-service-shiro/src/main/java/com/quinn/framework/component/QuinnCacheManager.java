@@ -28,7 +28,7 @@ public class QuinnCacheManager implements CacheManager {
 
     private String keyPrefix = DEFAULT_CACHE_KEY_PREFIX;
 
-    public static final String DEFAULT_PRINCIPAL_ID_FIELD_NAME = "userKey";
+    public static final String DEFAULT_PRINCIPAL_ID_FIELD_NAME = "principal";
 
     private String principalIdFieldName = DEFAULT_PRINCIPAL_ID_FIELD_NAME;
 

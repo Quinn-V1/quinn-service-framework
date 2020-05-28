@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/tenant/*")
 @Api(tags = {"0ZY091系统：权限租户"})
-public class TenantController {
+public class TenantController extends AbstractController {
 
     @Resource
     private SsoService ssoService;

@@ -1,4 +1,4 @@
-package com.quinn.framework.handler;
+package com.quinn.framework.util;
 
 import com.quinn.framework.api.ErrorHandler;
 import com.quinn.framework.model.DefaultErrorHandler;
@@ -50,7 +50,7 @@ public class MultiErrorHandler {
 
         Throwable cause = e.getCause();
         if (cause instanceof Exception) {
-            handleError((Exception) cause, request, response);
+            return handleError((Exception) cause, request, response);
         }
 
         LOGGER.errorError("Error {0}[{1}] handle by default", e, e.getClass().getName(),
