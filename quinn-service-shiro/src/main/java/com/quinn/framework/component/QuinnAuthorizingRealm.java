@@ -2,6 +2,7 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.TokenInfo;
+import com.quinn.framework.exception.AuthInfoNotFoundException;
 import com.quinn.framework.model.AuthInfoFactory;
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.framework.model.QuinnAuthorizationInfoAdapter;
@@ -37,9 +38,8 @@ public class QuinnAuthorizingRealm extends AuthorizingRealm {
 
         TokenInfo tokenInfo = ModelTransferUtil.authenticationTokenToTokenInfo(authenticationToken);
         BaseResult<AuthInfo> authInfo = MultiAuthInfoFetcher.fetchInfo(tokenInfo);
-        if (authInfo == null) {
-            // FIXME 抛出正确异常
-            throw new BaseBusinessException(authInfo.getMessage());
+        if (!authInfo.isSuccess()) {
+            throw new AuthInfoNotFoundException().getMessageProp().ofPrevProp(authInfo.getMessageProp()).exception();
         }
         return new SimpleAuthenticationInfo(authInfo.getData(), tokenInfo.getCredentials(), getName());
     }

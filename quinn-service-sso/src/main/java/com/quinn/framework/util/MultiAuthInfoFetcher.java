@@ -3,8 +3,10 @@ package com.quinn.framework.util;
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.AuthInfoFetcher;
 import com.quinn.framework.api.TokenInfo;
+import com.quinn.framework.exception.AuthTypeNotSupportException;
 import com.quinn.framework.model.DefaultPermission;
-import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.framework.util.enums.AuthMessageEnum;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 
@@ -26,6 +28,9 @@ public final class MultiAuthInfoFetcher {
     private static final Map<String, AuthInfoFetcher> AUTH_INFO_FETCHER_MAP = new HashMap<>();
 
     private static final Map<Class, AuthInfoFetcher> AUTH_INFO_FETCHER_MAP_CLASS = new HashMap<>();
+
+    private static final String activeProfile = System.getProperty(ConfigConstant.PROP_KEY_OF_ACTIVE_PROFILE,
+            ConfigConstant.DEFAULT_ACTIVE_PROFILE);
 
     /**
      * 添加授权信息获取器
@@ -86,8 +91,11 @@ public final class MultiAuthInfoFetcher {
     private static AuthInfoFetcher pickAuthInfoFetcher(String type) {
         AuthInfoFetcher authInfoFetcher = AUTH_INFO_FETCHER_MAP.get(type);
         if (authInfoFetcher == null) {
-            // FIXME 抛出实际异常
-            throw new BaseBusinessException();
+            throw new AuthTypeNotSupportException()
+                    .addParamI8n(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.paramNames[0], activeProfile)
+                    .addParamI8n(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.paramNames[1], type)
+                    .exception()
+                    ;
         }
         return authInfoFetcher;
     }
@@ -101,8 +109,11 @@ public final class MultiAuthInfoFetcher {
     private static AuthInfoFetcher pickAuthInfoFetcher(Class type) {
         AuthInfoFetcher authInfoFetcher = AUTH_INFO_FETCHER_MAP_CLASS.get(type);
         if (authInfoFetcher == null) {
-            // FIXME 抛出实际异常
-            throw new BaseBusinessException();
+            throw new AuthTypeNotSupportException()
+                    .addParamI8n(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.paramNames[0], activeProfile)
+                    .addParamI8n(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.paramNames[1], type.getSimpleName())
+                    .exception()
+                    ;
         }
         return authInfoFetcher;
     }

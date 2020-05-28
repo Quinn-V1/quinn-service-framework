@@ -1,6 +1,6 @@
 package com.quinn.framework.exception;
 
-import com.quinn.framework.util.enums.AuthExceptionEnum;
+import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.exception.BaseBusinessException;
 
 /**
@@ -12,7 +12,7 @@ import com.quinn.util.base.exception.BaseBusinessException;
 public class AuthTypeNotSupportException extends BaseBusinessException {
 
     {
-        buildParam(AuthExceptionEnum.AUTH_TYPE_NOT_SUPPORT.name(), 1, 2);
+        buildParam(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.name(), 0, 2);
     }
 
     public AuthTypeNotSupportException() {

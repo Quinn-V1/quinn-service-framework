@@ -1,6 +1,6 @@
 package com.quinn.framework.exception;
 
-import com.quinn.framework.util.enums.AuthExceptionEnum;
+import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.exception.BaseBusinessException;
 
 /**
@@ -12,7 +12,7 @@ import com.quinn.util.base.exception.BaseBusinessException;
 public class OverAuthorizedAccessException extends BaseBusinessException {
 
     {
-        buildParam(AuthExceptionEnum.OVER_AUTHORIZED_ACCESS.name(), 1, 0);
+        buildParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.name(), 1, 0);
     }
 
     public OverAuthorizedAccessException() {

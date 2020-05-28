@@ -1,6 +1,6 @@
 package com.quinn.framework.exception;
 
-import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.enums.CommonMessageEnum;
 
 /**
  * 数据操作事务异常
@@ -11,7 +11,7 @@ import com.quinn.util.base.enums.CommMessageEnum;
 public class DataOperationTransactionException extends ServiceException {
 
     {
-        buildParam(CommMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED.name(), 2, 2);
+        buildParam(CommonMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED.name(), 2, 2);
     }
 
     public DataOperationTransactionException() {

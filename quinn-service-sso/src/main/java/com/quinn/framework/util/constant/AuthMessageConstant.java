@@ -1,12 +1,14 @@
 package com.quinn.framework.util.constant;
 
+import com.quinn.util.constant.CommonParamName;
+
 /**
  * 权限相关常量
  *
  * @author Qunhua.Liao
  * @since 2020-04-13
  */
-public interface AuthConstant {
+public interface AuthMessageConstant {
 
     /**
      * 参数名：环境
@@ -38,5 +40,20 @@ public interface AuthConstant {
      * 越权访问
      */
     String ERROR_OVER_AUTHORIZED_ACCESS = "尚未取得功能【${" + PARAM_NAME_FUNCTION_KEY + "}】的访问权限，请联系管理员";
+
+    /**
+     * 当前用户未分配租户
+     */
+    String DESC_NO_TENANT = "当前用户未分配租户";
+
+    /**
+     * 当前用户存在多【${dataSize}】个租户
+     */
+    String DESC_MULTI_TENANT = "当前用户存在多【${" + CommonParamName.PARAM_DATA_SIZE + "}】个租户";
+
+    /**
+     * 用户名或密码不匹配
+     */
+    String DESC_AUTH_INFO_NOT_FOUND = "用户名或密码不匹配";
 
 }

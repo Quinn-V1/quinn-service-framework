@@ -5,10 +5,14 @@ import com.quinn.framework.api.AuthInfoFetcher;
 import com.quinn.framework.api.TokenInfo;
 import com.quinn.framework.model.DefaultAuthInfo;
 import com.quinn.framework.model.DefaultPermission;
+import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.framework.util.enums.TokenTypeEnum;
 import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
+import com.quinn.util.constant.enums.MessageLevelEnum;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -36,11 +40,30 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
 
         for (DefaultAuthInfo authInfo : authInfos) {
             if (BaseUtil.equals(authInfo.getPrincipal(), tokenInfo.getPrincipal())) {
-                return BaseResult.success(authInfo);
+                Map<String, DefaultPermission> principals = authInfo.getPrincipals();
+                BaseResult result = BaseResult.success(authInfo);
+
+                if (CollectionUtil.isEmpty(principals)) {
+                    result.ofLevel(MessageLevelEnum.WARN)
+                            .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
+                    ;
+                } else if (principals.size() == 1) {
+                    authInfo.setCurrentTenantCode(principals.keySet().iterator().next());
+                } else {
+                    result.ofLevel(MessageLevelEnum.WARN)
+                            .buildMessage(AuthMessageEnum.MULTI_TENANT.name(), 1, 0)
+                            .addParam(AuthMessageEnum.MULTI_TENANT.paramNames[0], principals.size())
+                    ;
+                }
+
+                return result;
             }
         }
 
-        return BaseResult.fail();
+        return BaseResult.fail()
+                .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                .addParamI8n(CommonMessageEnum.RESULT_NOT_FOUND.paramNames[0], DefaultAuthInfo.class.getSimpleName())
+                .result();
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.quinn.util.base.factory.LicenceClassLoader;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.LicenceInfo;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.constant.enums.LicenceExceptionType;
 import com.quinn.util.constant.enums.SystemExitTypeEnum;
 import com.quinn.util.licence.model.ApplicationInfo;
@@ -45,7 +45,7 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
 
         if (resource == null) {
             Integer errCode = LicenceExceptionType.UNAUTHORIZED.code + SystemExitTypeEnum.LICENCE_ERROR.code;
-            System.err.println(CommMessageEnum.LICENCE_EXCEPTION.name() + "[" + errCode + "]");
+            System.err.println(CommonMessageEnum.LICENCE_EXCEPTION.name() + "[" + errCode + "]");
             System.exit(errCode);
         }
 
@@ -54,7 +54,7 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
 
         if (!init.isSuccess()) {
             Integer errCode = LicenceExceptionType.FILE_DESTROYED.code + SystemExitTypeEnum.LICENCE_ERROR.code;
-            System.err.println(CommMessageEnum.LICENCE_EXCEPTION.name() + "[" + errCode + "]");
+            System.err.println(CommonMessageEnum.LICENCE_EXCEPTION.name() + "[" + errCode + "]");
             System.exit(errCode);
         }
 

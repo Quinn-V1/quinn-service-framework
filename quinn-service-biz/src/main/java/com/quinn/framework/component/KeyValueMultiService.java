@@ -9,7 +9,7 @@ import com.quinn.util.base.api.KeyValue;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.enums.CommonMessageEnum;
 
 import java.util.List;
 import java.util.Map;
@@ -57,8 +57,8 @@ public final class KeyValueMultiService {
     public static <K extends KeyValue> BaseResult<PageInfo<K>> pageByMap(Map condition) {
         String dataType = (String) condition.get("dataType");
         if (StringUtil.isEmpty(dataType)) {
-            return BaseResult.fail().buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType")
+            return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType")
                     .result();
         }
 
@@ -76,8 +76,8 @@ public final class KeyValueMultiService {
     public static <K extends KeyValue> BaseResult<List<K>> selectByMap(Map condition) {
         String dataType = (String) condition.get("dataType");
         if (StringUtil.isEmpty(dataType)) {
-            return BaseResult.fail().buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType")
+            return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType")
                     .result();
         }
 
@@ -95,16 +95,16 @@ public final class KeyValueMultiService {
     @Strategy("KeyValueMultiService.get")
     public static <K extends KeyValue> BaseResult<K> get(String dataType, String dataKey) {
         if (StringUtil.isEmpty(dataType) || StringUtil.isEmpty(dataKey)) {
-            return BaseResult.fail().buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType or dataKey")
+            return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType or dataKey")
                     .result();
         }
 
         KeyValueService keyValueService = SpringBeanHolder.getKeyValueService(dataType);
         BaseDTO baseDTO = SpringBeanHolder.getDto(dataType, dataKey);
         if (baseDTO == null) {
-            return BaseResult.fail().buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType")
+            return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType")
                     .result();
         }
 
@@ -121,8 +121,8 @@ public final class KeyValueMultiService {
     @Strategy("KeyValueMultiService.show")
     public static BaseResult<String> show(String dataType, String dataKeys) {
         if (StringUtil.isEmpty(dataType) || StringUtil.isEmpty(dataKeys)) {
-            return BaseResult.fail().buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType or dataKeys")
+            return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType or dataKeys")
                     .result();
         }
 

@@ -6,9 +6,8 @@ import com.quinn.framework.api.MqService;
 import com.quinn.framework.api.MqTarget;
 import com.quinn.framework.util.enums.ExchangeTypeEnum;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.DataStyleNotMatchException;
-import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.StringConstant;
 import org.springframework.amqp.core.*;
@@ -92,8 +91,8 @@ public class SimpleRabbitServiceImpl implements MqService {
     public BaseResult send(Object data, MqTarget target) {
         if (!(target instanceof RabbitMqMessageTarget)) {
             throw new DataStyleNotMatchException()
-                    .addParamI8n(CommMessageEnum.DATA_STYLE_NOT_MATCHED.paramNames[0], RabbitMqMessageTarget.class)
-                    .addParam(CommMessageEnum.DATA_STYLE_NOT_MATCHED.paramNames[1], data)
+                    .addParamI8n(CommonMessageEnum.DATA_STYLE_NOT_MATCHED.paramNames[0], RabbitMqMessageTarget.class)
+                    .addParam(CommonMessageEnum.DATA_STYLE_NOT_MATCHED.paramNames[1], data)
                     .exception()
                     ;
         }

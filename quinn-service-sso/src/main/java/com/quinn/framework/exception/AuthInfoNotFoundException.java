@@ -9,21 +9,21 @@ import com.quinn.util.base.exception.BaseBusinessException;
  * @author Qunhua.Liao
  * @since 2020-05-26
  */
-public class UnauthorizedException extends BaseBusinessException {
+public class AuthInfoNotFoundException extends BaseBusinessException {
 
     {
-        buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.name(), 0, 0);
+        buildParam(AuthMessageEnum.AUTH_INFO_NOT_FOUND.name(), 0, 0);
     }
 
-    public UnauthorizedException() {
+    public AuthInfoNotFoundException() {
         super();
     }
 
-    public UnauthorizedException(String message) {
+    public AuthInfoNotFoundException(String message) {
         super(message);
     }
 
-    public UnauthorizedException(String message, Throwable throwable) {
+    public AuthInfoNotFoundException(String message, Throwable throwable) {
         super(message, throwable);
     }
 

@@ -4,7 +4,7 @@ import com.quinn.framework.api.DynamicFilter;
 import com.quinn.framework.exception.OverAuthorizedAccessException;
 import com.quinn.framework.exception.UnauthorizedException;
 import com.quinn.framework.handler.MultiErrorHandler;
-import com.quinn.framework.util.enums.AuthExceptionEnum;
+import com.quinn.framework.util.enums.AuthMessageEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -51,7 +51,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
         } catch (AuthorizationException e) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             MultiErrorHandler.handleError(new OverAuthorizedAccessException()
-                            .addParam(AuthExceptionEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path).exception()
+                            .addParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path).exception()
                     , request, response);
             return;
         }

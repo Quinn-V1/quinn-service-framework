@@ -7,7 +7,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.FileUtil;
 import com.quinn.util.base.StreamUtil;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.constant.enums.StorageTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +38,8 @@ public class LocalStorageServiceImpl implements StorageService {
         // 判断参数是否完整
         if (StringUtils.isEmpty(fullPath) || in == null) {
             return BaseResult.build(false)
-                    .buildMessage(CommMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "fullPath or inputStream")
+                    .buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "fullPath or inputStream")
                     .result();
         }
 
@@ -50,14 +50,14 @@ public class LocalStorageServiceImpl implements StorageService {
             if (file.isFile()) {
                 if (!file.delete()) {
                     return BaseResult.build(false)
-                            .buildMessage(CommMessageEnum.FILE_DELETE_FAIL.name(), 1, 0)
-                            .addParam(CommMessageEnum.FILE_DELETE_FAIL.paramNames[0], fullPath)
+                            .buildMessage(CommonMessageEnum.FILE_DELETE_FAIL.name(), 1, 0)
+                            .addParam(CommonMessageEnum.FILE_DELETE_FAIL.paramNames[0], fullPath)
                             .result();
                 }
             } else {
                 return BaseResult.build(false)
-                        .buildMessage(CommMessageEnum.FILE_OCCUPIED_BY_DIRECTORY.name(), 1, 0)
-                        .addParam(CommMessageEnum.FILE_OCCUPIED_BY_DIRECTORY.paramNames[0], fullPath)
+                        .buildMessage(CommonMessageEnum.FILE_OCCUPIED_BY_DIRECTORY.name(), 1, 0)
+                        .addParam(CommonMessageEnum.FILE_OCCUPIED_BY_DIRECTORY.paramNames[0], fullPath)
                         .result();
             }
         }
@@ -68,14 +68,14 @@ public class LocalStorageServiceImpl implements StorageService {
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 return BaseResult.build(false)
-                        .buildMessage(CommMessageEnum.FILE_DIRECTORY_CREATE_FAIL.name(), 1, 0)
-                        .addParam(CommMessageEnum.FILE_DIRECTORY_CREATE_FAIL.paramNames[0], filePath)
+                        .buildMessage(CommonMessageEnum.FILE_DIRECTORY_CREATE_FAIL.name(), 1, 0)
+                        .addParam(CommonMessageEnum.FILE_DIRECTORY_CREATE_FAIL.paramNames[0], filePath)
                         .result();
             }
         } else if (dir.isFile()) {
             return BaseResult.build(false)
-                    .buildMessage(CommMessageEnum.FILE_DIRECTORY_OCCUPIED_BY_FILE.name(), 1, 0)
-                    .addParam(CommMessageEnum.FILE_DIRECTORY_OCCUPIED_BY_FILE.paramNames[0], filePath)
+                    .buildMessage(CommonMessageEnum.FILE_DIRECTORY_OCCUPIED_BY_FILE.name(), 1, 0)
+                    .addParam(CommonMessageEnum.FILE_DIRECTORY_OCCUPIED_BY_FILE.paramNames[0], filePath)
                     .result();
         }
 
@@ -88,8 +88,8 @@ public class LocalStorageServiceImpl implements StorageService {
         } catch (IOException e) {
             LOGGER.error("Error occurs when upload File", e);
             return BaseResult.build(false)
-                    .buildMessage(CommMessageEnum.FILE_STREAM_OPERATION_FAIL.name(), 1, 0)
-                    .addParam(CommMessageEnum.FILE_STREAM_OPERATION_FAIL.paramNames[0], fullPath)
+                    .buildMessage(CommonMessageEnum.FILE_STREAM_OPERATION_FAIL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.FILE_STREAM_OPERATION_FAIL.paramNames[0], fullPath)
                     .result();
         } finally {
             StreamUtil.closeQuietly(in, os);

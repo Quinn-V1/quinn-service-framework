@@ -10,7 +10,7 @@ import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.exception.UnSupportedStrategyException;
 import com.quinn.util.base.model.AsyncSuccess;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.enums.CommMessageEnum;
+import com.quinn.util.base.enums.CommonMessageEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +101,7 @@ public class StrategyFactory {
             this.strategyExecutor = STRATEGY_EXECUTOR_MAP.get(scriptType);
             if (this.strategyExecutor == null) {
                 throw new UnSupportedStrategyException().getMessageProp()
-                        .addParam(CommMessageEnum.STRATEGY_NOT_SUPPORTED.paramNames[0], scriptType)
+                        .addParam(CommonMessageEnum.STRATEGY_NOT_SUPPORTED.paramNames[0], scriptType)
                         .exception();
             }
 
@@ -126,7 +126,7 @@ public class StrategyFactory {
                     if (BaseUtil.isEmpty(paramValue)) {
                         if (paramItem.isMustFlag()) {
                             throw new ParameterShouldNotEmpty().getMessageProp()
-                                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames, paramName)
+                                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames, paramName)
                                     .exception();
                         }
                     } else {
