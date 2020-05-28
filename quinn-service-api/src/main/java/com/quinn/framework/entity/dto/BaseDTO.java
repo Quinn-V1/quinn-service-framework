@@ -29,12 +29,12 @@ public abstract class BaseDTO<T> {
     /**
      * 缓存主键分割符
      */
-    public static final String CACHE_KEY_DELIMITER = StringConstant.CHAR_COLON + StringConstant.CHAR_COLON;
+    public static final String CACHE_KEY_DELIMITER = StringConstant.CHAR_COLON ;
 
     /**
      * 数据主键分割符
      */
-    public static final String DATA_KEY_DELIMITER = StringConstant.CHAR_COLON;
+    public static final String DATA_KEY_DELIMITER = StringConstant.CHAR_VERTICAL_BAR;
 
     /**
      * 属性主键分割符
