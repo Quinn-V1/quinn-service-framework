@@ -82,7 +82,7 @@ public class RedisConfiguration {
     @Value("${com.quinn-service.cache.redis.keys-normalize:true}")
     private boolean keysNormalize;
 
-    @Bean
+    @Bean("redisConnectionFactory")
     public RedisConnectionFactory redisConnectionFactory() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
@@ -130,14 +130,15 @@ public class RedisConfiguration {
     }
 
     @Bean("redisTemplate")
-    public RedisTemplate redisTemplate() {
-        RedisConnectionFactory connectionFactory = redisConnectionFactory();
+    public RedisTemplate redisTemplate(
+            RedisConnectionFactory redisConnectionFactory
+    ) {
         RedisTemplate redisTemplate = new RedisTemplate();
         RedisSerializer stringSerializer = new StringRedisSerializer();
 
         redisTemplate.setKeySerializer(stringSerializer);
         redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }
 

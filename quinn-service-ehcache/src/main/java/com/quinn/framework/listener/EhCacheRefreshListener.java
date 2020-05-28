@@ -11,11 +11,11 @@ import javax.annotation.Resource;
 
 /**
  * EhCache 缓存刷新监听器
+ * 如果主缓存是 EhCache 则需要这个
  *
  * @author Qunhua.Liao
  * @since 2020-05-27
  */
-@Component
 public class EhCacheRefreshListener extends AbstractMqListener<CacheAble> {
 
     @Value("${com.quinn-service.cache.ehcache.refresh-mq-name:eh-cache-refresh-listener}")

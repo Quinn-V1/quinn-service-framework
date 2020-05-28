@@ -8,12 +8,12 @@ package com.quinn.framework.util.enums;
  */
 public enum ExchangeTypeEnum {
 
-    // 交换器类型：订阅发送
+    // 交换器类型：订阅发送 - 有路由
     TOPIC,
 
-    // 直接发送
+    // 直接发送 - 抢签
     DIRECT,
 
-    // ？
+    // 1 - N 无路由
     FANOUT
 }

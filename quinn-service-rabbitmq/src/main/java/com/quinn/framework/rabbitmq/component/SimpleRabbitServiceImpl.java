@@ -106,75 +106,16 @@ public class SimpleRabbitServiceImpl implements MqService {
     @Override
     public BaseResult send(Object data, String exchangeType, String exchangeName, String routingKey,
                            String... queueNames) {
-
-        if (StringUtil.isEmpty(exchangeName)) {
-            throw new ParameterShouldNotEmpty()
-                    .addParam(CommMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], exchangeName)
-                    .exception()
-                    ;
+        if (StringUtil.isEmpty(exchangeName) || StringUtil.isEmpty(exchangeType)) {
+            exchangeType = ExchangeTypeEnum.DIRECT.name();
+            exchangeName = queueNames[0];
+            routingKey = queueNames[0];
         }
 
         this.declareExchangeAndQueue(exchangeType, exchangeName, routingKey, queueNames);
         rabbitTemplate.convertAndSend(exchangeName, routingKey, data);
 
         return BaseResult.SUCCESS;
-    }
-
-    /**
-     * 声明简单队列（监听过程中）
-     *
-     * @param queueName 队列名
-     */
-    private void ensureQueueDeclared(String queueName) {
-        if (!declaredQueues.contains(queueName)) {
-            Queue queue = new Queue(queueName);
-            queue.setAdminsThatShouldDeclare(rabbitAdmin);
-            rabbitAdmin.declareQueue(queue);
-            declaredQueues.add(queueName);
-        }
-    }
-
-    /**
-     * 声明复杂队列（发送过程中）
-     *
-     * @param exchangeName 交换器名
-     * @param exchangeType 交换器类型
-     * @param routingKey   路由名
-     * @param queueNames   队列名
-     */
-    private void declareExchangeAndQueue(String exchangeType, String exchangeName,
-                                         String routingKey, String... queueNames) {
-        if (queueNames != null && queueNames.length > 0) {
-            for (String queueName : queueNames) {
-                String key = exchangeName + StringConstant.CHAR_VERTICAL_BAR + queueName;
-
-                if (!declaredExchangeAndQueues.contains(key)) {
-                    Queue queue = new Queue(queueName);
-                    queue.setAdminsThatShouldDeclare(rabbitAdmin);
-                    rabbitAdmin.declareQueue(queue);
-
-                    // FANOUT 同 default
-                    switch (exchangeType) {
-                        case "TOPIC":
-                            TopicExchange topicExchange = new TopicExchange(exchangeName);
-                            rabbitAdmin.declareExchange(topicExchange);
-                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(routingKey));
-                            break;
-                        case "DIRECT":
-                            DirectExchange directExchange = new DirectExchange(exchangeName);
-                            rabbitAdmin.declareExchange(directExchange);
-                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(directExchange).with(routingKey));
-                            break;
-                        default:
-                            FanoutExchange exchange = new FanoutExchange(exchangeName);
-                            rabbitAdmin.declareExchange(exchange);
-                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange));
-                            break;
-                    }
-                    declaredExchangeAndQueues.add(key);
-                }
-            }
-        }
     }
 
     @Override
@@ -248,5 +189,62 @@ public class SimpleRabbitServiceImpl implements MqService {
         container.removeQueueNames(listener.getTargetName());
         declaredQueues.remove(listener.getTargetName());
         return BaseResult.SUCCESS;
+    }
+
+    /**
+     * 声明简单队列（监听过程中）
+     *
+     * @param queueName 队列名
+     */
+    private void ensureQueueDeclared(String queueName) {
+        if (!declaredQueues.contains(queueName)) {
+            Queue queue = new Queue(queueName);
+            queue.setAdminsThatShouldDeclare(rabbitAdmin);
+            rabbitAdmin.declareQueue(queue);
+            declaredQueues.add(queueName);
+        }
+    }
+
+    /**
+     * 声明复杂队列（发送过程中）
+     *
+     * @param exchangeName 交换器名
+     * @param exchangeType 交换器类型
+     * @param routingKey   路由名
+     * @param queueNames   队列名
+     */
+    private void declareExchangeAndQueue(String exchangeType, String exchangeName,
+                                         String routingKey, String... queueNames) {
+        if (queueNames != null && queueNames.length > 0) {
+            for (String queueName : queueNames) {
+                String key = exchangeName + StringConstant.CHAR_VERTICAL_BAR + queueName;
+
+                if (!declaredExchangeAndQueues.contains(key)) {
+                    Queue queue = new Queue(queueName);
+                    queue.setAdminsThatShouldDeclare(rabbitAdmin);
+                    rabbitAdmin.declareQueue(queue);
+
+                    // FANOUT 同 default
+                    switch (exchangeType) {
+                        case "TOPIC":
+                            TopicExchange topicExchange = new TopicExchange(exchangeName);
+                            rabbitAdmin.declareExchange(topicExchange);
+                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(routingKey));
+                            break;
+                        case "DIRECT":
+                            DirectExchange directExchange = new DirectExchange(exchangeName);
+                            rabbitAdmin.declareExchange(directExchange);
+                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(directExchange).with(routingKey));
+                            break;
+                        default:
+                            FanoutExchange exchange = new FanoutExchange(exchangeName);
+                            rabbitAdmin.declareExchange(exchange);
+                            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange));
+                            break;
+                    }
+                    declaredExchangeAndQueues.add(key);
+                }
+            }
+        }
     }
 }

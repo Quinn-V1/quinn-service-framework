@@ -23,10 +23,16 @@ public class MqWriteEntityServiceInterceptor implements EntityServiceInterceptor
         this.mqService = mqService;
     }
 
-    @Value("com.quinn-service.cache-able-mq.exchange-name:")
+    @Value("${com.quinn-service.mq.cache-able-exchange-type:FANOUT}")
+    private String exchangeType;
+
+    @Value("${com.quinn-service.mq.cache-able-exchange-name:eh-cache-refresh-listener}")
     private String exchangeName;
 
-    @Value("com.quinn-service.cache-able-mq.queue-name:")
+    @Value("${com.quinn-service.mq.cache-able-rout-key:}")
+    private String routKey;
+
+    @Value("${com.quinn-service.mq.cache-able-queue-name:eh-cache-refresh-listener}")
     private String[] queueNames;
 
     @Resource
@@ -44,6 +50,7 @@ public class MqWriteEntityServiceInterceptor implements EntityServiceInterceptor
 
     @Override
     public <V> void after(EntityServiceInterceptorChain chain, V t, BaseResult result) {
+        mqService.send(t, exchangeType, exchangeName, routKey, queueNames);
     }
 
 }
