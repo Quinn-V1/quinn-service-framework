@@ -6,6 +6,7 @@ import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.base.api.MethodInvokerTwoParam;
+import com.quinn.util.constant.StringConstant;
 
 import java.util.Collection;
 import java.util.Map;
@@ -25,6 +26,34 @@ public final class EntityUtil {
     }
 
     private EntityUtil() {
+    }
+
+    /**
+     * 包装 Key
+     *
+     * @param locale   语言
+     * @param cacheKey 数据编码
+     * @return 综合编码
+     */
+    public static String wrapperKey(String locale, String cacheKey, String delimiter) {
+        StringBuilder query = new StringBuilder();
+        query.append(locale).append(delimiter);
+
+        // 如果含冒号，说明是实体的 cacheKey
+        if (!cacheKey.contains(BaseDTO.CACHE_KEY_DELIMITER)) {
+            query.append(StringConstant.DATA_TYPE_OF_MESSAGE).append(delimiter);
+        } else {
+            cacheKey = cacheKey.replaceFirst(BaseDTO.CACHE_KEY_DELIMITER, delimiter);
+        }
+
+        if (!cacheKey.contains(BaseDTO.PROPERTY_DELIMITER)) {
+            query.append(cacheKey).append(delimiter).append(StringConstant.NONE_OF_DATA);
+        } else {
+            cacheKey = cacheKey.replace(BaseDTO.PROPERTY_DELIMITER, delimiter);
+            query.append(cacheKey);
+        }
+
+        return query.toString();
     }
 
     /**
