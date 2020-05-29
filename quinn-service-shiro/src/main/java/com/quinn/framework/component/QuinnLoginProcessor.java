@@ -57,7 +57,7 @@ public class QuinnLoginProcessor implements LoginProcessor {
 
         subject.logout();
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
-        realm.getAuthorizationCache().remove(authInfo.getPrincipal());
+        realm.getAuthorizationCache().remove(authInfo.authCacheKey());
         realm.getAuthenticationCache().remove(authInfo.getPrincipal());
 
         return BaseResult.SUCCESS;
