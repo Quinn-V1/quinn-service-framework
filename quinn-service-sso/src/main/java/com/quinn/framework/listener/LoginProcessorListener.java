@@ -1,4 +1,4 @@
-package com.quinn.framework.configuration;
+package com.quinn.framework.listener;
 
 import com.quinn.framework.api.LoginPostProcessor;
 import com.quinn.framework.api.LoginPrevProcessor;

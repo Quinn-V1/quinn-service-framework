@@ -1,7 +1,5 @@
 package com.quinn.framework.util.constant;
 
-import com.quinn.util.constant.CommonParamName;
-
 /**
  * 权限相关常量
  *

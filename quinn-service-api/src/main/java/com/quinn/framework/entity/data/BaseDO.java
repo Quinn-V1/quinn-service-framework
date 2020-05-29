@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.api.entityflag.IdGenerateAble;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.constant.NumberConstant;
-import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.DataStatusEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -75,10 +75,10 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     private Integer dataVersion;
 
     /**
-     * 归档标识
+     * 数据状态
      */
-    @ApiModelProperty("归档标识")
-    private Integer archiveFlag;
+    @ApiModelProperty("数据状态")
+    private Integer dataStatus;
 
     /**
      * 顶层组织
@@ -115,11 +115,14 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
      */
     public <T> T prepareForInsert(String userKey, String orgKey) {
         this.rootOrg = orgKey;
-        this.archiveFlag = NumberConstant.INT_ZERO;
         this.dataVersion = NumberConstant.INT_ONE;
         this.insertUser = this.updateUser = userKey;
         this.insertDateTime = this.updateDateTime = LocalDateTime.now();
         this.dbOperateType = DbOperateTypeEnum.INSERT;
+
+        if (this.dataStatus == null) {
+            this.dataStatus = DataStatusEnum.NORMAL.code;
+        }
         return (T) this;
     }
 

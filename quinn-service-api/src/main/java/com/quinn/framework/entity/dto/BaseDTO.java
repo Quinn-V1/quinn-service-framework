@@ -3,11 +3,12 @@ package com.quinn.framework.entity.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.util.enums.UpdateTypeEnum;
 import com.quinn.framework.util.enums.WrapperEnum;
-import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.DataStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,7 @@ public abstract class BaseDTO<T> {
     /**
      * 缓存主键分割符
      */
-    public static final String CACHE_KEY_DELIMITER = StringConstant.CHAR_COLON ;
+    public static final String CACHE_KEY_DELIMITER = StringConstant.CHAR_COLON;
 
     /**
      * 数据主键分割符
@@ -48,6 +49,10 @@ public abstract class BaseDTO<T> {
         // 默认查找有效数据
         dataVersionFrom = 1;
 
+        // 数据状态默认启用
+        dataStatusFrom = DataStatusEnum.NORMAL.code;
+
+        // 使用缓存
         useCache = true;
     }
 
@@ -147,10 +152,22 @@ public abstract class BaseDTO<T> {
     private LocalDateTime updateDateTimeTo;
 
     /**
-     * 归档标识
+     * 数据状态
      */
-    @ApiModelProperty("归档标识")
-    private Integer archiveFlag;
+    @ApiModelProperty("数据状态")
+    private Integer dataStatus;
+
+    /**
+     * 数据状态开始
+     */
+    @ApiModelProperty("数据状态开始")
+    private Integer dataStatusFrom;
+
+    /**
+     * 数据状态结束
+     */
+    @ApiModelProperty("数据状态结束")
+    private Integer dataStatusTo;
 
     /**
      * 创建用户

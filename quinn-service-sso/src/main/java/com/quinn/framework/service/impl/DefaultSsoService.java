@@ -4,6 +4,7 @@ import com.quinn.framework.api.*;
 import com.quinn.framework.exception.AuthInfoNotFoundException;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.framework.service.SsoService;
+import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
@@ -97,8 +98,9 @@ public class DefaultSsoService implements SsoService {
     public BaseResult listMyTenant() {
         List<StringKeyValue> result = loginProcessor.listMyTenant();
         if (CollectionUtil.isEmpty(result)) {
-            // FIXME 正确消息
-            return BaseResult.fail();
+            return BaseResult.fail()
+                    .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0 , 0)
+                    .result();
         }
 
         return BaseResult.success(result);

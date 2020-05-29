@@ -11,7 +11,7 @@
         t.UPDATE_USER updateUser,
         t.UPDATE_DATE_TIME updateDateTime,
         t.DATA_VERSION dataVersion,
-        t.ARCHIVE_FLAG archiveFlag
+        t.DATA_STATUS dataStatus
     </sql>
 
     <sql id="common_insert_column">
@@ -22,7 +22,7 @@
         UPDATE_USER,
         UPDATE_DATE_TIME,
         DATA_VERSION,
-        ARCHIVE_FLAG
+        DATA_STATUS
     </sql>
 
     <sql id="common_insert_value">
@@ -33,15 +33,15 @@
         #{updateUser,jdbcType=VARCHAR},
         #{updateDateTime,jdbcType=TIMESTAMP},
         #{dataVersion,jdbcType=NUMERIC},
-        #{archiveFlag,jdbcType=NUMERIC}
+        #{dataStatus,jdbcType=NUMERIC}
     </sql>
 
     <sql id="common_update_value">
         UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
         UPDATE_DATE_TIME = #{updateDateTime,jdbcType=TIMESTAMP},
         DATA_VERSION = #{dataVersion,jdbcType=NUMERIC},
-        <if test="archiveFlag != null" >
-            ARCHIVE_FLAG = #{archiveFlag,jdbcType=INTEGER},
+        <if test="dataStatus != null" >
+            DATA_STATUS = #{dataStatus,jdbcType=INTEGER},
         </if>
     </sql>
 
@@ -76,8 +76,14 @@
         <if test="dataVersionTo != null" >
             <![CDATA[ AND t.DATA_VERSION < #{dataVersionTo,jdbcType=INTEGER} ]]>
         </if>
-        <if test="archiveFlag != null" >
-            AND t.ARCHIVE_FLAG = #{archiveFlag,jdbcType=INTEGER}
+        <if test="dataStatus != null" >
+            AND t.DATA_STATUS = #{dataStatus,jdbcType=INTEGER}
+        </if>
+        <if test="dataStatusFrom != null" >
+            <![CDATA[ AND t.DATA_STATUS >= #{dataStatusFrom,jdbcType=INTEGER} ]]>
+        </if>
+        <if test="dataStatusTo != null" >
+            <![CDATA[ AND t.DATA_STATUS < #{dataStatusTo,jdbcType=INTEGER} ]]>
         </if>
     </sql>
 

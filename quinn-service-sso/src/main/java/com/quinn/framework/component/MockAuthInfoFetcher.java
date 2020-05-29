@@ -14,8 +14,6 @@ import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 import com.quinn.util.constant.enums.MessageLevelEnum;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +25,6 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-04-13
  */
-@Component("authInfoFetcher_MOCK_USER")
-@ConfigurationProperties(prefix = "com.quinn-service.mock-auth")
 public class MockAuthInfoFetcher implements AuthInfoFetcher {
 
     private List<DefaultAuthInfo> authInfos;
