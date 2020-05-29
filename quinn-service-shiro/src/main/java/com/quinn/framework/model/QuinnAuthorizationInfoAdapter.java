@@ -1,5 +1,6 @@
 package com.quinn.framework.model;
 
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.constant.enums.FunctionTypeEnum;
 import com.quinn.util.constant.enums.RoleTypeEnum;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -30,7 +31,8 @@ public class QuinnAuthorizationInfoAdapter extends DefaultPermission implements 
 
     @Override
     public Collection<String> getStringPermissions() {
-        return permissionOf(FunctionTypeEnum.INTERFACE.name());
+        return CollectionUtil.mergeSet(permissionOf(FunctionTypeEnum.INTERFACE.name()),
+                permissionOf(FunctionTypeEnum.MATCH.name()));
     }
 
     @Override

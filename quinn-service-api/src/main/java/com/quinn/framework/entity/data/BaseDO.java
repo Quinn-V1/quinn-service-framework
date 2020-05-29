@@ -200,6 +200,6 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     }
 
     public String cacheKey() {
-        return this.getClass().getSimpleName() + DATA_KEY_DELIMITER + dataKey();
+        return this.getClass().getSimpleName() + CACHE_KEY_DELIMITER + dataKey();
     }
 }
