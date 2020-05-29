@@ -1,8 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.CredentialsSubMatcher;
-import com.quinn.framework.model.DefaultAuthInfoAdapter;
-import com.quinn.framework.model.DefaultTokenInfoAdapter;
+import com.quinn.framework.model.AuthInfoFactory;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
@@ -25,28 +24,29 @@ public class MultiCredentialsMatcher implements CredentialsMatcher {
 
     @Override
     public boolean doCredentialsMatch(AuthenticationToken tokenInfo, AuthenticationInfo authInfo) {
-        CredentialsSubMatcher credentialsMatcher = credentialsMatcher(tokenInfo.getClass());
+        Object principal = authInfo.getPrincipals().getPrimaryPrincipal();
+        CredentialsSubMatcher credentialsMatcher = credentialsMatcher(principal.getClass());
         if (credentialsMatcher == null) {
             return true;
         }
 
-        return credentialsMatcher.doCredentialsMatch(new DefaultTokenInfoAdapter(tokenInfo),
-                new DefaultAuthInfoAdapter(authInfo.getPrincipals().getPrimaryPrincipal()));
+        return credentialsMatcher.doCredentialsMatch(AuthInfoFactory.generateTokenInfo(tokenInfo),
+                AuthInfoFactory.generate(principal));
     }
 
     /**
      * 根据令牌类型获取认证机制
      *
-     * @param tokenClass 令牌类型
+     * @param authClass 令牌类型
      */
-    private static CredentialsSubMatcher credentialsMatcher(Class tokenClass) {
-        CredentialsSubMatcher credentialsSubMatcher = AUTH_SUB_SERVICE_MAP.get(tokenClass);
+    private static CredentialsSubMatcher credentialsMatcher(Class authClass) {
+        CredentialsSubMatcher credentialsSubMatcher = AUTH_SUB_SERVICE_MAP.get(authClass);
         if (credentialsSubMatcher != null) {
             return credentialsSubMatcher;
         }
 
         for (Map.Entry<Class, CredentialsSubMatcher> entity : AUTH_SUB_SERVICE_MAP.entrySet()) {
-            if (tokenClass.isAssignableFrom(entity.getKey())) {
+            if (authClass.isAssignableFrom(entity.getKey())) {
                 return entity.getValue();
             }
         }
@@ -57,10 +57,11 @@ public class MultiCredentialsMatcher implements CredentialsMatcher {
     /**
      * 添加认证工具
      *
+     * @param clazz      适用类
      * @param subMatcher 认证工具
      */
-    public static void addCredentialMatcher(CredentialsSubMatcher subMatcher) {
-        AUTH_SUB_SERVICE_MAP.put(subMatcher.getDivClass(), subMatcher);
+    public static void addCredentialMatcher(Class<?> clazz, CredentialsSubMatcher subMatcher) {
+        AUTH_SUB_SERVICE_MAP.put(clazz, subMatcher);
     }
 
 }

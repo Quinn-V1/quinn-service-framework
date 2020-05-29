@@ -47,4 +47,9 @@ public interface AuthMessageConstant {
      */
     String DESC_AUTH_INFO_NOT_FOUND = "用户名、密码或者租户不匹配";
 
+    /**
+     * 用户名或密码不匹配
+     */
+    String DESC_AUTH_CREDENTIALS_MISMATCH = "用户名、密码或者租户不匹配";
+
 }

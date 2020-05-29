@@ -16,4 +16,11 @@ public interface AuthInfoSupplier<T> extends ClassDivAble {
      */
     AuthInfo supply(T object);
 
+    /**
+     * 密码比较器名称
+     *
+     * @return 密码比较器名称
+     */
+    String credentialsMatcherName();
+
 }

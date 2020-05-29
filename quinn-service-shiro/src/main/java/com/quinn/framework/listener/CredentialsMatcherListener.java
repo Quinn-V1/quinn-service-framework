@@ -1,16 +1,16 @@
 package com.quinn.framework.listener;
 
+import com.quinn.framework.api.AuthInfo;
+import com.quinn.framework.api.AuthInfoSupplier;
 import com.quinn.framework.api.CredentialsSubMatcher;
 import com.quinn.framework.component.MultiCredentialsMatcher;
-import com.quinn.util.base.model.ClassComparator;
-import com.quinn.util.constant.enums.OrderByTypeEnum;
+import com.quinn.framework.model.AuthInfoFactory;
+import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.base.exception.MandatoryBeanMissException;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,15 +24,26 @@ public class CredentialsMatcherListener implements ApplicationListener<ContextRe
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        ClassComparator comparator = new ClassComparator(OrderByTypeEnum.ASC);
         Map<String, CredentialsSubMatcher> credentialsSubMatcherMap
                 = contextRefreshedEvent.getApplicationContext().getBeansOfType(CredentialsSubMatcher.class);
-        if (credentialsSubMatcherMap != null) {
-            List<CredentialsSubMatcher> list = new ArrayList<>(credentialsSubMatcherMap.values());
-            Collections.sort(list, comparator);
 
-            for (CredentialsSubMatcher credentialsSubMatcher : credentialsSubMatcherMap.values()) {
-                MultiCredentialsMatcher.addCredentialMatcher(credentialsSubMatcher);
+        Map<Class, AuthInfoSupplier> authInfoSupplierMap = AuthInfoFactory.getAuthInfoSupplierMap();
+        for (Map.Entry<Class, AuthInfoSupplier> entry : authInfoSupplierMap.entrySet()) {
+            String beanName = entry.getValue().credentialsMatcherName();
+            CredentialsSubMatcher credentialsSubMatcher =
+                    credentialsSubMatcherMap.get(beanName);
+
+            if (credentialsSubMatcher == null) {
+                throw new MandatoryBeanMissException()
+                        .addParam(CommonMessageEnum.MANDATORY_BEAN_MISS.paramNames[0], beanName)
+                        .addParam(CommonMessageEnum.MANDATORY_BEAN_MISS.paramNames[1], CredentialsSubMatcher.class)
+                        .exception();
+            }
+
+            MultiCredentialsMatcher.addCredentialMatcher(entry.getKey(), credentialsSubMatcher);
+            AuthInfo demo = entry.getValue().supply(null);
+            if (demo != null) {
+                MultiCredentialsMatcher.addCredentialMatcher(demo.getClass(), credentialsSubMatcher);
             }
         }
     }

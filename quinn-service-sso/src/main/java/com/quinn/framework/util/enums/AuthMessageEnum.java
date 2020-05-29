@@ -35,7 +35,12 @@ public enum AuthMessageEnum implements MessageEnumFlag {
     OVER_AUTHORIZED_ACCESS(ERROR_OVER_AUTHORIZED_ACCESS, PARAM_NAME_FUNCTION_KEY),
 
     // 用户名名或密码不匹配
-    AUTH_INFO_NOT_FOUND(DESC_AUTH_INFO_NOT_FOUND);
+    AUTH_INFO_NOT_FOUND(DESC_AUTH_INFO_NOT_FOUND),
+
+    // 用户名名或密码不匹配
+    AUTH_CREDENTIALS_MISMATCH(DESC_AUTH_CREDENTIALS_MISMATCH),
+
+    ;
 
     /**
      * 默认描述

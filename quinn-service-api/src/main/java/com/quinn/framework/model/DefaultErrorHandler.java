@@ -2,9 +2,11 @@ package com.quinn.framework.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quinn.framework.api.ErrorHandler;
+import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
+import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.StringConstant;
 
@@ -52,7 +54,16 @@ public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T>
 
                 generateMessage(e, result);
 
-                objectMapper.writeValue(out, result);
+                String msg = MultiMessageResolver.resolveMessageProp(SessionUtil.getLocale(), result.getMessageProp());
+                if (StringUtil.isEmpty(msg)) {
+                    msg = result.getMessage();
+                    if (StringUtil.isEmpty(msg)) {
+                        msg = generateMessageStatic(e);
+                    }
+                }
+
+                objectMapper.writeValue(out, result.ofMessage(msg));
+
                 out.flush();
             } catch (Exception e1) {
                 LOGGER.error("Error occurs When write error info {0}[{1}]", e1, true,
@@ -65,11 +76,21 @@ public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T>
     /**
      * 生成消息
      *
-     * @param e         错误
-     * @param result    结果
+     * @param e      错误
+     * @param result 结果
      */
     public void generateMessage(T e, BaseResult result) {
-        result.setMessage(e.getClass().getName() + StringConstant.CHAR_COLON + e.getMessage());
+        result.setMessage(generateMessageStatic(e));
+    }
+
+    /**
+     * 生成消息
+     *
+     * @param e 错误
+     * @return 简单消息
+     */
+    public static String generateMessageStatic(Exception e) {
+        return e.getClass().getName() + StringConstant.CHAR_COLON + e.getMessage();
     }
 
 }

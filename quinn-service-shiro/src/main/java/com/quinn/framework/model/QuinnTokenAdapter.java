@@ -1,6 +1,7 @@
 package com.quinn.framework.model;
 
 import com.quinn.framework.api.TokenInfo;
+import com.quinn.framework.api.TokenInfoAdapter;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
@@ -9,7 +10,7 @@ import org.apache.shiro.authc.AuthenticationToken;
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-public class QuinnTokenAdapter implements AuthenticationToken {
+public class QuinnTokenAdapter implements AuthenticationToken, TokenInfoAdapter {
 
     /**
      * 真实令牌
@@ -30,6 +31,7 @@ public class QuinnTokenAdapter implements AuthenticationToken {
         return tokenInfo.getCredentials();
     }
 
+    @Override
     public TokenInfo getTokenInfo() {
         return tokenInfo;
     }

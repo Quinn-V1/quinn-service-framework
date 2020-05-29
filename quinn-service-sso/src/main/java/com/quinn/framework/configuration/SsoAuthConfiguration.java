@@ -1,6 +1,8 @@
 package com.quinn.framework.configuration;
 
 import com.quinn.framework.api.AuthInfoFetcher;
+import com.quinn.framework.api.CredentialsSubMatcher;
+import com.quinn.framework.component.Md5CredentialsSubMatcher;
 import com.quinn.framework.component.MockAuthInfoFetcher;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,6 +23,11 @@ public class SsoAuthConfiguration {
     @ConditionalOnExpression("'${com.quinn-service.mock-auth.disabled:true}'=='false'")
     public AuthInfoFetcher mockAuthInfoFetcher() {
         return new MockAuthInfoFetcher();
+    }
+
+    @Bean("md5CredentialsSubMatcher")
+    public CredentialsSubMatcher md5CredentialsSubMatcher() {
+        return new Md5CredentialsSubMatcher();
     }
 
 }
