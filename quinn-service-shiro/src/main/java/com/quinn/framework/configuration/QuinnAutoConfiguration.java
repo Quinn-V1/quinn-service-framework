@@ -52,6 +52,12 @@ public class QuinnAutoConfiguration {
     @Value("${com.quinn-service.session.error-max-limit:5}")
     private int maxRetryLimit;
 
+    @Value("${com.quinn-service.session.authentication-cache-name:authenticationCache}")
+    private String authenticationCache;
+
+    @Value("${com.quinn-service.session.authorization-cache-name:authorizationCache}")
+    private String authorizationCache;
+
     @Resource
     @Qualifier("sessionCacheAllService")
     private CacheAllService sessionCacheAllService;
@@ -73,8 +79,8 @@ public class QuinnAutoConfiguration {
 
         // 缓存 AuthenticationInfo 信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
         // 缓存AuthorizationInfo信息的缓存名称  在ehcache-shiro.xml中有对应缓存的配置
-        shiroRealm.setAuthenticationCacheName("authenticationCache");
-        shiroRealm.setAuthorizationCacheName("authorizationCache");
+        shiroRealm.setAuthenticationCacheName(authenticationCache);
+        shiroRealm.setAuthorizationCacheName(authorizationCache);
 
         // 配置自定义密码比较器
         shiroRealm.setCredentialsMatcher(credentialsMatcher);

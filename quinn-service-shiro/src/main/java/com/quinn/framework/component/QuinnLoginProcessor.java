@@ -12,9 +12,12 @@ import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,6 +28,15 @@ import java.util.List;
  */
 @Service
 public class QuinnLoginProcessor implements LoginProcessor {
+
+    @Value("${com.quinn-service.session.authentication-cache-name:authenticationCache}")
+    private String authenticationCache;
+
+    @Value("${com.quinn-service.session.authorization-cache-name:authorizationCache}")
+    private String authorizationCache;
+
+    @Resource
+    private CacheManager cacheManager;
 
     @Override
     public AuthInfo login(TokenInfo token) {
@@ -41,7 +53,17 @@ public class QuinnLoginProcessor implements LoginProcessor {
 
     @Override
     public Object logout() {
-        SecurityUtils.getSubject().logout();
+        Subject subject = SecurityUtils.getSubject();
+        Object principal = subject.getPrincipal();
+        if (principal == null) {
+            return BaseResult.SUCCESS;
+        }
+
+        subject.logout();
+        AuthInfo authInfo = AuthInfoFactory.generate(principal);
+        cacheManager.getCache(authenticationCache).remove(authInfo.getPrincipal());
+        cacheManager.getCache(authorizationCache).remove(authInfo.getPrincipal());
+
         return BaseResult.SUCCESS;
     }
 
