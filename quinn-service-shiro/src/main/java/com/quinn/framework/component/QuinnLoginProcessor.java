@@ -10,7 +10,6 @@ import com.quinn.framework.model.QuinnTokenAdapter;
 import com.quinn.framework.util.MultiAuthInfoFetcher;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.framework.util.enums.AuthMessageEnum;
-import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 import org.apache.shiro.SecurityUtils;
@@ -67,7 +66,9 @@ public class QuinnLoginProcessor implements LoginProcessor {
     public List<StringKeyValue> listMyTenant() {
         Subject subject = SecurityUtils.getSubject();
         if (!subject.isAuthenticated()) {
-            throw new BaseBusinessException();
+            throw new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
+                    .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.name(), 0, 0)
+                    .exception();
         }
 
         Object principal = subject.getPrincipal();
@@ -87,7 +88,7 @@ public class QuinnLoginProcessor implements LoginProcessor {
         Object principal = subject.getPrincipal();
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
         if (!MultiAuthInfoFetcher.hasTenant(authInfo, tenantCode)) {
-            throw new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
+            throw new UnauthorizedException().ofStatusCode(HttpStatus.FORBIDDEN.value())
                     .buildParam(AuthMessageEnum.ERROR_TENANT.name(), 1, 0)
                     .addParam(AuthMessageEnum.ERROR_TENANT.paramNames[0], tenantCode)
                     .exception();
