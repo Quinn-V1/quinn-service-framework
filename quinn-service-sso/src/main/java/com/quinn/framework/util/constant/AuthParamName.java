@@ -28,4 +28,9 @@ public interface AuthParamName {
      */
     String PARAM_NAME_TENANT_CODE = "tenantCode";
 
+    /**
+     * 参数名：校验类型
+     */
+    String PARAM_NAME_ORG_NAME = "orgName";
+
 }

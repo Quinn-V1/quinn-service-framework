@@ -25,10 +25,10 @@ public class MessageResolverListener implements ApplicationListener<ContextRefre
         Map<String, MessageResolver> beansOfType = event.getApplicationContext().getBeansOfType(MessageResolver.class);
         if (beansOfType != null) {
             ArrayList arrayList = new ArrayList(beansOfType.values());
-            arrayList.add(new EnumMessageResolver());
+            arrayList.add(EnumMessageResolver.getInstant());
             MultiMessageResolver.setResolverList(arrayList);
         } else {
-            MultiMessageResolver.setResolverList(Arrays.asList(new EnumMessageResolver()));
+            MultiMessageResolver.setResolverList(Arrays.asList(EnumMessageResolver.getInstant()));
         }
     }
 }

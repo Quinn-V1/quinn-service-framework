@@ -3,8 +3,8 @@ package com.quinn.framework.listener;
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.AuthInfoSupplier;
 import com.quinn.framework.api.CredentialsSubMatcher;
-import com.quinn.framework.component.MultiCredentialsMatcher;
 import com.quinn.framework.model.AuthInfoFactory;
+import com.quinn.framework.util.MultiCredentialsMatcher;
 import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.MandatoryBeanMissException;
 import org.springframework.context.ApplicationListener;
@@ -30,8 +30,7 @@ public class CredentialsMatcherListener implements ApplicationListener<ContextRe
         Map<Class, AuthInfoSupplier> authInfoSupplierMap = AuthInfoFactory.getAuthInfoSupplierMap();
         for (Map.Entry<Class, AuthInfoSupplier> entry : authInfoSupplierMap.entrySet()) {
             String beanName = entry.getValue().credentialsMatcherName();
-            CredentialsSubMatcher credentialsSubMatcher =
-                    credentialsSubMatcherMap.get(beanName);
+            CredentialsSubMatcher credentialsSubMatcher = credentialsSubMatcherMap.get(beanName);
 
             if (credentialsSubMatcher == null) {
                 throw new MandatoryBeanMissException()
@@ -41,6 +40,7 @@ public class CredentialsMatcherListener implements ApplicationListener<ContextRe
             }
 
             MultiCredentialsMatcher.addCredentialMatcher(entry.getKey(), credentialsSubMatcher);
+
             AuthInfo demo = entry.getValue().supply(null);
             if (demo != null) {
                 MultiCredentialsMatcher.addCredentialMatcher(demo.getClass(), credentialsSubMatcher);

@@ -6,7 +6,7 @@ import com.quinn.framework.api.TokenInfo;
 import com.quinn.framework.model.DefaultAuthInfo;
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.framework.util.enums.AuthMessageEnum;
-import com.quinn.framework.util.enums.TokenTypeEnum;
+import com.quinn.framework.util.enums.AuthTypeEnum;
 import com.quinn.util.base.BaseUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
@@ -80,7 +80,7 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
 
     @Override
     public String tokenType() {
-        return TokenTypeEnum.MOCK_USER.name();
+        return AuthTypeEnum.MOCK_USER.name();
     }
 
     @Override

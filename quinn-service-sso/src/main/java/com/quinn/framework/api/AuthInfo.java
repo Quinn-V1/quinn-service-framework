@@ -63,6 +63,15 @@ public interface AuthInfo<T> extends Serializable {
     }
 
     /**
+     * 获取验证方式
+     *
+     * @return 验证方式
+     */
+    default String getValidateWay() {
+        return null;
+    }
+
+    /**
      * 附加属性
      *
      * @param name 属性名称

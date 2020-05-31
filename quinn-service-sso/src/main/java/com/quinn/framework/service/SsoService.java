@@ -5,6 +5,7 @@ import com.quinn.framework.api.LoginPostProcessor;
 import com.quinn.framework.api.LoginPrevProcessor;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.StringKeyValue;
 
 import java.util.List;
 
@@ -15,6 +16,13 @@ import java.util.List;
  * @since 2020-04-13
  */
 public interface SsoService {
+
+    /**
+     * 支持的校验方式
+     *
+     * @return 校验方式列表
+     */
+    BaseResult<List<StringKeyValue>> selectAuthTypes();
 
     /**
      * 登录
@@ -45,6 +53,13 @@ public interface SsoService {
      * @return 设置是否成功
      */
     BaseResult setMyCurrentTenant(String tenantCode);
+
+    /**
+     * 获取密码校验方式
+     *
+     * @return 密码校验方式列表
+     */
+    BaseResult<List<StringKeyValue>> credentialsMatchers();
 
     /**
      * 添加前置登录增强

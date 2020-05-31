@@ -1,15 +1,26 @@
 package com.quinn.framework.util.enums;
 
+import com.quinn.util.base.handler.EnumMessageResolver;
+import com.quinn.util.constant.MessageEnumFlag;
+
+import java.util.Locale;
+
 /**
  * 通用数据类型枚举类
  *
  * @author Qunhua.Liao
  * @since 2020-05-29
  */
-public enum CommonDataTypeEnum {
+public enum CommonDataTypeEnum implements MessageEnumFlag {
 
     // 租户
     TENANT("OrgInfoVO", "租户"),
+
+    // 授权信息类型
+    AUTH_TYPE("AuthTypeEnum", "授权信息类型"),
+
+    // 证书比较类型 (Credentials Matcher)
+    CM_TYPE("CmTypeEnum", "证书比较类型"),
 
     ;
 
@@ -26,6 +37,20 @@ public enum CommonDataTypeEnum {
     CommonDataTypeEnum(String code, String defaultDesc) {
         this.code = code;
         this.defaultDesc = defaultDesc;
+    }
+
+    @Override
+    public String defaultDesc() {
+        return this.defaultDesc;
+    }
+
+    @Override
+    public String[] paramNames() {
+        return null;
+    }
+
+    static {
+        EnumMessageResolver.addContent(Locale.SIMPLIFIED_CHINESE, CommonDataTypeEnum.values());
     }
 
 }

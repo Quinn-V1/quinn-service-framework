@@ -1,6 +1,5 @@
 package com.quinn.framework.api;
 
-import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -14,7 +13,7 @@ public interface CustomApplicationListener {
     /**
      * 应用启动监听
      *
-     * @param applicationContext    应用容器
+     * @param applicationContext 应用容器
      */
     void applicationStarted(ApplicationContext applicationContext);
 

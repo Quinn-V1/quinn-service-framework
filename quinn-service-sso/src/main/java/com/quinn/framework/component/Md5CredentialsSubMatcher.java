@@ -16,6 +16,11 @@ import com.quinn.util.base.convertor.BaseConverter;
 public class Md5CredentialsSubMatcher implements CredentialsSubMatcher {
 
     @Override
+    public String name() {
+        return "md5CredentialsSubMatcher";
+    }
+
+    @Override
     public boolean doCredentialsMatch(TokenInfo tokenInfo, AuthInfo authInfo) {
         String credentialsOfAuth = BaseConverter.staticToString(authInfo.getCredentials());
         String credentialsOfToken = BaseConverter.staticToString(tokenInfo.getCredentials());

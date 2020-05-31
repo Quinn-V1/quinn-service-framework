@@ -2,7 +2,7 @@ package com.quinn.framework.model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.TokenInfo;
-import com.quinn.framework.util.enums.TokenTypeEnum;
+import com.quinn.framework.util.enums.AuthTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class DefaultTokenInfo implements TokenInfo {
     }
 
     public DefaultTokenInfo(String principal, String credentials) {
-        this(TokenTypeEnum.DB_USER.name(), principal, credentials);
+        this(AuthTypeEnum.DB_USER.name(), principal, credentials);
     }
 
     public DefaultTokenInfo(String tokenType, String principal, String credentials) {

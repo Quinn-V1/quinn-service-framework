@@ -10,9 +10,7 @@ import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 权限信息获取工具
@@ -31,6 +29,15 @@ public final class MultiAuthInfoFetcher {
 
     private static final String activeProfile = System.getProperty(ConfigConstant.PROP_KEY_OF_ACTIVE_PROFILE,
             ConfigConstant.DEFAULT_ACTIVE_PROFILE);
+
+    /**
+     * 支持的校验方式
+     *
+     * @return
+     */
+    public static Collection<String> authTypes() {
+        return AUTH_INFO_FETCHER_MAP.keySet();
+    }
 
     /**
      * 添加授权信息获取器

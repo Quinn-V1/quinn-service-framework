@@ -93,7 +93,7 @@ public class DegreeCacheService<T> {
     /**
      * 设置备用数据库查找方案
      *
-     * @param backup
+     * @param backup 备用函数
      */
     public void ofBackup(MethodInvokerOneParam<String, HeatRateObject<T>> backup) {
         this.backup = backup;

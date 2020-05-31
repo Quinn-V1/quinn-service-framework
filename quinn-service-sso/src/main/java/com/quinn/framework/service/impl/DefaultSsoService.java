@@ -1,19 +1,28 @@
 package com.quinn.framework.service.impl;
 
-import com.quinn.framework.api.*;
+import com.quinn.framework.api.AuthInfo;
+import com.quinn.framework.api.LoginPostProcessor;
+import com.quinn.framework.api.LoginPrevProcessor;
+import com.quinn.framework.api.LoginProcessor;
+import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.exception.AuthInfoNotFoundException;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.framework.service.SsoService;
+import com.quinn.framework.util.EntityUtil;
+import com.quinn.framework.util.MultiAuthInfoFetcher;
+import com.quinn.framework.util.MultiCredentialsMatcher;
 import com.quinn.framework.util.enums.AuthMessageEnum;
+import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
-import org.springframework.beans.factory.annotation.Value;
+import com.quinn.util.base.model.StringKeyValueMsgKeyResolver;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,15 +36,21 @@ public class DefaultSsoService implements SsoService {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DefaultSsoService.class);
 
-    @Value("${spring.profile.active:prd}")
-    private String activeProfile;
-
     @Resource
     private LoginProcessor loginProcessor;
 
     private List<LoginPrevProcessor> loginPrevProcessors;
 
     private List<LoginPostProcessor> loginPostProcessors;
+
+    @Override
+    public BaseResult<List<StringKeyValue>> selectAuthTypes() {
+        Collection<String> authTypes = MultiAuthInfoFetcher.authTypes();
+        StringKeyValueMsgKeyResolver keyResolver =
+                new StringKeyValueMsgKeyResolver(CommonDataTypeEnum.AUTH_TYPE.code)
+                        .ofCacheDelimiter(BaseDTO.CACHE_KEY_DELIMITER).ofPropDelimiter(BaseDTO.PROPERTY_DELIMITER);
+        return EntityUtil.stringToKeyValue(authTypes, keyResolver);
+    }
 
     @Override
     public BaseResult<AuthInfo> login(DefaultTokenInfo token) {
@@ -99,7 +114,7 @@ public class DefaultSsoService implements SsoService {
         List<StringKeyValue> result = loginProcessor.listMyTenant();
         if (CollectionUtil.isEmpty(result)) {
             return BaseResult.fail()
-                    .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0 , 0)
+                    .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
                     .result();
         }
 
@@ -110,6 +125,15 @@ public class DefaultSsoService implements SsoService {
     public BaseResult setMyCurrentTenant(String tenantCode) {
         loginProcessor.setMyCurrentTenant(tenantCode);
         return BaseResult.SUCCESS;
+    }
+
+    @Override
+    public BaseResult<List<StringKeyValue>> credentialsMatchers() {
+        Collection<String> matcherTypes = MultiCredentialsMatcher.matcherTypes();
+        StringKeyValueMsgKeyResolver keyResolver =
+                new StringKeyValueMsgKeyResolver(CommonDataTypeEnum.CM_TYPE.code)
+                        .ofCacheDelimiter(BaseDTO.CACHE_KEY_DELIMITER).ofPropDelimiter(BaseDTO.PROPERTY_DELIMITER);
+        return EntityUtil.stringToKeyValue(matcherTypes, keyResolver);
     }
 
     @Override

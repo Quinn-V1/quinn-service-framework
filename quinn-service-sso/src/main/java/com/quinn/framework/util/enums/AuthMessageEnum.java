@@ -5,6 +5,7 @@ import static com.quinn.framework.util.constant.AuthParamName.*;
 import com.quinn.util.base.handler.EnumMessageResolver;
 import com.quinn.util.constant.CommonParamName;
 import com.quinn.util.constant.MessageEnumFlag;
+import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.LanguageEnum;
 
 /**
@@ -70,6 +71,12 @@ public enum AuthMessageEnum implements MessageEnumFlag {
     @Override
     public String[] paramNames() {
         return paramNames;
+    }
+
+    @Override
+    public String key() {
+        return StringConstant.DATA_TYPE_OF_MESSAGE + StringConstant.CHAR_COLON + name()
+                + StringConstant.CHAR_POUND_SIGN + StringConstant.NONE_OF_DATA;
     }
 
     static {

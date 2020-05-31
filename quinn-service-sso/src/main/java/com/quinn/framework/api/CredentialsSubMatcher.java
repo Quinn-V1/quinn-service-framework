@@ -9,6 +9,13 @@ package com.quinn.framework.api;
 public interface CredentialsSubMatcher {
 
     /**
+     * 对比器名称
+     *
+     * @return 对比器名称
+     */
+    String name();
+
+    /**
      * 用户密码对比
      *
      * @param tokenInfo 令牌信息

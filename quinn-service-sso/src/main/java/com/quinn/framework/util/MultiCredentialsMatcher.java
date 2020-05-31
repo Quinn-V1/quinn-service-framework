@@ -1,11 +1,10 @@
-package com.quinn.framework.component;
+package com.quinn.framework.util;
 
 import com.quinn.framework.api.CredentialsSubMatcher;
+import com.quinn.framework.api.TokenInfo;
 import com.quinn.framework.model.AuthInfoFactory;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -15,21 +14,30 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-public class MultiCredentialsMatcher implements CredentialsMatcher {
+public class MultiCredentialsMatcher {
 
     /**
      * 所有的认证机制实现
      */
     private static final Map<Class, CredentialsSubMatcher> AUTH_SUB_SERVICE_MAP = new LinkedHashMap<>();
 
-    @Override
-    public boolean doCredentialsMatch(AuthenticationToken tokenInfo, AuthenticationInfo authInfo) {
-        Object principal = authInfo.getPrincipals().getPrimaryPrincipal();
+    /**
+     * 所有的认证机制实现
+     */
+    private static final Map<String, CredentialsSubMatcher> STRING_AUTH_SUB_SERVICE_MAP = new LinkedHashMap<>();
+
+    /**
+     * 整数比较
+     *
+     * @param tokenInfo 令牌信息
+     * @param principal 权限信息
+     * @return 匹配：true
+     */
+    public static boolean doCredentialsMatch(TokenInfo tokenInfo, Object principal) {
         CredentialsSubMatcher credentialsMatcher = credentialsMatcher(principal.getClass());
         if (credentialsMatcher == null) {
             return true;
         }
-
         return credentialsMatcher.doCredentialsMatch(AuthInfoFactory.generateTokenInfo(tokenInfo),
                 AuthInfoFactory.generate(principal));
     }
@@ -62,6 +70,16 @@ public class MultiCredentialsMatcher implements CredentialsMatcher {
      */
     public static void addCredentialMatcher(Class<?> clazz, CredentialsSubMatcher subMatcher) {
         AUTH_SUB_SERVICE_MAP.put(clazz, subMatcher);
+        STRING_AUTH_SUB_SERVICE_MAP.put(subMatcher.name(), subMatcher);
+    }
+
+    /**
+     * 证书认证类型
+     *
+     * @return 证书类型集合
+     */
+    public static Collection<String> matcherTypes() {
+        return STRING_AUTH_SUB_SERVICE_MAP.keySet();
     }
 
 }

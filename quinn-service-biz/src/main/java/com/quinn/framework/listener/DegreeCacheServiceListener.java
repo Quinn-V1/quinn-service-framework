@@ -5,7 +5,6 @@ import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.framework.api.cache.CacheCommonService;
 import com.quinn.framework.api.entityflag.CacheAble;
 import com.quinn.framework.component.DegreeCacheService;
-import com.quinn.framework.util.EntityUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
@@ -58,8 +57,6 @@ public class DegreeCacheServiceListener implements ApplicationListener<ContextRe
                 LOGGER.warn("cacheService【{0}】 in degreeCacheService not found", entry.getKey());
             }
         }
-
-        EntityUtil.setMessageDegreeCacheService(degreeCacheService);
 
         // 启动即加载数据
         Map<String, LoadOnStartDataService> beans = applicationContext.getBeansOfType(LoadOnStartDataService.class);

@@ -2,8 +2,6 @@ package com.quinn.framework.configuration;
 
 import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.framework.component.*;
-import com.quinn.framework.filter.PathMatchPermissionFilter;
-import com.quinn.framework.filter.QuinnIntranetFilter;
 import com.quinn.framework.model.QuinnSessionFactory;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
@@ -27,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
-import javax.servlet.Filter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -64,7 +61,7 @@ public class QuinnAutoConfiguration {
 
     @Bean
     public CredentialsMatcher credentialsMatcher() {
-        return new MultiCredentialsMatcher();
+        return new QuinnCredentialsMatcher();
     }
 
     @Bean

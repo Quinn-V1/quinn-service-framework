@@ -1,15 +1,17 @@
 package com.quinn.framework.util;
 
-import com.quinn.framework.component.DegreeCacheService;
 import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.entity.dto.BaseDTO;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.base.api.MethodInvokerTwoParam;
+import com.quinn.util.base.handler.MultiMessageResolver;
+import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.StringKeyValue;
 import com.quinn.util.constant.StringConstant;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 实体工具类
@@ -18,12 +20,6 @@ import java.util.Map;
  * @since 2020-03-20
  */
 public final class EntityUtil {
-
-    private static DegreeCacheService<String> messageDegreeCacheService;
-
-    public static void setMessageDegreeCacheService(DegreeCacheService<String> messageDegreeCacheService) {
-        EntityUtil.messageDegreeCacheService = messageDegreeCacheService;
-    }
 
     private EntityUtil() {
     }
@@ -85,15 +81,12 @@ public final class EntityUtil {
      * @param keyInvoker  获取键
      * @param descInvoker 设置描述
      */
-    public static <T> void resolveEntities(Collection<T> dataList, MethodInvokerOneParam<T, String> keyInvoker,
-                                           MethodInvokerTwoParam<T, String, String> descInvoker) {
-        if (messageDegreeCacheService == null) {
-            return;
-        }
-
+    public static <T> void resolveEntities(
+            Locale locale, Collection<T> dataList, MethodInvokerOneParam<T, String> keyInvoker,
+            MethodInvokerTwoParam<T, String, String> descInvoker) {
         for (T data : dataList) {
             String key = keyInvoker.invoke(data);
-            String desc = messageDegreeCacheService.get(key);
+            String desc = MultiMessageResolver.resolveString(locale, key);
             if (!StringUtil.isEmptyInFrame(desc)) {
                 descInvoker.invoke(data, desc);
             }
@@ -107,17 +100,43 @@ public final class EntityUtil {
      * @param keyInvoker  获取键
      * @param descInvoker 设置描述
      */
-    public static <T> void resolveEntity(T data, MethodInvokerOneParam<T, String> keyInvoker,
+    public static <T> void resolveEntity(Locale locale, T data, MethodInvokerOneParam<T, String> keyInvoker,
                                          MethodInvokerTwoParam<T, String, String> descInvoker) {
-        if (messageDegreeCacheService == null) {
-            return;
-        }
-
         String key = keyInvoker.invoke(data);
-        String desc = messageDegreeCacheService.get(key);
+        String desc = MultiMessageResolver.resolve(locale, key);
         if (!StringUtil.isEmptyInFrame(desc)) {
             descInvoker.invoke(data, desc);
         }
     }
 
+    /**
+     * 将字符串转变为键值对
+     *
+     * @param keys        键
+     * @param keyResolver 键解析器
+     * @return 键值对列表
+     */
+    public static BaseResult<List<StringKeyValue>> stringToKeyValue(
+            Collection<String> keys, MethodInvokerOneParam<StringKeyValue, String> keyResolver) {
+        if (CollectionUtil.isEmpty(keys)) {
+            // FIXME
+            return BaseResult.fail();
+        }
+
+        List<StringKeyValue> result = new ArrayList<>(keys.size());
+        for (String authType : keys) {
+            StringKeyValue kv = new StringKeyValue();
+            kv.setDataKey(authType);
+            kv.setDataValue(authType);
+            result.add(kv);
+        }
+
+        Locale locale = SessionUtil.getLocale();
+        EntityUtil.resolveEntities(locale, result, keyResolver, (e, desc) -> {
+            e.setDataValue(desc);
+            return null;
+        });
+
+        return BaseResult.success(result);
+    }
 }
