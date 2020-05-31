@@ -12,26 +12,15 @@
     </parent>
 
     <groupId>com.quinn.framework</groupId>
-    <artifactId>quinn-service-email</artifactId>
+    <artifactId>quinn-service-message</artifactId>
     <version>1.0.0</version>
-    <name>quinn-service-email</name>
-    <description>Quinn服务框架：邮件发送</description>
+    <name>quinn-service-message</name>
+    <description>Quinn服务框架：消息发送接口层</description>
 
     <dependencies>
         <dependency>
             <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-message</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
     </dependencies>
 

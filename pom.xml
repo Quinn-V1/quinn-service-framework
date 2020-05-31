@@ -27,6 +27,7 @@
         <module>quinn-service-file-fast</module>
         <module>quinn-service-file-miniio</module>
         <module>quinn-service-jasypt</module>
+        <module>quinn-service-message</module>
         <module>quinn-service-mq</module>
         <module>quinn-service-quartz</module>
         <module>quinn-service-rabbitmq</module>
