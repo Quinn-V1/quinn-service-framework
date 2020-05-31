@@ -6,6 +6,7 @@ import com.quinn.framework.listener.QuartzTriggerListenerAdapter;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerTwoParam;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
 import org.quartz.*;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -37,9 +38,11 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     public BaseResult addJob(JobTemplate jobTemplate) {
         String jobKey = jobTemplate.getScheduleKey();
         String jobImplement = jobTemplate.getImplementClass();
+        String syncType = jobTemplate.getSyncType();
 
         BusinessJob businessJob = businessJobMap.get(jobImplement);
         if (businessJob == null) {
+            // FIXME
             return BaseResult.fail("任务" + jobKey
                     + "初始化失败：实现Bean【" + jobImplement + "】不存在");
         }
@@ -48,7 +51,9 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
         if (!SpringBeanHolder.containsBean(jobKey)) {
             Map<String, Object> properties = new HashMap<>(8);
             properties.put("name", jobKey);
-            properties.put("group", Scheduler.DEFAULT_GROUP);
+
+            // 此处本是 Scheduler.DEFAULT_GROUP
+            properties.put("group", syncType);
             properties.put("targetMethod", "execute");
             properties.put("targetObject", businessJob);
             properties.put("arguments", new String[]{jobKey});
@@ -61,13 +66,15 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
 
         Trigger trigger = null;
         try {
-            trigger = scheduler.getTrigger(TriggerKey.triggerKey(jobKey, Scheduler.DEFAULT_GROUP));
+            // Scheduler.DEFAULT_GROUP
+            trigger = scheduler.getTrigger(TriggerKey.triggerKey(jobKey, syncType));
         } catch (SchedulerException e) {
         }
 
         if (trigger == null) {
             trigger = TriggerBuilder.newTrigger()
-                    .withIdentity(jobKey, Scheduler.DEFAULT_GROUP)
+                    // Scheduler.DEFAULT_GROUP
+                    .withIdentity(jobKey, syncType)
                     .withSchedule(CronScheduleBuilder.cronSchedule(jobTemplate.getExecCycleExpress())).build();
         }
 
@@ -81,6 +88,91 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
             scheduler.scheduleJob(jobDetail, trigger);
             return BaseResult.success(jobTemplate);
         } catch (SchedulerException e) {
+            // FIXME
+            return BaseResult.fail(e.getMessage());
+        }
+    }
+
+    @Override
+    public BaseResult executeJobDirect(JobTemplate jobTemplate) {
+        BusinessJob businessJob = businessJobMap.get(jobTemplate.getImplementClass());
+        if (businessJob == null) {
+            // FIXME
+            return BaseResult.fail("未找到实现类");
+        }
+        return businessJob.execute(jobTemplate.getScheduleKey());
+    }
+
+    @Override
+    @SneakyThrows
+    public BaseResult executeJob(JobTemplate jobTemplate) {
+        String keyCode = jobTemplate.getScheduleKey();
+        JobKey jobKey = JobKey.jobKey(keyCode);
+        scheduler.triggerJob(jobKey);
+        return BaseResult.SUCCESS;
+    }
+
+    @Override
+    public BaseResult disableJob(JobTemplate jobTemplate) {
+        return deleteJob(jobTemplate);
+    }
+
+    @Override
+    public BaseResult enableJob(JobTemplate jobTemplate) {
+        String keyCode = jobTemplate.getScheduleKey();
+        JobKey jobKey = JobKey.jobKey(keyCode);
+        try {
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail == null) {
+                return addJob(jobTemplate);
+            } else {
+                scheduler.resumeJob(jobKey);
+                scheduler.resumeTrigger(TriggerKey.triggerKey(keyCode));
+            }
+
+            return BaseResult.success(jobTemplate);
+        } catch (SchedulerException e) {
+            // FIXME
+            return BaseResult.fail(e.getMessage());
+        }
+    }
+
+    @Override
+    public BaseResult updateJob(JobTemplate jobTemplate) {
+        String keyCode = jobTemplate.getScheduleKey();
+        JobKey jobKey = JobKey.jobKey(keyCode);
+        try {
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail != null) {
+                scheduler.deleteJob(jobKey);
+            }
+
+            if (jobTemplate.isDisabled()) {
+                return BaseResult.success(jobTemplate);
+            }
+
+            return addJob(jobTemplate);
+        } catch (SchedulerException e) {
+            // FIXME
+            return BaseResult.fail(e.getMessage());
+        }
+    }
+
+    @Override
+    public BaseResult deleteJob(JobTemplate jobTemplate) {
+        String keyCode = jobTemplate.getScheduleKey();
+        JobKey jobKey = JobKey.jobKey(keyCode);
+        try {
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail == null) {
+                return BaseResult.success(jobTemplate).ofLevel(MessageLevelEnum.WARN)
+                        .buildMessage("", 0, 0).result();
+            }
+
+            boolean delete = scheduler.deleteJob(jobKey);
+            return BaseResult.build(delete).ofData(jobTemplate);
+        } catch (SchedulerException e) {
+            // FIXME
             return BaseResult.fail(e.getMessage());
         }
     }

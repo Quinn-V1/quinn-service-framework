@@ -34,4 +34,51 @@ public interface JobExecuteService {
      */
     void addTriggerListeners(List<SortTriggerListener> sortTriggerListeners);
 
+    /**
+     * 执行任务
+     *
+     * @param jobTemplate 任务模板
+     * @return 任务实例
+     */
+    BaseResult executeJob(JobTemplate jobTemplate);
+
+    /**
+     * 直接执行任务，不交给调度系统
+     *
+     * @param jobTemplate 任务模板
+     * @return 任务实例
+     */
+    BaseResult executeJobDirect(JobTemplate jobTemplate);
+
+    /**
+     * 禁用任务
+     *
+     * @param jobTemplate 任务模板
+     * @return 禁用结果
+     */
+    BaseResult disableJob(JobTemplate jobTemplate);
+
+    /**
+     * 启用任务
+     *
+     * @param jobTemplate 任务模板
+     * @return 启用结果
+     */
+    BaseResult enableJob(JobTemplate jobTemplate);
+
+    /**
+     * 更新任务
+     *
+     * @param jobTemplate 任务模板
+     * @return 更新结果
+     */
+    BaseResult updateJob(JobTemplate jobTemplate);
+
+    /**
+     * 删除任务
+     *
+     * @param jobTemplate 任务模板
+     * @return 删除结果
+     */
+    BaseResult deleteJob(JobTemplate jobTemplate);
 }

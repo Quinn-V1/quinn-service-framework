@@ -42,7 +42,6 @@ public class DistributeLockTriggerListener implements SortTriggerListener {
 
     @Override
     public void triggerFired(TriggerExecuteInfo executionInfo) {
-
     }
 
     @Override
@@ -52,11 +51,11 @@ public class DistributeLockTriggerListener implements SortTriggerListener {
 
     @Override
     public void triggerMisfired(TriggerExecuteInfo executionInfo) {
-
+        cacheLockService.unLock(executionInfo.getJobKey());
     }
 
     @Override
     public void triggerComplete(TriggerExecuteInfo executionInfo, BaseBusinessException exception) {
-
+        cacheLockService.unLock(executionInfo.getJobKey());
     }
 }

@@ -89,9 +89,17 @@ public interface JobTemplate extends Serializable {
     String getParamStrategy();
 
     /**
+     * 同步类型
+     *
+     * @return 同步类型
+     */
+    String getSyncType();
+
+    /**
      * 执行次数加 1
      */
-    default void execIncrease() {}
+    default void execIncrease() {
+    }
 
     /**
      * 设置最后执行情况
@@ -126,6 +134,15 @@ public interface JobTemplate extends Serializable {
         if (getLastFailDateTime() == null) {
             setLastFailDateTime(dateTime);
         }
+    }
+
+    /**
+     * 是否禁用
+     *
+     * @return 禁用则true
+     */
+    default boolean isDisabled() {
+        return false;
     }
 
 }

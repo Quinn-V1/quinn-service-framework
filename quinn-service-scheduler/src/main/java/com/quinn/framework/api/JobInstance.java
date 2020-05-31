@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * @author Qunhua.Liao
  * @since 2020-05-29
  */
-public interface JobInstance extends Serializable {
+public interface JobInstance<T extends JobTemplate> extends Serializable {
 
     /**
      * 设置执行任务的服务APP节点
@@ -65,7 +65,7 @@ public interface JobInstance extends Serializable {
      *
      * @param jobTemplate 任务模板
      */
-    void setJobTemplate(JobTemplate jobTemplate);
+    void setJobTemplate(T jobTemplate);
 
     /**
      * 获取任务模板
