@@ -3,6 +3,8 @@ package com.quinn.framework.util;
 import com.quinn.framework.api.JobInstance;
 import com.quinn.framework.api.JobTemplate;
 import com.quinn.framework.util.enums.JobStateEnum;
+import com.quinn.util.constant.DateConstant;
+import com.quinn.util.constant.StringConstant;
 import com.quinn.util.licence.model.ApplicationInfo;
 
 import java.time.LocalDateTime;
@@ -32,6 +34,9 @@ public final class JobInfoUtil {
         jobInstance.setScheduleKey(jobTemplate.getScheduleKey());
         jobInstance.setStartDateTime(LocalDateTime.now());
         jobInstance.setExecResult(JobStateEnum.DOING.code);
+        jobInstance.setExecMsg(StringConstant.NONE_OF_DATA);
+        jobInstance.setExecParam(StringConstant.NONE_OF_DATA);
+        jobInstance.setEndDateTime(DateConstant.MAX_DATE_TIME);
         jobInstance.setJobTemplate(jobTemplate);
     }
 

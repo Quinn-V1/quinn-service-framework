@@ -9,7 +9,7 @@ import com.quinn.framework.component.serializer.BaseResultSerializer;
 import com.quinn.framework.component.serializer.BatchResultSerializer;
 import com.quinn.framework.component.serializer.CustomSerializer;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.constant.DateFormatConstant;
+import com.quinn.util.constant.DateConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -28,10 +28,10 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class JsonSerializerConfiguration {
 
-    @Value("${com.quinn-service.date-pattern:" + DateFormatConstant.DEFAULT_DATE_FORMAT + "}")
+    @Value("${com.quinn-service.date-pattern:" + DateConstant.DEFAULT_DATE_FORMAT + "}")
     private String datePattern;
 
-    @Value("${com.quinn-service.datetime-pattern:" + DateFormatConstant.DEFAULT_DATE_TIME_FORMAT + "}")
+    @Value("${com.quinn-service.datetime-pattern:" + DateConstant.DEFAULT_DATE_TIME_FORMAT + "}")
     private String dateTimePattern;
 
     @Bean

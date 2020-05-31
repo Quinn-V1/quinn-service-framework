@@ -60,7 +60,7 @@ public class DefaultJobInstance implements JobInstance {
      * 执行参数
      */
     @ApiModelProperty("执行参数")
-    private String executeParameter;
+    private String execParam;
 
     /**
      * 任务模板

@@ -3,7 +3,7 @@ package com.quinn.framework.component.serializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.quinn.util.constant.DateFormatConstant;
+import com.quinn.util.constant.DateConstant;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -20,6 +20,6 @@ public class LocalDateDeserializer extends JsonDeserializer<LocalDate> {
     public LocalDate deserialize(JsonParser p, DeserializationContext deserializationContext)
             throws IOException {
         return LocalDate.parse(p.getValueAsString(),
-                DateTimeFormatter.ofPattern(DateFormatConstant.DATE_PATTEN_YYYY_MM_DD_SEPARATOR_1));
+                DateTimeFormatter.ofPattern(DateConstant.DATE_PATTEN_YYYY_MM_DD_SEPARATOR_1));
     }
 }

@@ -1,5 +1,6 @@
 package com.quinn.framework.model;
 
+import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.BusinessJob;
 import com.quinn.framework.api.JobHelpService;
 import com.quinn.framework.api.JobInstance;
@@ -37,7 +38,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
      */
     @Override
     public BaseResult<JobInstance> execute(String templateKey) {
-        LOGGER.error("Job execute start of ${}", templateKey);
+        LOGGER.error("Job execute start of ${templateKey}", templateKey);
 
         BaseResult<JobTemplate> res = jobHelpService.getTemplate(templateKey);
         if (!res.isSuccess()) {
@@ -58,6 +59,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
                 result = BaseResult.fromPrev(paramRes);
                 return result;
             }
+            jobInstance.setExecParam(JSONObject.toJSONString(paramRes.getData()));
 
             // 调用业务逻辑
             result = doExecute(jobInstance, paramRes.getData());
@@ -68,7 +70,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
             }
 
         } catch (Exception e) {
-            LOGGER.error("DistributeBusinessJob.execute failed", e);
+            LOGGER.errorError("DistributeBusinessJob.execute failed", e);
             result = BaseResult.fromException(e);
             jobInstance.setExecResult(JobStateEnum.DONE_FAIL.code);
         } finally {
@@ -80,7 +82,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
             // 更新最新运行时间
             jobTemplate.lastExecute(jobInstance.getStartDateTime(), result.isSuccess());
             jobHelpService.updateTemplate(jobTemplate);
-            LOGGER.error("Job execute end of ${}", templateKey);
+            LOGGER.error("Job execute end of ${templateKey}", templateKey);
         }
 
         return result;

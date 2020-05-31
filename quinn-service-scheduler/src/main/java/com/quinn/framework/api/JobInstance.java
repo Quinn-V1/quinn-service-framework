@@ -26,6 +26,13 @@ public interface JobInstance<T extends JobTemplate> extends Serializable {
     void setScheduleKey(String scheduleKey);
 
     /**
+     * 设置执行参数
+     *
+     * @param execParam 执行参数
+     */
+    void setExecParam(String execParam);
+
+    /**
      * 设置执行结果
      *
      * @param execResult 执行结果
