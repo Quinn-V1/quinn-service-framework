@@ -37,7 +37,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
      */
     @Override
     public BaseResult<JobInstance> execute(String templateKey) {
-        LOGGER.error("Job execute start of {}", templateKey);
+        LOGGER.error("Job execute start of ${}", templateKey);
 
         BaseResult<JobTemplate> res = jobHelpService.getTemplate(templateKey);
         if (!res.isSuccess()) {
@@ -80,7 +80,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
             // 更新最新运行时间
             jobTemplate.lastExecute(jobInstance.getStartDateTime(), result.isSuccess());
             jobHelpService.updateTemplate(jobTemplate);
-            LOGGER.error("Job execute end of {}", templateKey);
+            LOGGER.error("Job execute end of ${}", templateKey);
         }
 
         return result;
