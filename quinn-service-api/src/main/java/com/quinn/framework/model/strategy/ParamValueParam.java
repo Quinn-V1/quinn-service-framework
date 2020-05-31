@@ -27,6 +27,7 @@ public class ParamValueParam<T> extends BaseStrategyParam<T> {
         paramValueParam.initParam(strategyScript, dynamicParam);
         String url = strategyScript.getScriptUrl();
         url = FreeMarkTemplateLoader.invoke(url, dynamicParam);
+
         if (StringUtil.isEmptyInFrame(url)) {
             paramValueParam.setParamPaths(new String[]{ConfigConstant.PARAM_OF_ITSELF});
         } else {
