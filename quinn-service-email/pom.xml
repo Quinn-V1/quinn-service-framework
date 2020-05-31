@@ -21,7 +21,6 @@
         <dependency>
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-message</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
