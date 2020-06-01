@@ -5,6 +5,7 @@ import com.quinn.framework.api.file.FileHandler;
 import com.quinn.framework.api.file.StorageService;
 import com.quinn.framework.component.*;
 import com.quinn.framework.component.file.DemoFileHandler;
+import com.quinn.framework.filter.SessionInfoFilter;
 import com.quinn.framework.service.AuditAbleService;
 import com.quinn.framework.service.CacheAbleService;
 import com.quinn.framework.service.IdGenerateAbleService;
@@ -17,14 +18,18 @@ import com.quinn.util.base.api.LoggerGenerator;
 import com.quinn.util.base.api.MessageResolver;
 import com.quinn.util.base.factory.PrefixThreadFactory;
 import com.quinn.util.base.handler.PlaceholderHandler;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.FilterOrderGroupEnum;
 import com.quinn.util.licence.model.ApplicationInfo;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -45,6 +50,8 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @AutoConfigureOrder(Integer.MAX_VALUE - 1000)
 public class BaseBizConfiguration {
+
+    private static final String SESSION_URI = "/*";
 
     @Value("${com.quinn-service.strategy.thread.core-size:2}")
     private int coreTheadSize;
@@ -136,6 +143,16 @@ public class BaseBizConfiguration {
     @ConditionalOnExpression("'${com.quinn-service.framework.collect-metadata:true}'=='true'")
     public CustomApplicationListener metaDataConfigInfoCollector() {
         return new MetaDataConfigInfoCollector();
+    }
+
+    @Bean
+    public FilterRegistrationBean sessionInfoFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new SessionInfoFilter());
+        registration.addUrlPatterns(SESSION_URI);
+        registration.setName("sessionInfoFilter");
+        registration.setOrder(NumberConstant.INT_TEN);
+        return registration;
     }
 
     @Bean

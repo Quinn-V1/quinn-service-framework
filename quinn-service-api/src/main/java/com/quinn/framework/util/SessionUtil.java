@@ -3,6 +3,7 @@ package com.quinn.framework.util;
 import com.quinn.framework.api.strategy.Strategy;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -137,7 +138,7 @@ public class SessionUtil {
      */
     @Strategy("SessionUtil.getLocale")
     public static Locale getLocale() {
-        return getValue(SESSION_KEY_LOCALE, Locale.getDefault());
+        return LocaleContextHolder.getLocale();
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.quinn.framework.component;
 
-import com.quinn.framework.util.SessionUtil;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,14 +13,11 @@ import java.util.Locale;
  * @author Qunhua.Liao
  * @since 2020-06-01
  */
-public class DefaultQuinnLocalResolver extends FixedLocaleResolver {
+public class DefaultQuinnLocalResolver extends CookieLocaleResolver {
 
     @Override
     public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
         super.setLocale(request, response, locale);
-        SessionUtil.setValue(SessionUtil.SESSION_KEY_LOCALE, locale);
-        SessionUtil.setValue(SessionUtil.SESSION_KEY_REQUEST, request);
-        SessionUtil.setValue(SessionUtil.SESSION_KEY_RESPONSE, response);
     }
 
 }
