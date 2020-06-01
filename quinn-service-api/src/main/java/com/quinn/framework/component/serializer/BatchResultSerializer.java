@@ -7,7 +7,7 @@ import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.CharConstant;
-import com.quinn.util.constant.enums.NotifyEnum;
+import com.quinn.util.base.enums.NotifyEnum;
 
 import java.io.IOException;
 import java.util.List;

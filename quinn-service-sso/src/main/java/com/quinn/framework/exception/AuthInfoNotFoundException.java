@@ -12,7 +12,7 @@ import com.quinn.util.base.exception.BaseBusinessException;
 public class AuthInfoNotFoundException extends BaseBusinessException {
 
     {
-        buildParam(AuthMessageEnum.AUTH_INFO_NOT_FOUND.name(), 0, 0);
+        buildParam(AuthMessageEnum.AUTH_INFO_NOT_FOUND.key(), 0, 0);
     }
 
     public AuthInfoNotFoundException() {

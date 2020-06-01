@@ -69,6 +69,15 @@ public final class MultiAuthInfoFetcher {
     }
 
     /**
+     * 获取权限信息
+     *
+     * @param authInfo 验证信息
+     */
+    public static BaseResult<List> fetchPermissions(AuthInfo authInfo, String group, String type, Long parentId) {
+        return pickAuthInfoFetcher(authInfo.getClass()).selectMyPermissions(authInfo, group, type, parentId);
+    }
+
+    /**
      * 获取用户所有租户
      *
      * @param authInfo 用户信息

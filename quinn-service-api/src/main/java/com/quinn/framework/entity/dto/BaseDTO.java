@@ -104,6 +104,12 @@ public abstract class BaseDTO<T> {
     private String operator;
 
     /**
+     * 操作者组织
+     */
+    @ApiModelProperty("操作者组织")
+    private String operatorOrg;
+
+    /**
      * 操作时间
      */
     @ApiModelProperty("操作时间")

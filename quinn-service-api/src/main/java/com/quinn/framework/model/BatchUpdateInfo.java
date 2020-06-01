@@ -6,7 +6,7 @@ import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.constant.enums.MessageLevelEnum;
-import com.quinn.util.constant.enums.NotifyEnum;
+import com.quinn.util.base.enums.NotifyEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +47,7 @@ public class BatchUpdateInfo<T extends BaseDO> {
     public BaseResult<List<T>> flag(boolean allFlag, boolean hardFlag) {
         if (CollectionUtil.isEmpty(oldValues) && CollectionUtil.isEmpty(newList)) {
             return BaseResult.success(null).ofLevel(MessageLevelEnum.WARN)
-                    .buildMessage(NotifyEnum.NOTHING_HAPPENED.name(), 0, 0)
+                    .buildMessage(NotifyEnum.NOTHING_HAPPENED.key(), 0, 0)
                     .result();
         }
 

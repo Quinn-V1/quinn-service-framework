@@ -12,7 +12,7 @@ import com.quinn.util.base.exception.BaseBusinessException;
 public class AuthTypeNotSupportException extends BaseBusinessException {
 
     {
-        buildParam(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.name(), 0, 2);
+        buildParam(AuthMessageEnum.AUTH_TYPE_NOT_SUPPORT.key(), 0, 2);
     }
 
     public AuthTypeNotSupportException() {

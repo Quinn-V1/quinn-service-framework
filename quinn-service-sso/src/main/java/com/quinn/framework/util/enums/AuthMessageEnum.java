@@ -2,11 +2,14 @@ package com.quinn.framework.util.enums;
 
 import static com.quinn.framework.util.constant.AuthMessageConstant.*;
 import static com.quinn.framework.util.constant.AuthParamName.*;
+
 import com.quinn.util.base.handler.EnumMessageResolver;
 import com.quinn.util.constant.CommonParamName;
 import com.quinn.util.constant.MessageEnumFlag;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.LanguageEnum;
+
+import java.util.Locale;
 
 /**
  * 权限异常枚举类
@@ -80,6 +83,6 @@ public enum AuthMessageEnum implements MessageEnumFlag {
     }
 
     static {
-        EnumMessageResolver.addContent(LanguageEnum.zh_CN.locale, AuthMessageEnum.values());
+        EnumMessageResolver.addContent(Locale.SIMPLIFIED_CHINESE, AuthMessageEnum.values());
     }
 }

@@ -6,6 +6,7 @@ import com.quinn.framework.model.QuinnSessionFactory;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.SubjectDAO;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.SessionListener;
@@ -140,12 +141,19 @@ public class QuinnAutoConfiguration {
         return sessionManager;
     }
 
+    @Bean
+    public SubjectDAO subjectDAO() {
+        QuinnSubjectDao subjectDao = new QuinnSubjectDao();
+        return subjectDao;
+    }
+
     /**
      * 配置核心安全事务管理器
      */
     @Bean(name = "securityManager")
     public SecurityManager securityManager(
             Realm realm,
+            SubjectDAO subjectDAO,
             CacheManager cacheManager,
             SessionManager sessionManager
     ) {
@@ -153,6 +161,7 @@ public class QuinnAutoConfiguration {
         securityManager.setRealm(realm);
         securityManager.setCacheManager(cacheManager);
         securityManager.setSessionManager(sessionManager);
+        securityManager.setSubjectDAO(subjectDAO);
         return securityManager;
     }
 

@@ -6,12 +6,15 @@ import com.quinn.framework.api.LoginPrevProcessor;
 import com.quinn.framework.api.LoginProcessor;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.exception.AuthInfoNotFoundException;
+import com.quinn.framework.model.AuthInfoFactory;
 import com.quinn.framework.model.DefaultTokenInfo;
 import com.quinn.framework.service.SsoService;
 import com.quinn.framework.util.EntityUtil;
 import com.quinn.framework.util.MultiAuthInfoFetcher;
 import com.quinn.framework.util.MultiCredentialsMatcher;
+import com.quinn.framework.util.SessionUtil;
 import com.quinn.framework.util.enums.AuthMessageEnum;
+import com.quinn.framework.util.enums.CmTypeEnum;
 import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.LoggerExtend;
@@ -47,8 +50,14 @@ public class DefaultSsoService implements SsoService {
      */
     private LoginProcessor loginProcessor;
 
+    /**
+     * 登录前置处理
+     */
     private List<LoginPrevProcessor> loginPrevProcessors;
 
+    /**
+     * 登录后置处理
+     */
     private List<LoginPostProcessor> loginPostProcessors;
 
     @Override
@@ -118,7 +127,7 @@ public class DefaultSsoService implements SsoService {
     }
 
     @Override
-    public BaseResult listMyTenant() {
+    public BaseResult selectMyTenant() {
         List<StringKeyValue> result = loginProcessor.listMyTenant();
         if (CollectionUtil.isEmpty(result)) {
             return BaseResult.fail()
@@ -139,7 +148,7 @@ public class DefaultSsoService implements SsoService {
     public BaseResult<List<StringKeyValue>> credentialsMatchers() {
         Collection<String> matcherTypes = MultiCredentialsMatcher.matcherTypes();
         StringKeyValueMsgKeyResolver keyResolver =
-                new StringKeyValueMsgKeyResolver(CommonDataTypeEnum.CM_TYPE.code)
+                new StringKeyValueMsgKeyResolver(CmTypeEnum.class.getSimpleName())
                         .ofCacheDelimiter(BaseDTO.CACHE_KEY_DELIMITER).ofPropDelimiter(BaseDTO.PROPERTY_DELIMITER);
         return EntityUtil.stringToKeyValue(matcherTypes, keyResolver);
     }
@@ -152,5 +161,11 @@ public class DefaultSsoService implements SsoService {
     @Override
     public void setLoginPostProcessors(List<LoginPostProcessor> loginPostProcessors) {
         this.loginPostProcessors = loginPostProcessors;
+    }
+
+    @Override
+    public BaseResult<List> selectMyPermissions(String group, String type, Long parentId) {
+        return MultiAuthInfoFetcher.fetchPermissions(
+                AuthInfoFactory.generate(SessionUtil.getAuthInfo()), group, type, parentId);
     }
 }

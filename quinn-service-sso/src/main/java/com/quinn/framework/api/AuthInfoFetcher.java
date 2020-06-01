@@ -49,6 +49,17 @@ public interface AuthInfoFetcher extends ClassDivAble {
     boolean hasTenant(AuthInfo authInfo, String tenantCode);
 
     /**
+     * 查询权限信息
+     *
+     * @param authInfo 权限信息
+     * @param group    分组
+     * @param type     类型
+     * @param parentId 上级ID
+     * @return
+     */
+    BaseResult selectMyPermissions(AuthInfo authInfo, String group, String type, Long parentId);
+
+    /**
      * 作用令牌类型
      *
      * @return 令牌类型

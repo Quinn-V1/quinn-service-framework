@@ -13,6 +13,16 @@ import java.io.Serializable;
 public interface AuthInfo<T> extends Serializable {
 
     /**
+     * 验证方式
+     */
+    String ATTR_NAME_VALIDATE_WAY = "validateWay";
+
+    /**
+     * ID
+     */
+    String ATTR_NAME_ID = "id";
+
+    /**
      * 获取令牌明文(用户名)
      *
      * @return 令牌明文（用户名）

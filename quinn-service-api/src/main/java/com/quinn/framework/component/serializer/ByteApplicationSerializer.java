@@ -35,6 +35,7 @@ public class ByteApplicationSerializer implements ApplicationSerializer {
             oos.flush();
             return bos.toByteArray();
         } catch (Exception e) {
+            // FIXME
             throw new BaseBusinessException().buildParam("", 1, 2).exception();
         } finally {
             StreamUtil.closeQuietly(bos, oos);
@@ -56,6 +57,7 @@ public class ByteApplicationSerializer implements ApplicationSerializer {
             ois = new ObjectInputStream(bis);
             return ois.readObject();
         } catch (Exception e) {
+            // FIXME
             throw new BaseBusinessException().buildParam("", 1, 2).exception();
         } finally {
             StreamUtil.closeQuietly(bis, ois);

@@ -27,7 +27,7 @@ import java.util.List;
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-@Service
+@Service("loginProcessor")
 public class QuinnLoginProcessor implements LoginProcessor {
 
     @Resource
@@ -67,7 +67,7 @@ public class QuinnLoginProcessor implements LoginProcessor {
         Subject subject = SecurityUtils.getSubject();
         if (!subject.isAuthenticated()) {
             throw new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
-                    .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.name(), 0, 0)
+                    .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.key(), 0, 0)
                     .exception();
         }
 
@@ -81,7 +81,7 @@ public class QuinnLoginProcessor implements LoginProcessor {
         Subject subject = SecurityUtils.getSubject();
         if (!subject.isAuthenticated()) {
             throw new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
-                    .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.name(), 0, 0)
+                    .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.key(), 0, 0)
                     .exception();
         }
 
@@ -89,7 +89,7 @@ public class QuinnLoginProcessor implements LoginProcessor {
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
         if (!MultiAuthInfoFetcher.hasTenant(authInfo, tenantCode)) {
             throw new UnauthorizedException().ofStatusCode(HttpStatus.FORBIDDEN.value())
-                    .buildParam(AuthMessageEnum.ERROR_TENANT.name(), 1, 0)
+                    .buildParam(AuthMessageEnum.ERROR_TENANT.key(), 1, 0)
                     .addParam(AuthMessageEnum.ERROR_TENANT.paramNames[0], tenantCode)
                     .exception();
         }

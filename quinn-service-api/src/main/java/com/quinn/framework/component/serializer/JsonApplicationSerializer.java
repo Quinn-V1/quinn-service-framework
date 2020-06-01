@@ -38,6 +38,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
 
             return jsonObject.toJSONString().getBytes(StringConstant.SYSTEM_DEFAULT_CHARSET);
         } catch (Exception e) {
+            // FIXME
             throw new BaseBusinessException().buildParam("", 1, 1)
                     .exception();
         }
@@ -56,6 +57,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
                 return value;
             }
         } catch (Exception e) {
+            // FIXME
             throw new BaseBusinessException()
                     .buildParam("deserialize exception", 1, 1)
                     .exception();
@@ -92,6 +94,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
 
             return JSONObject.parseObject(s, tpl);
         } catch (Exception e) {
+                    // FIXME
             throw new BaseBusinessException()
                     .buildParam("deserialize exception", 1, 1)
                     .exception();
@@ -111,6 +114,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
         try {
             return deserialize(json.getBytes(StringConstant.SYSTEM_DEFAULT_CHARSET), tpl);
         } catch (UnsupportedEncodingException e) {
+            // FIXME
             throw new BaseBusinessException().buildParam("deserialize exception", 1, 1).exception();
         }
     }
@@ -120,6 +124,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
         try {
             return new String(this.serialize(o), StringConstant.SYSTEM_DEFAULT_CHARSET);
         } catch (UnsupportedEncodingException e) {
+            // FIXME
             throw new BaseBusinessException().buildParam("deserialize exception", 1, 1).exception();
         }
     }

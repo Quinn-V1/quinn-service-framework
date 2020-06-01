@@ -44,26 +44,26 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
                 if (!StringUtil.isEmptyInFrame(tenantCode)) {
                     if (CollectionUtil.isEmpty(principals)) {
                         result.ofLevel(MessageLevelEnum.WARN)
-                                .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
+                                .buildMessage(AuthMessageEnum.NO_TENANT.key(), 0, 0)
                         ;
                     } else if (principals.containsKey(tenantCode)) {
                         authInfo.setCurrentTenantCode(tenantCode);
                     } else {
                         result.ofLevel(MessageLevelEnum.WARN)
-                                .buildMessage(AuthMessageEnum.ERROR_TENANT.name(), 1, 0)
+                                .buildMessage(AuthMessageEnum.ERROR_TENANT.key(), 1, 0)
                                 .addParam(AuthMessageEnum.ERROR_TENANT.paramNames[0], tenantCode)
                         ;
                     }
                 } else {
                     if (CollectionUtil.isEmpty(principals)) {
                         result.ofLevel(MessageLevelEnum.WARN)
-                                .buildMessage(AuthMessageEnum.NO_TENANT.name(), 0, 0)
+                                .buildMessage(AuthMessageEnum.NO_TENANT.key(), 0, 0)
                         ;
                     } else if (principals.size() == 1) {
                         authInfo.setCurrentTenantCode(principals.keySet().iterator().next());
                     } else {
                         result.ofLevel(MessageLevelEnum.WARN)
-                                .buildMessage(AuthMessageEnum.MULTI_TENANT.name(), 1, 0)
+                                .buildMessage(AuthMessageEnum.MULTI_TENANT.key(), 1, 0)
                                 .addParam(AuthMessageEnum.MULTI_TENANT.paramNames[0], principals.size())
                         ;
                     }
@@ -73,7 +73,7 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
         }
 
         return BaseResult.fail()
-                .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)
                 .addParamI8n(CommonMessageEnum.RESULT_NOT_FOUND.paramNames[0], DefaultAuthInfo.class.getSimpleName())
                 .result();
     }
@@ -81,6 +81,11 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
     @Override
     public String tokenType() {
         return AuthTypeEnum.MOCK_USER.name();
+    }
+
+    @Override
+    public BaseResult<List> selectMyPermissions(AuthInfo authInfo, String group, String type, Long parentId) {
+        return BaseResult.fail();
     }
 
     @Override

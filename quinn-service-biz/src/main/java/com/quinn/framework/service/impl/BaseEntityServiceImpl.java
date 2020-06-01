@@ -20,7 +20,7 @@ import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
-import com.quinn.util.constant.enums.DataOperateTypeEnum;
+import com.quinn.util.base.enums.DataOperateTypeEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
@@ -101,9 +101,9 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     getResult().ofData(data);
                 } else {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.name(), 1, 2)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.INSERT.name())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], getDOClass().getSimpleName())
+                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.INSERT.key())
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], VOClass.getSimpleName())
                             .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
                     ;
                 }
@@ -139,9 +139,9 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     getResult().ofData(getData());
                 } else {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.name(), 1, 2)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.DELETE.name())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], getDOClass().getSimpleName())
+                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.DELETE.key())
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], VOClass.getSimpleName())
                             .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
                     ;
                 }
@@ -178,9 +178,9 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     getResult().ofData(vo);
                 } else {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.name(), 1, 2)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.name())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], getDOClass().getSimpleName())
+                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.key())
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], VOClass.getSimpleName())
                             .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
                     ;
                 }
@@ -208,8 +208,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     getResult().ofData(data);
                 } else {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.name(), 1, 2)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.name())
+                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.key())
                             .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], getDOClass().getSimpleName())
                             .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
                     ;
@@ -224,7 +224,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     @SneakyThrows
     public BaseResult<VO> getById(Long id) {
         TO condition = TOClass.getConstructor().newInstance();
-        condition.ofEntityClass(DOClass);
         condition.setId(id);
         condition.setDataVersionFrom(null);
         condition.setDataStatusFrom(null);
@@ -234,7 +233,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     @Override
     public BaseResult<VO> get(TO condition) {
         BaseResult<VO> result = new BaseResult();
-        condition.ofEntityClass(DOClass);
         condition.setResultNumExpected(1);
         entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
 
@@ -245,17 +243,17 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     String dataKey = getData().dataKey();
                     dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.name(), 2, 1)
-                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.name())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], TOClass.getSimpleName())
+                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 2, 1)
+                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.key())
+                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1], VOClass.getSimpleName())
                             .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], dataKey)
                     ;
                 } else if (select.size() > 1) {
                     String dataKey = getData().dataKey();
                     dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(RESULT_NOT_UNIQUE.name(), 2, 1)
-                            .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0], TOClass.getSimpleName())
+                            .buildMessage(RESULT_NOT_UNIQUE.key(), 2, 1)
+                            .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0], VOClass.getSimpleName())
                             .addParam(RESULT_NOT_UNIQUE.paramNames[1], dataKey)
                             .addParam(RESULT_NOT_UNIQUE.paramNames[2], select.size())
                     ;
@@ -288,8 +286,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                 Page<VO> select = baseMapper.select(getData());
                 if (CollectionUtils.isEmpty(select)) {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
-                            .buildMessage(RESULT_NOT_FOUND.name(), 0, 1)
-                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0], DOClass.getSimpleName())
+                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
+                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0], VOClass.getSimpleName())
                     ;
                 } else {
                     getResult().ofData(select);
@@ -316,8 +314,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                 Page<VO> select = baseMapper.select(getData());
                 if (CollectionUtils.isEmpty(select)) {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
-                            .buildMessage(RESULT_NOT_FOUND.name(), 0, 1)
-                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0], TOClass.getName())
+                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
+                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0], VOClass.getName())
                     ;
                 } else {
                     getResult().ofData(pageAdapter.toPageInf(select));
@@ -335,8 +333,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             if (!res.isSuccess() && transaction) {
                 throw new DataOperationTransactionException(res.getMessage())
                         .getMessageProp()
-                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.INSERT.name())
-                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], TOClass.getName())
+                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.INSERT.key())
+                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], VOClass.getName())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], list.size())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[3], i)
                         .ofPrevProp(res.getMessageProp())
@@ -355,8 +353,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             if (!res.isSuccess() && transaction) {
                 throw new DataOperationTransactionException(res.getMessage())
                         .getMessageProp()
-                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.DELETE.name())
-                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], TOClass.getName())
+                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.DELETE.key())
+                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], VOClass.getName())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], list.size())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[3], i)
                         .ofPrevProp(res.getMessageProp())
@@ -374,8 +372,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             BaseResult<VO> res = update(list.get(i).prepareForUpdate(SessionUtil.getUserKey(), allFlag));
             if (!res.isSuccess() && transaction) {
                 throw new DataOperationTransactionException(res.getMessage())
-                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.UPDATE.name())
-                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], TOClass.getName())
+                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.UPDATE.key())
+                        .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], VOClass.getName())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], list.size())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[3], i)
                         .ofPrevProp(res.getMessageProp())

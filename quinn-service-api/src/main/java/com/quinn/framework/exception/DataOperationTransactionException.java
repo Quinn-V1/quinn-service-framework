@@ -11,7 +11,7 @@ import com.quinn.util.base.enums.CommonMessageEnum;
 public class DataOperationTransactionException extends ServiceException {
 
     {
-        buildParam(CommonMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED.name(), 2, 2);
+        buildParam(CommonMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED.key(), 2, 2);
     }
 
     public DataOperationTransactionException() {

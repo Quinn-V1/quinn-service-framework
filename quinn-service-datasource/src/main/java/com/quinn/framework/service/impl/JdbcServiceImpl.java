@@ -17,7 +17,7 @@ import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.DataOperateTypeEnum;
+import com.quinn.util.base.enums.DataOperateTypeEnum;
 import com.quinn.util.base.enums.CommonMessageEnum;
 import javax.annotation.Resource;
 
@@ -72,7 +72,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
-                    .buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.key(), 1, 0)
                     .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "sql")
                     .result();
         }
@@ -95,7 +95,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
                 if (transaction) {
                     throw new DataOperationTransactionException()
                             .getMessageProp()
-                            .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.OPERATE.name())
+                            .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[0], DataOperateTypeEnum.OPERATE.key())
                             .addParamI8n(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[1], StringConstant.STRING_EMPTY)
                             .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], sqlArray.length)
                             .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[3], i)
@@ -121,7 +121,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
         T t = jdbcTemplate.queryForObject(sql, params, clazz);
         if (t == null) {
             return BaseResult.fail()
-                    .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                    .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)
                     .addParam(CommonMessageEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
                     .result()
                     ;
@@ -134,7 +134,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
         List<T> list = jdbcTemplate.queryForList(sql, params, clazz);
         if (CollectionUtil.isEmpty(list)) {
             return BaseResult.fail()
-                    .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.name(), 0, 1)
+                    .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)
                     .addParam(CommonMessageEnum.RESULT_NOT_FOUND.paramNames[0], StringConstant.STRING_EMPTY)
                     .result()
                     ;

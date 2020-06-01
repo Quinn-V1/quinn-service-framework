@@ -23,6 +23,16 @@ public class SessionUtil {
     /**
      * 会话信息键：用户ID
      */
+    public static final String SESSION_KEY_AUTH_INFO = "SESSION_KEY_AUTH_INFO";
+
+    /**
+     * 会话信息键：用户ID
+     */
+    public static final String SESSION_KEY_SESSION_INFO = "SESSION_KEY_SESSION_INFO";
+
+    /**
+     * 会话信息键：用户ID
+     */
     public static final String SESSION_KEY_USER_ID = "SESSION_KEY_USER_ID";
 
     /**
@@ -324,6 +334,24 @@ public class SessionUtil {
      */
     public static boolean isOrgAdmin() {
         return true;
+    }
+
+    /**
+     * 获取授权纤细对象
+     *
+     * @return 授权信息对象
+     */
+    public static Object getAuthInfo() {
+        return getValue(SESSION_KEY_AUTH_INFO, null);
+    }
+
+    /**
+     * 设置授权纤细对象
+     *
+     * @param object 授权信息对象
+     */
+    public static void setAuthInfo(Object object) {
+        setValue(SESSION_KEY_AUTH_INFO, object);
     }
 
 }

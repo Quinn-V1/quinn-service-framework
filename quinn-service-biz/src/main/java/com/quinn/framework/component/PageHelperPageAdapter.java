@@ -42,7 +42,7 @@ public class PageHelperPageAdapter implements PageAdapter<Page> {
         if (condition.getPageNum() == null || condition.getPageSize() == null
                 || condition.getPageSize().intValue() == 0) {
             return BaseResult.build(false)
-                    .buildMessage(CommonMessageEnum.PARAM_PAGE_NOT_PROVIDED.name(), 1, 0)
+                    .buildMessage(CommonMessageEnum.PARAM_PAGE_NOT_PROVIDED.key(), 1, 0)
                     .addParam("paramName", "pageNum or pageSize")
                     .result()
                     ;
@@ -58,7 +58,7 @@ public class PageHelperPageAdapter implements PageAdapter<Page> {
 
         if (pageNum == null || pageSize == null || pageSize.intValue() == 0) {
             return BaseResult.build(false)
-                    .buildMessage(CommonMessageEnum.PARAM_PAGE_NOT_PROVIDED.name(), 1, 0)
+                    .buildMessage(CommonMessageEnum.PARAM_PAGE_NOT_PROVIDED.key(), 1, 0)
                     .addParam("paramName", "pageNum or pageSize")
                     .result()
                     ;

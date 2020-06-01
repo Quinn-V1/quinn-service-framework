@@ -44,7 +44,7 @@ public interface SsoService {
      *
      * @return 我的租户列表
      */
-    BaseResult listMyTenant();
+    BaseResult selectMyTenant();
 
     /**
      * 设置我的当前租户
@@ -76,4 +76,15 @@ public interface SsoService {
      */
     default void setLoginPostProcessors(List<LoginPostProcessor> loginPostProcessors) {
     }
+
+    /**
+     * 查找我的权限
+     *
+     * @param group    分组
+     * @param type     类型
+     * @param parentId 上级权限ID
+     * @return 权限列表
+     */
+    BaseResult selectMyPermissions(String group, String type, Long parentId);
+
 }

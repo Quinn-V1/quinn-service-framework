@@ -15,7 +15,6 @@ public enum CmTypeEnum implements MessageEnumFlag {
 
     // 数据库用户
     md5CredentialsSubMatcher("MD5普通加密"),
-
     ;
 
     private String defaultDesc;
