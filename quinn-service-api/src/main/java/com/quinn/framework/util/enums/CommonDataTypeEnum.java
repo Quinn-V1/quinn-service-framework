@@ -2,6 +2,7 @@ package com.quinn.framework.util.enums;
 
 import com.quinn.util.base.handler.EnumMessageResolver;
 import com.quinn.util.constant.MessageEnumFlag;
+import com.quinn.util.constant.StringConstant;
 
 import java.util.Locale;
 
@@ -51,6 +52,17 @@ public enum CommonDataTypeEnum implements MessageEnumFlag {
 
     static {
         EnumMessageResolver.addContent(Locale.SIMPLIFIED_CHINESE, CommonDataTypeEnum.values());
+    }
+
+    /**
+     * 拼接消息主键编码
+     *
+     * @param dataType 数据类型
+     * @return Message Key
+     */
+    public static final String wrapperKey(String dataType) {
+        return "DataTypeEnum" + StringConstant.CHAR_COLON + dataType
+                + StringConstant.CHAR_POUND_SIGN + StringConstant.NONE_OF_DATA;
     }
 
 }
