@@ -48,7 +48,8 @@ public class ConfigurationController extends AbstractController {
     @ApiOperation(value = "查询应用配置项命名空间")
     public BaseResult getApplicationConfigurationNamespaces() {
         List<String> ret = new ArrayList<>();
-        String namespace = applicationInfo.getApplicationProperties().getProperty(ConfigConstant.NAMESPACE_NAME_MODULES);
+        String namespace = applicationInfo.getApplicationProperties()
+                .getProperty(ConfigConstant.NAMESPACE_NAME_MODULES);
         if (StringUtil.isNotEmpty(namespace)) {
             String[] namespaces = namespace.split(",");
             for (String n : namespaces) {

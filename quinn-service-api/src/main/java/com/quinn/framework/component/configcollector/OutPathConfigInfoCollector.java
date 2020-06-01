@@ -2,8 +2,9 @@ package com.quinn.framework.component.configcollector;
 
 import com.quinn.framework.api.ConfigInfoCollector;
 import com.quinn.framework.util.PropertiesUtil;
-import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.NumberConstant;
 
 import java.io.File;
 import java.util.Properties;
@@ -14,7 +15,7 @@ import java.util.Properties;
  * @author Qunhua.Liao
  * @since 2020-03-30
  */
-public class OutPathConfigInfoCollector extends BaseConfigInfoCollector implements ConfigInfoCollector {
+public class OutPathConfigInfoCollector implements ConfigInfoCollector {
 
     /**
      * 默认配置文件
@@ -24,7 +25,7 @@ public class OutPathConfigInfoCollector extends BaseConfigInfoCollector implemen
 
     @Override
     public int getPriority() {
-        return 200;
+        return NumberConstant.INT_HUNDRED * NumberConstant.INT_TWO;
     }
 
     @Override

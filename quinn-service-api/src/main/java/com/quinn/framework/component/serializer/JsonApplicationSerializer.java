@@ -20,6 +20,9 @@ import java.util.Map;
  */
 public class JsonApplicationSerializer implements ApplicationSerializer {
 
+    /**
+     * 序列化对象类名参数名
+     */
     private static final String REDIS_SERIALIZER_PROPERTY = "className";
 
     @Override
@@ -94,7 +97,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
 
             return JSONObject.parseObject(s, tpl);
         } catch (Exception e) {
-                    // FIXME
+            // FIXME
             throw new BaseBusinessException()
                     .buildParam("deserialize exception", 1, 1)
                     .exception();

@@ -1,10 +1,9 @@
 package com.quinn.framework.configuration;
 
+import com.quinn.framework.api.CustomApplicationListener;
 import com.quinn.framework.api.file.FileHandler;
 import com.quinn.framework.api.file.StorageService;
-import com.quinn.framework.component.LocalStorageServiceImpl;
-import com.quinn.framework.component.LoggerExtendSlf4jGenerator;
-import com.quinn.framework.component.PropertiesFileMessageResolver;
+import com.quinn.framework.component.*;
 import com.quinn.framework.component.file.DemoFileHandler;
 import com.quinn.framework.service.AuditAbleService;
 import com.quinn.framework.service.CacheAbleService;
@@ -24,10 +23,13 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -55,6 +57,9 @@ public class BaseBizConfiguration {
 
     @Value("${com.quinn-service.i18n.baseName:classpath*:i18n/msg}")
     private String baseNames;
+
+    @Value("${com.quinn-service.i18n.locale-param:lang}")
+    private String localeParamName;
 
     @Bean
     @ConditionalOnMissingBean(name = {"applicationInfo"})
@@ -125,6 +130,24 @@ public class BaseBizConfiguration {
     @Bean("propertiesFileMessageResolver")
     public MessageResolver propertiesFileMessageResolver(PlaceholderHandler messagePlaceholderHandler) {
         return new PropertiesFileMessageResolver(messagePlaceholderHandler, baseNames.split(StringConstant.CHAR_COMMA));
+    }
+
+    @Bean
+    @ConditionalOnExpression("'${com.quinn-service.framework.collect-metadata:true}'=='true'")
+    public CustomApplicationListener metaDataConfigInfoCollector() {
+        return new MetaDataConfigInfoCollector();
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        return new DefaultQuinnLocalResolver();
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+        lci.setParamName(localeParamName);
+        return lci;
     }
 
 }

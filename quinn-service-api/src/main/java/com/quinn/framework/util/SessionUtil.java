@@ -63,6 +63,11 @@ public class SessionUtil {
     /**
      * 会话信息键：请求
      */
+    public static final String SESSION_KEY_RESPONSE = "SESSION_KEY_RESPONSE";
+
+    /**
+     * 会话信息键：请求
+     */
     public static final String SESSION_KEY_CURR_TENANT = "SESSION_KEY_CURR_TENANT";
 
     /**

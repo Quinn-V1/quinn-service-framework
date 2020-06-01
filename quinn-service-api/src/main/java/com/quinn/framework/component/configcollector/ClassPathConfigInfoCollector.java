@@ -3,6 +3,7 @@ package com.quinn.framework.component.configcollector;
 import com.quinn.framework.api.ConfigInfoCollector;
 import com.quinn.framework.util.PropertiesUtil;
 import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 
 import java.util.Properties;
@@ -57,7 +58,7 @@ public class ClassPathConfigInfoCollector extends BaseConfigInfoCollector implem
 
     @Override
     public int getPriority() {
-        return 100;
+        return NumberConstant.INT_HUNDRED;
     }
 
     @Override

@@ -53,6 +53,7 @@ public class ApplicationDefaultEntry {
         Map<String, CustomApplicationListener> listeners =
                 applicationContext.getBeansOfType(CustomApplicationListener.class);
 
+        ApplicationInfo.getInstance().setApplicationProperties(properties);
         ApplicationInfo.getInstance().stated();
         for (Map.Entry<String, CustomApplicationListener> listener : listeners.entrySet()) {
             listener.getValue().applicationStarted(applicationContext);

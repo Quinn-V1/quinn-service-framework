@@ -1,12 +1,13 @@
 package com.quinn.framework.component.configcollector;
 
 import com.quinn.framework.api.ConfigInfoCollector;
+import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.factory.LoggerExtendFactory;
-import com.quinn.util.base.CollectionUtil;
-import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.CharConstant;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
@@ -23,13 +24,13 @@ import java.util.Set;
  * @author Qunhua.Liao
  * @since 2020-03-31
  */
-public class ModuleScanConfigurationCollector extends BaseConfigInfoCollector implements ConfigInfoCollector {
+public class ModuleScanConfigurationCollector implements ConfigInfoCollector {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(ModuleScanConfigurationCollector.class);
 
     @Override
     public int getPriority() {
-        return 300;
+        return NumberConstant.INT_HUNDRED * NumberConstant.INT_THREE;
     }
 
     @SneakyThrows
@@ -132,7 +133,7 @@ public class ModuleScanConfigurationCollector extends BaseConfigInfoCollector im
                 }
 
                 if (StringUtil.isNotEmpty(mapperPackage)
-                        && ! mapperPackages.contains(mapperPackage)) {
+                        && !mapperPackages.contains(mapperPackage)) {
                     queryMapperPackages.append(CharConstant.COMMA).append(mapperPackage);
                     mapperPackages.add(mapperPackage);
                 }
@@ -166,6 +167,6 @@ public class ModuleScanConfigurationCollector extends BaseConfigInfoCollector im
             swaggerDocGroups.deleteCharAt(0);
             priorityProperties.setProperty(ConfigConstant.RESTFUL_DOC_API_GROUPS, swaggerDocGroups.toString());
         }
-
     }
+
 }
