@@ -1,6 +1,5 @@
 package com.quinn.framework.rabbitmq.configuration;
 
-import com.quinn.framework.api.MqListener;
 import com.quinn.framework.api.MqService;
 import com.quinn.framework.rabbitmq.component.SimpleRabbitServiceImpl;
 import com.quinn.util.base.factory.PrefixThreadFactory;
@@ -9,18 +8,11 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -31,17 +23,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * @since 2020-05-27
  */
 @Configuration
-public class RabbitMqAutoConfiguration implements ApplicationContextAware, InitializingBean {
-
-    private ApplicationContext applicationContext;
+public class RabbitMqAutoConfiguration {
 
     /**
      * 消息转换器类型：Jackson
      */
     private final static int SERIALIZE_TYPE_JACKSON = 2;
-
-    @Value("${com.quinn-service.mq.rabbitmq.auto-listen:true}")
-    private boolean autoListen;
 
     @Value("${com.quinn-service.mq.rabbitmq.thread-pool-size:2}")
     private int coreTheadSize;
@@ -84,20 +71,17 @@ public class RabbitMqAutoConfiguration implements ApplicationContextAware, Initi
     }
 
     @Bean
-    @Autowired
     public RabbitTemplate rabbitTemplate(ConnectionFactory cf) {
         RabbitTemplate template = new RabbitTemplate(cf);
         return template;
     }
 
     @Bean
-    @Autowired
     public RabbitAdmin rabbitAdmin(ConnectionFactory cf) {
         RabbitAdmin admin = new RabbitAdmin(cf);
         return admin;
     }
 
-    @Autowired
     @Bean(name = {"rabbitMQService", "mqService"})
     public MqService rabbitMQService(
             ConnectionFactory rabbitConnectionFactory,
@@ -119,23 +103,6 @@ public class RabbitMqAutoConfiguration implements ApplicationContextAware, Initi
                 (r, executor) -> {
                     // TODO 超出处理能力保障
                 });
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        if (autoListen) {
-            Collection<MqListener> rabbitListeners = applicationContext.getBeansOfType(MqListener.class).values();
-            MqService rabbitMQService = applicationContext.getBean(MqService.class);
-            Iterator<MqListener> it = rabbitListeners.iterator();
-            while (it.hasNext()) {
-                rabbitMQService.listen(it.next());
-            }
-        }
     }
 
 }

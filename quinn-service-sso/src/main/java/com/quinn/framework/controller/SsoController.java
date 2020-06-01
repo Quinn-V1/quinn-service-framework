@@ -31,9 +31,7 @@ public class SsoController extends AbstractController {
 
     @PostMapping(value = "login")
     @ApiOperation(value = "登录")
-    public BaseResult<AuthInfo> login(
-            @RequestBody DefaultTokenInfo token
-    ) {
+    public BaseResult<AuthInfo> login(@RequestBody DefaultTokenInfo token) {
         return ssoService.login(token);
     }
 

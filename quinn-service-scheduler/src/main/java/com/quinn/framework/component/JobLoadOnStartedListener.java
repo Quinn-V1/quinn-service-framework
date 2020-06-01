@@ -7,7 +7,6 @@ import com.quinn.util.base.model.BaseResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -18,7 +17,6 @@ import java.util.*;
  * @author Qunhua.Liao
  * @since 2020-02-15
  */
-@Component
 public class JobLoadOnStartedListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(JobLoadOnStartedListener.class);

@@ -33,9 +33,4 @@ public interface ScheduleParamName {
      */
     String PARAM_KEY_THIS_EXEC_DATETIME = "thisExecDateTime";
 
-    /**
-     * 本次执行时间
-     */
-    String PARAM_KEY_RUNTIME_PARAM = "runtimeParam";
-
 }

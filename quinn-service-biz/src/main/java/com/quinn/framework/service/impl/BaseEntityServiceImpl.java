@@ -1,6 +1,5 @@
 package com.quinn.framework.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.quinn.framework.api.EntityServiceInterceptor;
@@ -25,9 +24,9 @@ import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
-import javax.annotation.Resource;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -115,7 +114,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
     @Override
     public BaseResult<VO> delete(VO data) {
-        BaseResult<VO> result = getByDO(data);
+        BaseResult<VO> result = getById(data.getId());
         if (!result.isSuccess()) {
             return result;
         }
@@ -153,7 +152,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
     @Override
     public BaseResult<VO> update(VO data) {
-        BaseResult<VO> result = getByDO(data);
+        BaseResult<VO> result = getById(data.getId());
         if (!result.isSuccess()) {
             return result;
         }
@@ -228,6 +227,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         condition.ofEntityClass(DOClass);
         condition.setId(id);
         condition.setDataVersionFrom(null);
+        condition.setDataStatusFrom(null);
         return get(condition);
     }
 
@@ -256,7 +256,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
                             .buildMessage(RESULT_NOT_UNIQUE.name(), 2, 1)
                             .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0], TOClass.getSimpleName())
-                            .addParam(RESULT_NOT_UNIQUE.paramNames[1], getData().dataKey())
+                            .addParam(RESULT_NOT_UNIQUE.paramNames[1], dataKey)
                             .addParam(RESULT_NOT_UNIQUE.paramNames[2], select.size())
                     ;
                 } else {
@@ -493,26 +493,4 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         return pageAdapter.toPageInf(t);
     }
 
-    /**
-     * 根据DO获取VO
-     *
-     * @param data 数据
-     * @return VO
-     */
-    protected BaseResult<VO> getByDO(DO data) {
-        if (data.getId() != null) {
-            return getById(data.getId());
-        } else {
-            BaseResult<List<VO>> res = selectByMap((JSONObject) JSON.toJSON(data));
-            if (!res.isSuccess()) {
-                return BaseResult.fromPrev(res);
-            }
-
-            if (res.getData().size() > 0) {
-                // FIXME
-                return BaseResult.fail("多条数据");
-            }
-            return BaseResult.success(res.getData().get(0));
-        }
-    }
 }

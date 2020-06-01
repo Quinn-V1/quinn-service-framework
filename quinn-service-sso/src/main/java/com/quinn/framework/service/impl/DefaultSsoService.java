@@ -19,9 +19,9 @@ import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 import com.quinn.util.base.model.StringKeyValueMsgKeyResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,12 +31,20 @@ import java.util.List;
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-@Service
+@Service("ssoService")
 public class DefaultSsoService implements SsoService {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DefaultSsoService.class);
 
-    @Resource
+    public DefaultSsoService(
+            @Autowired(required = false) LoginProcessor loginProcessor
+    ) {
+        this.loginProcessor = loginProcessor;
+    }
+
+    /**
+     * 登录逻辑执行器
+     */
     private LoginProcessor loginProcessor;
 
     private List<LoginPrevProcessor> loginPrevProcessors;
