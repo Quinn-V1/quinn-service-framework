@@ -1,7 +1,7 @@
 package com.quinn.framework.configuration;
 
-import com.quinn.framework.api.message.MessageSenderFactory;
-import com.quinn.framework.component.EmailSenderFactory;
+import com.quinn.framework.api.message.MessageSenderSupplier;
+import com.quinn.framework.component.EmailSenderSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 public class EmailConfiguration {
 
     @Bean("messageSenderFactoryEMAIL")
-    public MessageSenderFactory messageSenderFactoryEmail() {
-        return new EmailSenderFactory();
+    public MessageSenderSupplier messageSenderFactoryEmail() {
+        return new EmailSenderSupplier();
     }
 
 }

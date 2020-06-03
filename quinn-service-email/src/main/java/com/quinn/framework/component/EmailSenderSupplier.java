@@ -2,7 +2,8 @@ package com.quinn.framework.component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.message.MessageSender;
-import com.quinn.framework.api.message.MessageSenderFactory;
+import com.quinn.framework.api.message.MessageSenderSupplier;
+import com.quinn.framework.api.message.MessageServer;
 import com.quinn.framework.model.EmailSender;
 import com.quinn.util.base.model.BaseResult;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-04-07
  */
-public class EmailSenderFactory implements MessageSenderFactory {
+public class EmailSenderSupplier implements MessageSenderSupplier {
 
     /**
      * 连接参数实例
@@ -48,6 +49,12 @@ public class EmailSenderFactory implements MessageSenderFactory {
     @Override
     public BaseResult<Map> connectParamExample() {
         return BaseResult.success(PARAM_MAP);
+    }
+
+    @Override
+    public BaseResult<MessageSender> create(MessageServer messageServer) {
+        // TODO
+        return null;
     }
 
 }

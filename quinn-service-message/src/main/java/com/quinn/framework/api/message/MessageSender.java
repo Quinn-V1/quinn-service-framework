@@ -3,6 +3,8 @@ package com.quinn.framework.api.message;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.util.base.model.BaseResult;
 
+import java.util.List;
+
 /**
  * 消息发送器
  *
@@ -25,7 +27,7 @@ public interface MessageSender {
      * @param messageInfo
      * @return
      */
-    BaseResult send(MessageInfo messageInfo);
+    BaseResult send(MessageInstance messageInfo);
 
     /**
      * 测试连接
@@ -33,5 +35,20 @@ public interface MessageSender {
      * @return
      */
     BaseResult test();
+
+    /**
+     * 发送多条消息
+     *
+     * @param sendRecords 发送记录
+     * @return 发送结果
+     */
+    BaseResult sendAll(List<MessageSendRecord> sendRecords);
+
+    /**
+     * 次级主键区分（一般使用类型：租户）
+     *
+     * @return 没有指定serverKey, 则按照此优先级进行选择
+     */
+    String subKey();
 
 }

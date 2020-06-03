@@ -13,6 +13,6 @@ public interface MessageTempContent {
      *
      * @return 唯一区分
      */
-    String instanceKey();
+    String sendGroup();
 
 }

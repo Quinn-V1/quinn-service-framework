@@ -27,6 +27,6 @@ public interface MessageReceiver {
      *
      * @return 用于追踪消息实例的编码
      */
-    String instanceKey();
+    String sendGroup();
 
 }

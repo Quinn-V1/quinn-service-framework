@@ -1,5 +1,6 @@
-package com.quinn.framework.api.message;
+package com.quinn.framework.service;
 
+import com.quinn.framework.api.message.*;
 import com.quinn.util.base.model.BaseResult;
 
 import java.util.List;
@@ -13,6 +14,15 @@ import java.util.Map;
  * @since 2020-05-31
  */
 public interface MessageHelpService {
+
+    /**
+     * 根据业务主键查找消息实例
+     *
+     * @param fromSystem  来源系统
+     * @param businessKey 消息实例
+     * @return
+     */
+    <T extends MessageInstance> BaseResult<T> getInstanceByBiz(String fromSystem, String businessKey);
 
     /**
      * 查找消息内容
@@ -52,15 +62,6 @@ public interface MessageHelpService {
     BaseResult<List<MessageSendRecord>> receiver2SendRecord(MessageReceiver receiver, Map<String, Object> messageParam);
 
     /**
-     * 根据业务主键查找消息实例
-     *
-     * @param fromSystem  来源系统
-     * @param businessKey 消息实例
-     * @return
-     */
-    BaseResult<MessageInstance> getInstanceByBiz(String fromSystem, String businessKey);
-
-    /**
      * 保存消息实例
      *
      * @param instance 消息实例
@@ -81,5 +82,21 @@ public interface MessageHelpService {
      * @return 消息模板
      */
     BaseResult<MessageTemp> getTemplateByKey(String templateKey);
+
+    /**
+     * 根据编码获取消息服务
+     *
+     * @param serverKey 服务编码
+     * @return 查找结果
+     */
+    BaseResult<MessageServer> getMessageServerByKey(String serverKey);
+
+    /**
+     * 根据次级主键查找
+     *
+     * @param subKey 次级主键
+     * @return 消息服务列表
+     */
+    BaseResult<List<MessageServer>> selectMessageServerBySubKey(String subKey);
 
 }

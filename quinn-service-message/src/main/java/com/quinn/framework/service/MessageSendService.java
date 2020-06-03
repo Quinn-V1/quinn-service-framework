@@ -1,5 +1,6 @@
-package com.quinn.framework.api.message;
+package com.quinn.framework.service;
 
+import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.util.base.model.BaseResult;
 
 import java.util.List;

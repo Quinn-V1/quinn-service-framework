@@ -39,23 +39,23 @@ public class DirectMessageInfo {
      */
     public static final int DEFAULT_THREAD_SIZE = 3;
 
-    public DirectMessageInfo(String batchNo) {
-        this.batchNo = batchNo;
+    public DirectMessageInfo(String batchKey) {
+        this.batchKey = batchKey;
     }
 
     public static DirectMessageInfo newInstance() {
-        String uuid = StringUtil.uuid().substring(10);
+        String uuid = StringUtil.uuid();
         return new DirectMessageInfo(uuid);
     }
 
-    public static DirectMessageInfo newInstance(String batchNo) {
-        return new DirectMessageInfo(batchNo);
+    public static DirectMessageInfo newInstance(String batchKey) {
+        return new DirectMessageInfo(batchKey);
     }
 
     /**
      * 批次号
      */
-    private String batchNo;
+    private String batchKey;
 
     /**
      * 消息数
@@ -103,8 +103,8 @@ public class DirectMessageInfo {
      * @param messageInstance 消息实例
      */
     public void addInstance(MessageInstance messageInstance) {
-        messageInstance.setBatchNo(batchNo);
-        instanceMap.put(messageInstance.instanceKey(), messageInstance);
+        messageInstance.setBatchKey(batchKey);
+        instanceMap.put(messageInstance.sendGroup(), messageInstance);
     }
 
     /**
@@ -114,7 +114,7 @@ public class DirectMessageInfo {
      * @param instance 消息实例
      */
     public void addInstance(String key, MessageInstance instance) {
-        instance.setBatchNo(batchNo);
+        instance.setBatchKey(batchKey);
         instanceMap.put(key, instance);
     }
 
@@ -132,7 +132,7 @@ public class DirectMessageInfo {
         List<MessageSendRecord> sendRecordList1 = null;
 
         for (MessageSendRecord record : sendRecordList) {
-            String key = record.instanceKey();
+            String key = record.sendGroup();
 
             if (!key.equals(key1)) {
                 key1 = key;
@@ -185,21 +185,28 @@ public class DirectMessageInfo {
      * @param messageExecutorService 线程池
      */
     public void executeBy(ExecutorService messageExecutorService) {
+
+        // 如果参数解析线程不为空，收件人、参数都会
+        CountDownLatch countDownLatch = null;
         if (paramThread != null) {
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            receiverThread.setLatchForReceiver(countDownLatch);
-            paramThread.setLatchForReceiver(countDownLatch);
+            countDownLatch = new CountDownLatch(1);
+            // 我countDown
+            paramThread.setLatchForParam(countDownLatch);
+            // 我 await
+            receiverThread.setLatchForParam(countDownLatch);
         }
 
+        // 如果消息内容线程不为空
         if (contentThread != null) {
-            CountDownLatch latchForContentReceiver = new CountDownLatch(1);
-            receiverThread.setLatchForContentReceiver(latchForContentReceiver);
-            contentThread.setLatchForContentReceiver(latchForContentReceiver);
+            CountDownLatch latchForReceiver = new CountDownLatch(1);
+            // 我 countDown
+            receiverThread.setLatchForReceiver(latchForReceiver);
+            // 我 await
+            contentThread.setLatchForReceiver(latchForReceiver);
 
-            if (paramThread != null) {
-                CountDownLatch latchForContentParam = new CountDownLatch(1);
-                paramThread.setLatchForContentParam(latchForContentParam);
-                contentThread.setLatchForContentParam(latchForContentParam);
+            if (countDownLatch != null) {
+                // 我 await
+                contentThread.setLatchForParam(countDownLatch);
             }
         }
 
@@ -207,6 +214,7 @@ public class DirectMessageInfo {
             messageExecutorService.execute(paramThread);
         }
 
+        // 收件人的线程一定会创建：因为依赖模板需要查数据、解析；直接传入可能衣需要代入参数解析
         messageExecutorService.execute(receiverThread);
 
         if (contentThread != null) {
@@ -243,19 +251,22 @@ public class DirectMessageInfo {
      * @return 是否准备好
      */
     public BaseResult ready() {
-
+        // FIXME
         if (errorMessage.length() > 0) {
             return BaseResult.fail(errorMessage.substring(1));
         }
 
+        // 总锁数为 3：如果参数没线程，减1
         if (paramThread == null) {
             countDownLatchTotal.countDown();
         }
 
+        // 总锁数为 3：如果内容没线程（一定无），减1
         if (contentThread == null) {
             countDownLatchTotal.countDown();
         }
 
+        // 总锁数为 3：如果收件人没线程（一定有），减1
         if (receiverThread == null) {
             countDownLatchTotal.countDown();
         }
@@ -293,11 +304,13 @@ public class DirectMessageInfo {
     }
 
     /**
-     * 初始化
+     * 初始化-调用此方法表示不走模板解析
      *
      * @param messageSendParam 消息发送参数
      */
     public void initDirect(MessageSendParam messageSendParam) {
-
+        MessageInstance instance = MessageInfoFactory.createInstance(messageSendParam);
+        addInstance(instance);
     }
+
 }

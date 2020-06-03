@@ -1,5 +1,6 @@
 package com.quinn.framework.filter;
 
+import com.quinn.util.constant.HttpHeadersConstant;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.*;
@@ -24,7 +25,7 @@ public class SwaggerDocumentationDisabledFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
         byte[] responseData = "<h1>Swagger rest documentation is disabled</h1>".getBytes();
-        httpServletResponse.setContentType("text/html;charset=utf-8");
+        httpServletResponse.setContentType(HttpHeadersConstant.CONTENT_TYPE_HTML);
         httpServletResponse.setContentLength(responseData.length);
         httpServletResponse.getOutputStream().write(responseData);
     }

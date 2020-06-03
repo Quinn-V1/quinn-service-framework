@@ -3,6 +3,7 @@ package com.quinn.framework.controller;
 import com.quinn.framework.util.RequestUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
+import com.quinn.util.constant.HttpHeadersConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.licence.model.ApplicationInfo;
 import io.swagger.annotations.Api;
@@ -83,7 +84,7 @@ public class ApplicationController extends AbstractController {
             }
         } else {
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-            httpServletResponse.setContentType("text/html;charset=utf-8");
+            httpServletResponse.setContentType(HttpHeadersConstant.CONTENT_TYPE_HTML);
             httpServletResponse.getWriter().write("Shutdown commands can only be accessed from localhost" +
                     " or intranet by passing magic code<br/>");
             httpServletResponse.getWriter().flush();

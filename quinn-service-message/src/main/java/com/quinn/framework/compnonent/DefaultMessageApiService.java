@@ -1,8 +1,13 @@
 package com.quinn.framework.compnonent;
 
-import com.quinn.framework.api.message.*;
+import com.quinn.framework.api.message.MessageInstance;
+import com.quinn.framework.api.message.MessageSendRecord;
+import com.quinn.framework.api.message.MessageTemp;
 import com.quinn.framework.model.DirectMessageInfo;
 import com.quinn.framework.model.MessageSendParam;
+import com.quinn.framework.service.MessageApiService;
+import com.quinn.framework.service.MessageHelpService;
+import com.quinn.framework.service.MessageSendService;
 import com.quinn.framework.util.MessageInfoUtil;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.StringUtil;
@@ -10,6 +15,7 @@ import com.quinn.util.base.model.BaseResult;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -25,34 +31,37 @@ public class DefaultMessageApiService implements MessageApiService {
     /**
      * 消息模板业务操作接口
      */
+    @Resource
     private MessageHelpService messageHelpService;
 
     /**
      * 消息模板业务操作接口
      */
+    @Resource
     private MessageSendService messageSendService;
 
     /**
      * 消息线程池执行器
      */
+    @Resource
     private ExecutorService messageExecutorService;
 
     @Override
     public BaseResult send(MessageSendParam messageSendParam) {
+        // 参数内部校验
         BaseResult validate = messageSendParam.validate();
         if (!validate.isSuccess()) {
             return BaseResult.fromPrev(validate);
         }
 
-
+        // 生成可直接发送的对象
         BaseResult<DirectMessageInfo> directMessageInfoRes = generateInfo(messageSendParam);
         if (!directMessageInfoRes.isSuccess()) {
             return BaseResult.fromPrev(directMessageInfoRes);
         }
 
-        DirectMessageInfo directMessageInfo = directMessageInfoRes.getData();
-
         // 循环保存消息实例和消息发送记录
+        DirectMessageInfo directMessageInfo = directMessageInfoRes.getData();
         Map<String, List<MessageSendRecord>> sendRecordListMap = directMessageInfo.getSendRecordListMap();
         BaseResult result = new BaseResult<>();
 
@@ -60,15 +69,18 @@ public class DefaultMessageApiService implements MessageApiService {
             List<MessageSendRecord> sendRecordList = entry.getValue();
             String key = entry.getKey();
 
+            // 保存消息实例
             MessageInstance instance = directMessageInfo.getInstance(key);
             messageHelpService.saveInstance(instance);
 
             if (instance != null) {
+                // 保存消息发送记录
                 for (MessageSendRecord sendRecord : sendRecordList) {
                     MessageInfoUtil.fillSendRecordWithInstance(sendRecord, instance);
                     messageHelpService.saveSendRecord(sendRecord);
                 }
 
+                // 发送消息
                 BaseResult res = messageSendService.sendAll(sendRecordList);
                 if (!res.isSuccess()) {
                     result.appendMessage(res.getMessage());
@@ -84,6 +96,21 @@ public class DefaultMessageApiService implements MessageApiService {
         return null;
     }
 
+    @Override
+    public BaseResult revokeBySendIds(Long[] sendRecordIds) {
+        return null;
+    }
+
+    @Override
+    public BaseResult revokeByInstIds(Long[] instIds) {
+        return null;
+    }
+
+    @Override
+    public BaseResult revokeByBathNo(String batchKey) {
+        return null;
+    }
+
     /**
      * 生成消息信息
      *
@@ -91,9 +118,9 @@ public class DefaultMessageApiService implements MessageApiService {
      * @return 生成成功
      */
     private BaseResult<DirectMessageInfo> generateInfo(MessageSendParam messageSendParam) {
-        BaseResult rv = validateRepeat(messageSendParam);
-        if (!rv.isSuccess()) {
-            return BaseResult.fromPrev(rv);
+        BaseResult repeatRes = validateRepeat(messageSendParam);
+        if (!repeatRes.isSuccess()) {
+            return BaseResult.fromPrev(repeatRes);
         }
 
         String templateKey = messageSendParam.getTemplateKey();
@@ -127,6 +154,7 @@ public class DefaultMessageApiService implements MessageApiService {
             return BaseResult.fail("业务主键缺失，请指定参数fromSystem 和 businessKey");
         }
 
+        // 业务主键可能是占位参数
         if (messageSendParam.getMessageParam() != null) {
             fromSystem = FreeMarkTemplateLoader.invoke(fromSystem, messageSendParam.getMessageParam());
             businessKey = FreeMarkTemplateLoader.invoke(businessKey, messageSendParam.getMessageParam());
@@ -134,14 +162,14 @@ public class DefaultMessageApiService implements MessageApiService {
             messageSendParam.setFromSystem(fromSystem);
         }
 
+        // 业务主键不可重复
         BaseResult<MessageInstance> select = messageHelpService.getInstanceByBiz(fromSystem, businessKey);
-
         if (select.isSuccess()) {
             // FIXME
             return BaseResult.fail("业务主键重复").ofData(select.getData());
         }
 
-        return new BaseResult();
+        return BaseResult.SUCCESS;
     }
 
     /**
@@ -151,27 +179,18 @@ public class DefaultMessageApiService implements MessageApiService {
      * @return 校验成功则为空，失败则为失败消息
      */
     private BaseResult<DirectMessageInfo> validateWithoutTempKey(MessageSendParam messageSendParam) {
-        StringBuilder query = new StringBuilder();
-        if (StringUtils.isEmpty(messageSendParam.getContent())) {
-            query.append(" 消息内容不可为空");
-        }
+        DirectMessageInfo directMessageInfo = DirectMessageInfo.newInstance();
 
-        if (CollectionUtils.isEmpty(messageSendParam.getReceivers())) {
-            query.append(" 收件对象详细不可为空");
-        }
+        // 模板变成可直接发送的消息（视情况添加线程-准备做）
+        tempToDirect(messageSendParam, directMessageInfo);
 
-        if (query.length() > 0) {
-            query.insert(0, "消息模板为空的情况下");
-            return BaseResult.fail(query.toString());
-        }
+        // 模板变成可直接发送的消息
+        directMessageInfo.initDirect(messageSendParam);
 
-        DirectMessageInfo messageInfo = DirectMessageInfo.newInstance();
-        tempToDirect(messageSendParam, messageInfo);
+        // 通过多线程执行解析
+        directMessageInfo.executeBy(messageExecutorService);
 
-        messageInfo.initDirect(messageSendParam);
-
-        messageInfo.executeBy(messageExecutorService);
-        return BaseResult.success(messageInfo);
+        return BaseResult.success(directMessageInfo);
     }
 
     /**
@@ -181,31 +200,35 @@ public class DefaultMessageApiService implements MessageApiService {
      * @return 校验结果
      */
     private BaseResult<DirectMessageInfo> validateWithTempKey(MessageSendParam messageSendParam) {
-
         String templateKey = messageSendParam.getTemplateKey();
+
+        // 查找模板主数据：是否查出内容更具体
         BaseResult<MessageTemp> result = messageHelpService.getTemplateByKey(templateKey);
         if (!result.isSuccess()) {
             return BaseResult.fail(result.getMessage());
         }
 
+        // 如果参数没有指定地址，则需要指定默认地址
         MessageTemp messageTemp = result.getData();
         if (!messageTemp.hasDefaultAddress() && CollectionUtils.isEmpty(messageSendParam.getReceivers())) {
+            // FIXME
             return BaseResult.fail("未指定消息发送地址");
         }
 
-        DirectMessageInfo messageInfo = DirectMessageInfo.newInstance();
-        tempToDirect(messageSendParam, messageInfo);
+        DirectMessageInfo directMessageInfo = DirectMessageInfo.newInstance();
+        tempToDirect(messageSendParam, directMessageInfo);
 
         if (StringUtils.isEmpty(messageSendParam.getContent())) {
             // 解析消息内容（可能依赖参数信息、收件信息）
-            ContentToDirect contentToDirect = new ContentToDirect(messageInfo, messageSendParam, messageHelpService);
-            messageInfo.addThread(contentToDirect);
+            ContentToDirect contentToDirect = new ContentToDirect(directMessageInfo, messageSendParam,
+                    messageHelpService);
+            directMessageInfo.addThread(contentToDirect);
         } else {
-            messageInfo.initDirect(messageSendParam);
+            directMessageInfo.initDirect(messageSendParam);
         }
 
-        messageInfo.executeBy(messageExecutorService);
-        return BaseResult.success(messageInfo);
+        directMessageInfo.executeBy(messageExecutorService);
+        return BaseResult.success(directMessageInfo);
     }
 
     /**
@@ -217,7 +240,7 @@ public class DefaultMessageApiService implements MessageApiService {
     private void tempToDirect(MessageSendParam messageSendParam, DirectMessageInfo messageInfo) {
         // 解析参数信息
         Map<String, Object> messageParam = messageSendParam.getMessageParam();
-        ParameterToDirect parameterToDirect = null;
+        ParameterToDirect parameterToDirect;
         if (!CollectionUtils.isEmpty(messageParam)) {
             parameterToDirect = new ParameterToDirect(messageInfo, messageSendParam, messageHelpService);
             messageInfo.addThread(parameterToDirect);

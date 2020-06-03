@@ -20,7 +20,7 @@ public class DefaultMessageReceiver implements MessageReceiver {
     }
 
     @Override
-    public String instanceKey() {
+    public String sendGroup() {
         return null;
     }
 }

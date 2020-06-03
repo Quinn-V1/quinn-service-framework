@@ -1,9 +1,12 @@
 package com.quinn.framework.model;
 
 import com.alibaba.fastjson.JSONObject;
-import com.quinn.framework.api.message.MessageInfo;
+import com.quinn.framework.api.message.MessageInstance;
+import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageSender;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.HttpHeadersConstant;
+import com.quinn.util.constant.StringConstant;
 import com.sun.mail.util.MailSSLSocketFactory;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +26,7 @@ import javax.mail.internet.*;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -123,18 +127,18 @@ public class EmailSender implements MessageSender {
      * @return 消息内容
      */
     @Override
-    public BaseResult send(MessageInfo messageInfo) {
+    public BaseResult send(MessageInstance messageInfo) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             mimeMessage.setFrom(fromAddress);
-            mimeMessage.setSubject(MimeUtility.encodeText(messageInfo.getMessageSubject(), "utf-8", null));
+            mimeMessage.setSubject(MimeUtility.encodeText(messageInfo.getSubject(), "utf-8", null));
 
             Multipart mp = new MimeMultipart();
             MimeBodyPart mbp = new MimeBodyPart();
-            mbp.setContent(messageInfo.getMessageContent(), "text/html;charset=UTF-8");
+            mbp.setContent(messageInfo.getContent(), HttpHeadersConstant.CONTENT_TYPE_HTML);
             mp.addBodyPart(mbp);
 
-            String attachments = messageInfo.getMessageAttachment();
+            String attachments = messageInfo.getAttachment();
             if (!StringUtils.isEmpty(attachments)) {
                 String[] files = attachments.split(";");
                 for (int i = 0; i < files.length; i++) {
@@ -164,6 +168,7 @@ public class EmailSender implements MessageSender {
     @Override
     public BaseResult test() {
         if (StringUtils.isEmpty(testTo)) {
+            // FIXME
             return BaseResult.fail("未指定测试目标地址");
         }
 
@@ -171,14 +176,24 @@ public class EmailSender implements MessageSender {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             mimeMessage.setFrom(fromAddress);
             mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(testTo));
-            String c = MimeUtility.encodeText(testContent, "utf-8", null);
+            String c = MimeUtility.encodeText(testContent, StringConstant.SYSTEM_DEFAULT_CHARSET, null);
             mimeMessage.setSubject(c);
-            mimeMessage.setContent(testContent, "text/html;charset=UTF-8");
+            mimeMessage.setContent(testContent, HttpHeadersConstant.CONTENT_TYPE_HTML);
 
             javaMailSender.send(mimeMessage);
             return BaseResult.SUCCESS;
         } catch (Exception e) {
             return BaseResult.fail(e.getMessage());
         }
+    }
+
+    @Override
+    public BaseResult sendAll(List<MessageSendRecord> sendRecords) {
+        return null;
+    }
+
+    @Override
+    public String subKey() {
+        return null;
     }
 }

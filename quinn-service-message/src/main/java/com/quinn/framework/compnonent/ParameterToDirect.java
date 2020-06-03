@@ -1,9 +1,9 @@
 package com.quinn.framework.compnonent;
 
-import com.quinn.framework.api.message.MessageHelpService;
 import com.quinn.framework.model.DirectMessageInfo;
 import com.quinn.framework.model.MessageSendParam;
 import com.quinn.framework.model.MessageThread;
+import com.quinn.framework.service.MessageHelpService;
 import com.quinn.framework.util.enums.ThreadType;
 import com.quinn.util.base.model.BaseResult;
 import lombok.Setter;
@@ -36,16 +36,13 @@ public class ParameterToDirect extends MessageThread {
         try {
             BaseResult<Map<String, Object>> invoke = messageHelpService.fillRunTimeParam(
                     messageSendParam.getMessageParam());
+
             if (invoke.isSuccess()) {
                 messageSendParam.setMessageParam(invoke.getData());
             }
         } finally {
-            if (latchForContentParam != null) {
-                latchForContentParam.countDown();
-            }
-
-            if (latchForReceiver != null) {
-                latchForReceiver.countDown();
+            if (latchForParam != null) {
+                latchForParam.countDown();
             }
         }
     }

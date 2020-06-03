@@ -2,6 +2,7 @@ package com.quinn.framework.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.quinn.framework.api.message.MessageReceiver;
+import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerOneParam;
@@ -80,7 +81,7 @@ public class MessageSendParam {
      * 语言编码
      */
     @ApiModelProperty("语言编码")
-    private String languageCode;
+    private String langCode;
 
     /**
      * 主题
@@ -131,13 +132,46 @@ public class MessageSendParam {
     private String receiverValue;
 
     /**
+     * 发送用户
+     */
+    @ApiModelProperty("发送用户")
+    private String sender;
+
+    /**
+     * 安全获取用户
+     *
+     * @return 用户编码
+     */
+    public String senderOfSave() {
+        return StringUtil.isEmptyInFrame(sender) ? SessionUtil.getUserKey() : sender;
+    }
+
+    /**
      * 获取参数之后进行初始化
      *
      * @return 校验之后还要返回发送方案
      */
     public BaseResult<Integer> validate() {
-        if (CollectionUtil.isEmpty(receivers) && StringUtil.isNotEmpty(receiverType)
-                && StringUtil.isEmpty(receiverValue)) {
+        // 是否指定收件人信息
+        boolean hasReceivers = !CollectionUtil.isEmpty(receivers) || (StringUtil.isNotEmpty(receiverType)
+                && StringUtil.isEmpty(receiverValue));
+
+        // 没有指定消息模板的情况下
+        if (StringUtil.isEmptyInFrame(templateKey)) {
+            if (!hasReceivers) {
+                // FIXME
+                return BaseResult.fail("没有收件人信息");
+            }
+
+            // 消息内容和主题的判空与相互赋值
+            if (StringUtil.isEmptyInFrame(content) || StringUtil.isEmptyInFrame(subject)) {
+                // FIXME
+                return BaseResult.fail("没有指定消息内容");
+            }
+        }
+
+        // 如果指定了地址 但是没有 receivers：通过receiverType 和 receiverValue解析
+        if (CollectionUtil.isEmpty(receivers) && hasReceivers) {
             String[] rvs = receiverValue.split(StringConstant.CHAR_COMMA);
             if (receivers == null) {
                 receivers = new ArrayList<>();

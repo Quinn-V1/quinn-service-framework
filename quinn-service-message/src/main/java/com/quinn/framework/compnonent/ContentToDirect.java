@@ -1,6 +1,5 @@
 package com.quinn.framework.compnonent;
 
-import com.quinn.framework.api.message.MessageHelpService;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageTempContent;
@@ -8,6 +7,7 @@ import com.quinn.framework.model.DirectMessageInfo;
 import com.quinn.framework.model.MessageInfoFactory;
 import com.quinn.framework.model.MessageSendParam;
 import com.quinn.framework.model.MessageThread;
+import com.quinn.framework.service.MessageHelpService;
 import com.quinn.framework.util.enums.ThreadType;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
@@ -46,55 +46,62 @@ public class ContentToDirect extends MessageThread {
     public void handle() {
         String templateKey = messageSendParam.getTemplateKey();
         String messageType = messageSendParam.getMessageType();
-        String languageCode = messageSendParam.getLanguageCode();
+        String languageCode = messageSendParam.getLangCode();
 
+        try {
+            BaseResult<List<MessageTempContent>> contentRes =
+                    messageHelpService.selectContents(templateKey, messageType, languageCode);
 
-        BaseResult<List<MessageTempContent>> contentRes =
-                messageHelpService.selectContents(templateKey, messageType, languageCode);
-
-        if (!contentRes.isSuccess()) {
-            // FIXME
-            directMessageInfo.appendError(contentRes.getMessage());
-            return;
-        }
-
-        Map<String, MessageTempContent> tempContents = CollectionUtil.collectionToMap(contentRes.getData(),
-                messageTempContent -> messageTempContent.instanceKey());
-
-        if (StringUtil.isEmptyInFrame(templateKey) || StringUtil.isEmptyInFrame(languageCode)) {
-            try {
-                latchForContentReceiver.await(30, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-            }
-
-            BaseResult res = filter(tempContents, messageSendParam.getReceivers());
-            if (!res.isSuccess()) {
-                directMessageInfo.appendError(res.getMessage());
+            if (!contentRes.isSuccess()) {
+                // FIXME
+                directMessageInfo.appendError(contentRes.getMessage());
                 return;
             }
-        }
 
-        if (!CollectionUtils.isEmpty(tempContents)) {
-            try {
-                if (latchForContentParam != null) {
-                    latchForContentParam.await(30, TimeUnit.SECONDS);
+            Map<String, MessageTempContent> tempContents = CollectionUtil.collectionToMap(contentRes.getData(),
+                    messageTempContent -> messageTempContent.sendGroup());
+
+            // 如果消息类型为空、或者语言编码为空：则需要根据收件人信息解析出来需要哪些（消息类型 + 语言）
+            if (StringUtil.isEmptyInFrame(messageType) || StringUtil.isEmptyInFrame(languageCode)) {
+                try {
+                    latchForReceiver.await(30, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
                 }
-            } catch (InterruptedException e) {
+
+                BaseResult res = filter(tempContents, messageSendParam.getReceivers());
+                if (!res.isSuccess()) {
+                    directMessageInfo.appendError(res.getMessage());
+                    return;
+                }
             }
 
-            try {
-                for (Map.Entry<String, MessageTempContent> content : tempContents.entrySet()) {
-                    MessageInstance instance = MessageInfoFactory.createInstance(content.getValue(),
-                            messageSendParam.getMessageParam(), messageSendParam.getFromSystem(),
-                            messageSendParam.getBusinessKey());
-                    directMessageInfo.addInstance(content.getKey(), instance);
+            // 以下操作依赖参数将模板解析成具体内容
+            if (!CollectionUtils.isEmpty(tempContents)) {
+                try {
+                    if (latchForParam != null) {
+                        latchForParam.await(30, TimeUnit.SECONDS);
+                    }
+                } catch (InterruptedException e) {
                 }
-            } catch (Exception e) {
-                directMessageInfo.appendError(e.getMessage());
-            }
 
-        } else {
-            directMessageInfo.appendError("未找到消息模板内容");
+                try {
+                    for (Map.Entry<String, MessageTempContent> content : tempContents.entrySet()) {
+                        MessageInstance instance = MessageInfoFactory.createInstance(content.getValue(),
+                                messageSendParam.getMessageParam(), messageSendParam.getFromSystem(),
+                                messageSendParam.getBusinessKey());
+                        directMessageInfo.addInstance(content.getKey(), instance);
+                    }
+                } catch (Exception e) {
+                    directMessageInfo.appendError(e.getMessage());
+                }
+
+            } else {
+                directMessageInfo.appendError("未找到消息模板内容");
+            }
+        } finally {
+            if (latchForContent != null) {
+                latchForContent.countDown();
+            }
         }
     }
 
@@ -114,7 +121,7 @@ public class ContentToDirect extends MessageThread {
 
         Set<String> keys = new HashSet<>();
         for (MessageReceiver receiver : receivers) {
-            String key = receiver.instanceKey();
+            String key = receiver.sendGroup();
             if (!tempContents.containsKey(key)) {
                 return BaseResult.fail("模板【" + messageSendParam.getTemplateKey() + "】" + key + "未配置内容");
             }
@@ -122,7 +129,6 @@ public class ContentToDirect extends MessageThread {
         }
 
         tempContents.keySet().retainAll(keys);
-
         return BaseResult.success(tempContents);
     }
 

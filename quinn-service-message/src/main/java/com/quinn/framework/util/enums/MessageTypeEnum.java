@@ -2,6 +2,7 @@ package com.quinn.framework.util.enums;
 
 import com.quinn.util.base.handler.EnumMessageResolver;
 import com.quinn.util.constant.MessageEnumFlag;
+import com.quinn.util.constant.StringConstant;
 
 import java.util.Locale;
 
@@ -46,6 +47,16 @@ public enum MessageTypeEnum implements MessageEnumFlag {
 
     static {
         EnumMessageResolver.addContent(Locale.SIMPLIFIED_CHINESE, MessageTypeEnum.values());
+    }
+
+    /**
+     * 默认的次级主键
+     *
+     * @param type 消息类型
+     * @return 次级主键（参照MessageServer）
+     */
+    public static final String defaultSubKey(String type) {
+        return type + StringConstant.CHAR_COLON + StringConstant.ALL_OF_DATA;
     }
 
 }

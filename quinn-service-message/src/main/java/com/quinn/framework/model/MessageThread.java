@@ -38,12 +38,12 @@ public abstract class MessageThread extends Thread {
     /**
      * 有可能依赖外部线程《地址信息》
      */
-    protected CountDownLatch latchForContentParam;
+    protected CountDownLatch latchForParam;
 
     /**
      * 有可能依赖外部线程《地址信息》
      */
-    protected CountDownLatch latchForContentReceiver;
+    protected CountDownLatch latchForContent;
 
     /**
      * 有可能依赖外部线程《地址信息》

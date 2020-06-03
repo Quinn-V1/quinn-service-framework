@@ -1,11 +1,11 @@
 package com.quinn.framework.compnonent;
 
-import com.quinn.framework.api.message.MessageHelpService;
 import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.model.DirectMessageInfo;
 import com.quinn.framework.model.MessageSendParam;
 import com.quinn.framework.model.MessageThread;
+import com.quinn.framework.service.MessageHelpService;
 import com.quinn.framework.util.enums.ThreadType;
 import com.quinn.util.base.model.BaseResult;
 import lombok.Setter;
@@ -38,11 +38,11 @@ public class ReceiverToDirect extends MessageThread {
     @Override
     public void handle() {
         List<MessageReceiver> receivers = messageSendParam.getReceivers();
-        if (CollectionUtils.isEmpty(receivers)) {
-            try {
+        try {
+            if (CollectionUtils.isEmpty(receivers)) {
                 BaseResult<List<MessageReceiver>> res = messageHelpService.selectReceivers(
                         messageSendParam.getTemplateKey(), messageSendParam.getMessageType(),
-                        messageSendParam.getLanguageCode()
+                        messageSendParam.getLangCode()
                 );
 
                 if (res.isSuccess()) {
@@ -52,20 +52,17 @@ public class ReceiverToDirect extends MessageThread {
                     directMessageInfo.appendError(res.getMessage());
                     return;
                 }
-            } finally {
-                if (latchForContentReceiver != null) {
-                    latchForContentReceiver.countDown();
-                }
             }
-        } else {
-            if (latchForContentReceiver != null) {
-                latchForContentReceiver.countDown();
+        } finally {
+            if (latchForReceiver != null) {
+                latchForReceiver.countDown();
             }
         }
 
-        if (latchForReceiver != null) {
+        // 以下操作依赖参数解析成发送记录
+        if (latchForParam != null) {
             try {
-                latchForReceiver.await(30, TimeUnit.SECONDS);
+                latchForParam.await(30, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
             }
         }
