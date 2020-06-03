@@ -87,8 +87,7 @@ public class ContentToDirect extends MessageThread {
                 try {
                     for (Map.Entry<String, MessageTempContent> content : tempContents.entrySet()) {
                         MessageInstance instance = MessageInfoFactory.createInstance(content.getValue(),
-                                messageSendParam.getMessageParam(), messageSendParam.getFromSystem(),
-                                messageSendParam.getBusinessKey());
+                                messageSendParam);
                         directMessageInfo.addInstance(content.getKey(), instance);
                     }
                 } catch (Exception e) {

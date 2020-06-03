@@ -57,7 +57,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public <T> BaseResult<List<T>> selectFree(BaseDTO.FreeQuery freeQuery) {
-        return queryForObject(freeQuery.generateSql(), freeQuery.getResultClass(),
+        return queryForList(freeQuery.generateSql(), freeQuery.getResultClass(),
                 freeQuery.getParams());
     }
 
@@ -118,7 +118,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public <T> BaseResult<T> queryForObject(String sql, Class<T> clazz, Object... params) {
-        T t = jdbcTemplate.queryForObject(sql, params, clazz);
+        T t = (T) jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(clazz));
         if (t == null) {
             return BaseResult.fail()
                     .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)
@@ -131,7 +131,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public <T> BaseResult<List<T>> queryForList(String sql, Class<T> clazz, Object... params) {
-        List<T> list = jdbcTemplate.queryForList(sql, params, clazz);
+        List<T> list = jdbcTemplate.query(sql, params, new BeanPropertyRowMapper(clazz));
         if (CollectionUtil.isEmpty(list)) {
             return BaseResult.fail()
                     .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)

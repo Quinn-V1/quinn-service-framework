@@ -6,7 +6,7 @@ package com.quinn.framework.util.enums;
  * @author Qunhua.Liao
  * @since 2020-04-24
  */
-public enum WrapperEnum {
+public enum SqlPropWrapperEnum {
 
     // 最大值
     MAX,

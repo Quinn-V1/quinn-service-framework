@@ -11,11 +11,39 @@ import java.util.Set;
 public interface MessageInstance {
 
     /**
+     * 设置来源系统
+     *
+     * @param fromSystem 来源系统
+     */
+    void setFromSystem(String fromSystem);
+
+    /**
+     * 设置业务主键
+     *
+     * @param businessKey 业务主键
+     */
+    void setBusinessKey(String businessKey);
+
+    /**
      * 设置消息批次号（表示一批消息是同次发送的）
      *
      * @param batchKey 批次号
      */
     void setBatchKey(String batchKey);
+
+    /**
+     * 设置消息类型
+     *
+     * @param messageType 消息类型
+     */
+    void setMessageType(String messageType);
+
+    /**
+     * 设置语言编码
+     *
+     * @param langCode 语言编码
+     */
+    void setLangCode(String langCode);
 
     /**
      * 数据编码
@@ -60,32 +88,11 @@ public interface MessageInstance {
     String getAttachment();
 
     /**
-     * 获取收件人信息
+     * 设置消息附件
      *
-     * @return 收件人
+     * @param attachment 附件
      */
-    Set<String> getReceiverAddresses();
-
-    /**
-     * 设置消息类型
-     *
-     * @param messageType 消息类型
-     */
-    void setMessageType(String messageType);
-
-    /**
-     * 设置来源系统
-     *
-     * @param fromSystem 来源系统
-     */
-    void setFromSystem(String fromSystem);
-
-    /**
-     * 设置业务主键
-     *
-     * @param businessKey 业务主键
-     */
-    void setBusinessKey(String businessKey);
+    void setAttachment(String attachment);
 
     /**
      * 设置消息连接
@@ -95,18 +102,11 @@ public interface MessageInstance {
     void setMsgUrl(String url);
 
     /**
-     * 设置消息附件
+     * 设置消息链接
      *
-     * @param attachment 附件
+     * @return
      */
-    void setAttachment(String attachment);
-
-    /**
-     * 设置语言编码
-     *
-     * @param langCode 语言编码
-     */
-    void setLangCode(String langCode);
+    String getMsgUrl();
 
     /**
      * 设置发件人
@@ -114,5 +114,12 @@ public interface MessageInstance {
      * @param sender 发件人
      */
     void setSender(String sender);
+
+    /**
+     * 获取收件人信息
+     *
+     * @return 收件人
+     */
+    Set<String> getReceiverAddresses();
 
 }

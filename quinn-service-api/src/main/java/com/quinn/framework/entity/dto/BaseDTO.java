@@ -1,12 +1,14 @@
 package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quinn.framework.util.enums.SqlCondWrapperEnum;
+import com.quinn.framework.util.enums.SqlPropWrapperEnum;
 import com.quinn.framework.util.enums.UpdateTypeEnum;
-import com.quinn.framework.util.enums.WrapperEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.CharConstant;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.DataStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
@@ -515,9 +517,11 @@ public abstract class BaseDTO<T> {
                 query.append(" WHERE ");
                 params = new Object[condFields.size()];
                 for (int i = 0; i < condFields.size(); i++) {
-                    FieldValue FieldValue = condFields.get(i);
-                    query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
-                    params[i] = FieldValue.value;
+                    FieldValue fieldValue = condFields.get(i);
+                    query.append(fieldValue.fullValue())
+                            .append(" AND ")
+                    ;
+                    params[i] = fieldValue.value;
                 }
 
                 query.delete(query.length() - 5, query.length());
@@ -546,7 +550,7 @@ public abstract class BaseDTO<T> {
          * @param wrapper 包装方式
          * @return 本身
          */
-        public FreeQuery<V> wrapResultField(String prop, WrapperEnum wrapper) {
+        public FreeQuery<V> wrapResultField(String prop, SqlPropWrapperEnum wrapper) {
             resultFields.add(new ResultField(prop, wrapper));
             return this;
         }
@@ -562,6 +566,36 @@ public abstract class BaseDTO<T> {
             if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
                 condFields.add(new FieldValue(prop, value));
             }
+            return this;
+        }
+
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         * @return 本身
+         */
+        public FreeQuery<V> addParamField(String prop, Object value, SqlCondWrapperEnum wrapper) {
+            if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
+                condFields.add(new FieldValue(prop, value, wrapper));
+            }
+            return this;
+        }
+
+        /**
+         * 添加有效限制参数
+         *
+         * @return 本身
+         */
+        public FreeQuery<V> addAvailableParam() {
+            if (condFields == null) {
+                condFields = new ArrayList<>(2);
+            }
+
+            condFields.add(new FieldValue("dataVersion", NumberConstant.INT_ONE, SqlCondWrapperEnum.GREAT_EQUAL));
+            condFields.add(new FieldValue("dataStatus", DataStatusEnum.NORMAL.code,
+                    SqlCondWrapperEnum.GREAT_EQUAL));
             return this;
         }
 
@@ -742,6 +776,12 @@ public abstract class BaseDTO<T> {
             this.value = value;
         }
 
+        private FieldValue(String prop, Object value, SqlCondWrapperEnum wrapper) {
+            this.prop = prop;
+            this.value = value;
+            this.wrapper = wrapper;
+        }
+
         /**
          * 属性名称
          */
@@ -751,6 +791,24 @@ public abstract class BaseDTO<T> {
          * 条件值
          */
         Object value;
+
+        /**
+         * 包装方式
+         */
+        SqlCondWrapperEnum wrapper;
+
+        /**
+         * 全条件值
+         *
+         * @return 全条件值
+         */
+        public String fullValue() {
+            if (wrapper == null) {
+                return columnOfProp(prop) + StringConstant.CHAR_EQUAL_MARK + StringConstant.CHAR_QUESTION_MARK;
+            } else {
+                return columnOfProp(prop) + wrapper.wrap(StringConstant.CHAR_QUESTION_MARK);
+            }
+        }
 
     }
 
@@ -762,7 +820,7 @@ public abstract class BaseDTO<T> {
      */
     private class ResultField {
 
-        private ResultField(String prop, WrapperEnum wrapper) {
+        private ResultField(String prop, SqlPropWrapperEnum wrapper) {
             this.prop = prop;
             this.wrapper = wrapper;
         }
@@ -775,12 +833,12 @@ public abstract class BaseDTO<T> {
         /**
          * 包装方式
          */
-        WrapperEnum wrapper;
+        SqlPropWrapperEnum wrapper;
 
         /**
-         * 全名
+         * 全字段名
          *
-         * @return 全名
+         * @return 全字段名
          */
         public String fullName() {
             if (wrapper == null) {

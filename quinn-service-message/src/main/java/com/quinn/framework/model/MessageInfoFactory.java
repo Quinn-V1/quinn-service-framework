@@ -3,6 +3,8 @@ package com.quinn.framework.model;
 import com.quinn.framework.api.message.MessageInfoSupplier;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageTempContent;
+import com.quinn.framework.util.enums.PlaceTypeEnum;
+import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 import org.springframework.util.StringUtils;
@@ -27,15 +29,42 @@ public class MessageInfoFactory {
     /**
      * 创建消息实例
      *
-     * @param content      消息内容
-     * @param messageParam 消息参数
-     * @param fromSystem   来源系统
-     * @param businessKey  业务主键
+     * @param content          模板内容
+     * @param messageSendParam 消息参数
      * @return 消息实例
      */
-    public static MessageInstance createInstance(
-            MessageTempContent content, Map<String, Object> messageParam, String fromSystem, String businessKey) {
-        return null;
+    public static MessageInstance createInstance(MessageTempContent content, MessageSendParam messageSendParam) {
+        MessageInstance instance = messageInfoSupplier.createInstance();
+        instance.setMessageType(content.getMessageType());
+        instance.setLangCode(content.getLanguageCode());
+
+        instance.setSubject(content.getSubjectTemplate());
+        instance.setMsgUrl(content.getUrlTemplate());
+        instance.setAttachment(content.getAttachmentTemplate());
+        instance.setContent(content.getContentTemplate());
+
+        // 替换方案 , String fromSystem, String businessKey
+        Integer placeType = content.getPlaceTypes();
+        if (placeType != null) {
+            Map<String, Object> messageParam = messageSendParam.getMessageParam();
+            if ((PlaceTypeEnum.SUBJECT.code & placeType) > 0) {
+                instance.setSubject(FreeMarkTemplateLoader.invoke(instance.getSubject(), messageParam));
+            }
+            if ((PlaceTypeEnum.URL.code & placeType) > 0) {
+                instance.setMsgUrl(FreeMarkTemplateLoader.invoke(instance.getMsgUrl(), messageParam));
+            }
+            if ((PlaceTypeEnum.ATTACHMENT.code & placeType) > 0) {
+                instance.setAttachment(FreeMarkTemplateLoader.invoke(instance.getAttachment(), messageParam));
+            }
+            if ((PlaceTypeEnum.CONTENT.code & placeType) > 0) {
+                instance.setContent(FreeMarkTemplateLoader.invoke(instance.getContent(), messageParam));
+            }
+        }
+
+        instance.setFromSystem(messageSendParam.getFromSystem());
+        instance.setBusinessKey(messageSendParam.getBusinessKey());
+        instance.setSender(messageSendParam.senderOfSave());
+        return instance;
     }
 
     /**
@@ -57,9 +86,9 @@ public class MessageInfoFactory {
         }
 
         instance.setSubject(subject);
-        instance.setContent(content);
         instance.setMsgUrl(messageSendParam.getUrl());
         instance.setAttachment(messageSendParam.getAttachment());
+        instance.setContent(content);
 
         instance.setFromSystem(messageSendParam.getFromSystem());
         instance.setBusinessKey(messageSendParam.getBusinessKey());
