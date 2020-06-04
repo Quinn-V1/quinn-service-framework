@@ -3,6 +3,7 @@ package com.quinn.framework.util;
 import com.quinn.framework.api.JobInstance;
 import com.quinn.framework.api.JobTemplate;
 import com.quinn.framework.util.enums.JobStateEnum;
+import com.quinn.util.constant.CommonParamName;
 import com.quinn.util.constant.DateConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.licence.model.ApplicationInfo;
@@ -54,7 +55,7 @@ public final class JobInfoUtil {
         res.put(ScheduleParamName.PARAM_KEY_LAST_FAIL_DATETIME, jobTemplate.getLastFailDateTime());
         res.put(ScheduleParamName.PARAM_KEY_LAST_EXEC_DATETIME, jobTemplate.getLastExecDateTime());
         res.put(ScheduleParamName.PARAM_KEY_SCHEDULE_KEY, jobTemplate.getScheduleKey());
-        res.put(ScheduleParamName.PARAM_KEY_THIS_EXEC_DATETIME, jobInstance.getStartDateTime());
+        res.put(CommonParamName.PARAM_KEY_NOW_TIME, jobInstance.getStartDateTime());
         return res;
     }
 }

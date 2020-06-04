@@ -18,6 +18,7 @@ import com.quinn.framework.util.enums.CmTypeEnum;
 import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
@@ -164,7 +165,7 @@ public class DefaultSsoService implements SsoService {
     }
 
     @Override
-    public BaseResult<List> selectMyPermissions(String group, String type, Long parentId) {
+    public BaseResult<List> selectMyPermissions(String group, FunctionTypeEnum type, Long parentId) {
         return MultiAuthInfoFetcher.fetchPermissions(
                 AuthInfoFactory.generate(SessionUtil.getAuthInfo()), group, type, parentId);
     }

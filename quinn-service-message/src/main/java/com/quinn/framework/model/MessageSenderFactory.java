@@ -1,8 +1,11 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.api.message.*;
+import com.quinn.framework.api.message.MessageSendRecord;
+import com.quinn.framework.api.message.MessageSender;
+import com.quinn.framework.api.message.MessageSenderSupplier;
+import com.quinn.framework.api.message.MessageServer;
 import com.quinn.framework.service.MessageHelpService;
-import com.quinn.framework.util.enums.MessageTypeEnum;
+import com.quinn.framework.util.MessageInfoUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.exception.BaseBusinessException;
@@ -21,6 +24,9 @@ import java.util.Map;
  */
 public class MessageSenderFactory {
 
+    /**
+     * 关联数据库的协助类
+     */
     private static MessageHelpService messageHelpService;
 
     /**
@@ -106,7 +112,7 @@ public class MessageSenderFactory {
 
         // 初始加载所有默认消息队列
         String messageType = sendRecord.getMessageType();
-        String defaultSubKey = MessageTypeEnum.defaultSubKey(messageType);
+        String defaultSubKey = MessageInfoUtil.defaultServerSubKey(messageType);
         messageSenders = messageSenderListMap.get(defaultSubKey);
         if (CollectionUtil.isEmpty(messageSenders)) {
             throw new BaseBusinessException();
@@ -116,7 +122,13 @@ public class MessageSenderFactory {
         return messageSenders.get(0);
     }
 
+    /**
+     * 设置消息数据库信息获取帮助业务对象
+     *
+     * @param messageHelpService 消息数据库信息获取
+     */
     public static void setMessageServerService(MessageHelpService messageHelpService) {
         MessageSenderFactory.messageHelpService = messageHelpService;
     }
+
 }

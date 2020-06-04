@@ -4,6 +4,7 @@ import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.LoginPostProcessor;
 import com.quinn.framework.api.LoginPrevProcessor;
 import com.quinn.framework.model.DefaultTokenInfo;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 
@@ -85,6 +86,6 @@ public interface SsoService {
      * @param parentId 上级权限ID
      * @return 权限列表
      */
-    BaseResult selectMyPermissions(String group, String type, Long parentId);
+    BaseResult selectMyPermissions(String group, FunctionTypeEnum type, Long parentId);
 
 }

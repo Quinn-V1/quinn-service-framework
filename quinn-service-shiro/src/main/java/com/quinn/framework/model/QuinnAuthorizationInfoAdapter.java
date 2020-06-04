@@ -1,7 +1,7 @@
 package com.quinn.framework.model;
 
 import com.quinn.util.base.CollectionUtil;
-import com.quinn.util.constant.enums.FunctionTypeEnum;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.constant.enums.RoleTypeEnum;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;

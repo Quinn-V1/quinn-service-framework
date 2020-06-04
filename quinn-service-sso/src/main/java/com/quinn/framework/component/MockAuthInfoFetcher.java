@@ -11,6 +11,7 @@ import com.quinn.util.base.BaseUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 import com.quinn.util.constant.enums.MessageLevelEnum;
@@ -84,7 +85,7 @@ public class MockAuthInfoFetcher implements AuthInfoFetcher {
     }
 
     @Override
-    public BaseResult<List> selectMyPermissions(AuthInfo authInfo, String group, String type, Long parentId) {
+    public BaseResult<List> selectMyPermissions(AuthInfo authInfo, String group, FunctionTypeEnum type, Long parentId) {
         return BaseResult.fail();
     }
 

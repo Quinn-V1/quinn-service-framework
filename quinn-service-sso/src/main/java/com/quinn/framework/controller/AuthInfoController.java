@@ -1,6 +1,7 @@
 package com.quinn.framework.controller;
 
 import com.quinn.framework.service.SsoService;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,7 +46,7 @@ public class AuthInfoController extends AbstractController {
             @RequestParam(name = "group", required = false) String group,
 
             @ApiParam(name = "type", value = "类型编码", required = true)
-            @RequestParam(name = "type") String type,
+            @RequestParam(name = "type") FunctionTypeEnum type,
 
             @ApiParam(name = "parentId", value = "上级ID")
             @RequestParam(name = "parentId", required = false) Long parentId

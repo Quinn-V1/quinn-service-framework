@@ -2,6 +2,7 @@ package com.quinn.framework.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.quinn.framework.api.message.MessageReceiver;
+import com.quinn.framework.util.MessageParamName;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
@@ -17,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -138,6 +140,12 @@ public class MessageSendParam {
     private String sender;
 
     /**
+     * 发送时间
+     */
+    @ApiModelProperty("发送时间")
+    private LocalDateTime sendTime;
+
+    /**
      * 安全获取用户
      *
      * @return 用户编码
@@ -184,6 +192,15 @@ public class MessageSendParam {
                 receivers.add(receiver);
             }
         }
+
+        this.sendTime = LocalDateTime.now();
+        if (messageParam == null) {
+            messageParam = new HashMap<>(NumberConstant.INT_EIGHT);
+        }
+
+        messageParam.put(CommonParamName.PARAM_KEY_NOW_TIME, this.sendTime);
+        CollectionUtil.nullSafePut(messageParam, MessageParamName.PARAM_KEY_MESSAGE_TEMP_KEY, this.templateKey);
+        CollectionUtil.nullSafePut(messageParam, MessageParamName.PARAM_KEY_MESSAGE_MESSAGE_TYPE, this.messageType);
 
         // FIXME (根据实际参数返回解决方案)
         return BaseResult.success(NumberConstant.INT_ONE);

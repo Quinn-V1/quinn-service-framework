@@ -2,6 +2,7 @@ package com.quinn.framework.api;
 
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.util.base.api.ClassDivAble;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 
@@ -57,7 +58,7 @@ public interface AuthInfoFetcher extends ClassDivAble {
      * @param parentId 上级ID
      * @return
      */
-    BaseResult selectMyPermissions(AuthInfo authInfo, String group, String type, Long parentId);
+    BaseResult selectMyPermissions(AuthInfo authInfo, String group, FunctionTypeEnum type, Long parentId);
 
     /**
      * 作用令牌类型

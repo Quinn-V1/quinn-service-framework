@@ -28,9 +28,4 @@ public interface ScheduleParamName {
      */
     String PARAM_KEY_SCHEDULE_KEY = "scheduleKey";
 
-    /**
-     * 本次执行时间
-     */
-    String PARAM_KEY_THIS_EXEC_DATETIME = "thisExecDateTime";
-
 }

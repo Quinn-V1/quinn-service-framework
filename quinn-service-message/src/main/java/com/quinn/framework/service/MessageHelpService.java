@@ -65,15 +65,16 @@ public interface MessageHelpService {
      * 保存消息实例
      *
      * @param instance 消息实例
+     * @return 保存结果
      */
-    void saveInstance(MessageInstance instance);
+    BaseResult saveInstance(MessageInstance instance);
 
     /**
      * 保存发送记录
      *
      * @param sendRecord 发送记录
      */
-    void saveSendRecord(MessageSendRecord sendRecord);
+    BaseResult saveSendRecord(MessageSendRecord sendRecord);
 
     /**
      * 通过编码获取消息模板

@@ -1,5 +1,6 @@
 package com.quinn.framework.api.message;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -11,11 +12,25 @@ import java.util.Set;
 public interface MessageInstance {
 
     /**
+     * 系统主键
+     *
+     * @return 系统主键
+     */
+    Long getId();
+
+    /**
      * 设置来源系统
      *
      * @param fromSystem 来源系统
      */
     void setFromSystem(String fromSystem);
+
+    /**
+     * 获取来源系统
+     *
+     * @return 获取来源系统
+     */
+    String getFromSystem();
 
     /**
      * 设置业务主键
@@ -25,11 +40,25 @@ public interface MessageInstance {
     void setBusinessKey(String businessKey);
 
     /**
+     * 设置业务主键
+     *
+     * @return 业务主键
+     */
+    String getBusinessKey();
+
+    /**
      * 设置消息批次号（表示一批消息是同次发送的）
      *
      * @param batchKey 批次号
      */
     void setBatchKey(String batchKey);
+
+    /**
+     * 设置批次号
+     *
+     * @return 批次号
+     */
+    String getBatchKey();
 
     /**
      * 设置消息类型
@@ -39,6 +68,13 @@ public interface MessageInstance {
     void setMessageType(String messageType);
 
     /**
+     * 消息类型
+     *
+     * @return 消息类型
+     */
+    String getMessageType();
+
+    /**
      * 设置语言编码
      *
      * @param langCode 语言编码
@@ -46,11 +82,11 @@ public interface MessageInstance {
     void setLangCode(String langCode);
 
     /**
-     * 数据编码
+     * 语言编码
      *
-     * @return 数据编码
+     * @return 获取语言编码
      */
-    String sendGroup();
+    String getLangCode();
 
     /**
      * 获取消息主题
@@ -114,6 +150,34 @@ public interface MessageInstance {
      * @param sender 发件人
      */
     void setSender(String sender);
+
+    /**
+     * 设置发件人
+     *
+     * @return 发件人
+     */
+    String getSender();
+
+    /**
+     * 数据编码
+     *
+     * @return 数据编码
+     */
+    String sendGroup();
+
+    /**
+     * 发送时间
+     *
+     * @return 设置发送时间
+     */
+    LocalDateTime getSendTime();
+
+    /**
+     * 设置发送时间
+     *
+     * @param sendTime 发送时间
+     */
+    void setSendTime(LocalDateTime sendTime);
 
     /**
      * 获取收件人信息

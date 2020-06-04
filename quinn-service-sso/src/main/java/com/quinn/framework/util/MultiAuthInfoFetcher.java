@@ -7,6 +7,7 @@ import com.quinn.framework.exception.AuthTypeNotSupportException;
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.base.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 
@@ -73,7 +74,7 @@ public final class MultiAuthInfoFetcher {
      *
      * @param authInfo 验证信息
      */
-    public static BaseResult<List> fetchPermissions(AuthInfo authInfo, String group, String type, Long parentId) {
+    public static BaseResult<List> fetchPermissions(AuthInfo authInfo, String group, FunctionTypeEnum type, Long parentId) {
         return pickAuthInfoFetcher(authInfo.getClass()).selectMyPermissions(authInfo, group, type, parentId);
     }
 
