@@ -8,6 +8,7 @@ import com.quinn.framework.component.DegreeCacheService;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -31,7 +32,8 @@ public class DegreeCacheServiceListener implements ApplicationListener<ContextRe
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DegreeCacheServiceListener.class);
 
     @Resource
-    private DegreeCacheService degreeCacheService;
+    @Qualifier("messageDegreeCacheService")
+    private DegreeCacheService messageDegreeCacheService;
 
     @Resource
     private CacheAllService cacheAllService;
@@ -43,7 +45,7 @@ public class DegreeCacheServiceListener implements ApplicationListener<ContextRe
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (degreeCacheService == null || itemMap == null) {
+        if (messageDegreeCacheService == null || itemMap == null) {
             return;
         }
 
@@ -52,9 +54,9 @@ public class DegreeCacheServiceListener implements ApplicationListener<ContextRe
         for (Map.Entry<String, Integer> entry : itemMap.entrySet()) {
             try {
                 CacheCommonService bean = applicationContext.getBean(entry.getKey(), CacheCommonService.class);
-                degreeCacheService.addDegreeCache(entry.getValue(), bean);
+                messageDegreeCacheService.addDegreeCache(entry.getValue(), bean);
             } catch (Exception e) {
-                LOGGER.warn("cacheService【{0}】 in degreeCacheService not found", entry.getKey());
+                LOGGER.warn("cacheService【{0}】 in messageDegreeCacheService not found", entry.getKey());
             }
         }
 

@@ -3,6 +3,7 @@ package com.quinn.framework.compnonent;
 import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.model.DirectMessageInfo;
+import com.quinn.framework.model.MessageInfoFactory;
 import com.quinn.framework.model.MessageSendParam;
 import com.quinn.framework.model.MessageThread;
 import com.quinn.framework.service.MessageHelpService;
@@ -69,7 +70,7 @@ public class ReceiverToDirect extends MessageThread {
 
         receivers.parallelStream().forEach((receiver) -> {
             BaseResult<List<MessageSendRecord>> sendRecordListResult =
-                    messageHelpService.receiver2SendRecord(receiver, messageSendParam.getMessageParam());
+                    MessageInfoFactory.receiver2SendRecord(receiver, messageSendParam.getMessageParam());
 
             if (sendRecordListResult.isSuccess()) {
                 synchronized (directMessageInfo.getSendRecordListMap()) {

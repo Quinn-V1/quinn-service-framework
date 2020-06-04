@@ -77,15 +77,6 @@ public interface MessageHelpService {
     BaseResult<List<MessageReceiver>> selectReceivers(String templateKey, String messageType, String languageCode);
 
     /**
-     * 发送对象转发送记录
-     *
-     * @param receiver     收件对象
-     * @param messageParam 发送记录
-     * @return 发送记录
-     */
-    BaseResult<List<MessageSendRecord>> receiver2SendRecord(MessageReceiver receiver, Map<String, Object> messageParam);
-
-    /**
      * 保存消息实例
      *
      * @param instance 消息实例

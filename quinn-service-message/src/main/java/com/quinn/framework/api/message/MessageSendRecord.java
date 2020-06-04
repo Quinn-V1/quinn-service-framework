@@ -93,4 +93,25 @@ public interface MessageSendRecord {
      */
     String getReceiverAddress();
 
+    /**
+     * 设置语言编码
+     *
+     * @param langCode 语言编码
+     */
+    void setLangCode(String langCode);
+
+    /**
+     * 设置消息服务编码
+     *
+     * @param serverKey 消息服务编码
+     */
+    void setServerKey(String serverKey);
+
+    /**
+     * 设置紧急程度
+     *
+     * @param urgentLevel 紧急程度
+     */
+    void setUrgentLevel(Integer urgentLevel);
+
 }

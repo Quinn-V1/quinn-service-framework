@@ -166,20 +166,6 @@ public interface MessageInstance {
     String sendGroup();
 
     /**
-     * 发送时间
-     *
-     * @return 设置发送时间
-     */
-    LocalDateTime getSendTime();
-
-    /**
-     * 设置发送时间
-     *
-     * @param sendTime 发送时间
-     */
-    void setSendTime(LocalDateTime sendTime);
-
-    /**
      * 获取收件人信息
      *
      * @return 收件人

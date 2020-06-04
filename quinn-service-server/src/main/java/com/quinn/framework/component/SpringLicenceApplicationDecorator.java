@@ -2,11 +2,11 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.SpringApplicationDecorator;
 import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.factory.LicenceClassLoader;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.LicenceInfo;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.constant.enums.LicenceExceptionType;
 import com.quinn.util.constant.enums.SystemExitTypeEnum;
 import com.quinn.util.licence.model.ApplicationInfo;
@@ -31,14 +31,21 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
         String licenceDir = properties.getProperty(ConfigConstant.PROP_KEY_OF_LICENCE_PATH,
                 ConfigConstant.DEFAULT_LICENCE_PATH);
 
-        URL resource;
+        URL resource = null;
         File file = new File(licenceDir);
         if (!file.exists()) {
             if (licenceDir.startsWith(ConfigConstant.CONFIG_KEY_PREFIX_CLASSPATH) ||
                     licenceDir.startsWith(ConfigConstant.CONFIG_KEY_PREFIX_CLASSPATH_ALL)) {
                 licenceDir = licenceDir.substring(licenceDir.indexOf(StringConstant.CHAR_COLON) + 1);
+                file = new File(licenceDir);
+                if (file.exists()) {
+                    resource = file.toURI().toURL();
+                }
             }
-            resource = SpringLicenceApplicationDecorator.class.getClassLoader().getResource(licenceDir);
+
+            if (resource == null) {
+                resource = SpringLicenceApplicationDecorator.class.getClassLoader().getResource(licenceDir);
+            }
         } else {
             resource = file.toURI().toURL();
         }

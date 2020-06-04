@@ -55,6 +55,22 @@ public final class EntityUtil {
     }
 
     /**
+     * 拼接国际化显示Key
+     *
+     * @param locale        语言
+     * @param dataType      数据类型
+     * @param dataKey       数据编码
+     * @param propCode      属性编码
+     * @param keyDelimiter  键分割器
+     * @param propDelimiter 属性分割器
+     * @return 国际化显示Key
+     */
+    public static String wrapperKey(String locale, String dataType, String dataKey,
+                                    String propCode, String keyDelimiter, String propDelimiter) {
+        return locale + keyDelimiter + dataType + keyDelimiter + dataKey + propDelimiter + propCode;
+    }
+
+    /**
      * 获取一个对象缓存键
      *
      * @param object 对象

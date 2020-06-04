@@ -1,14 +1,16 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.api.message.MessageInfoSupplier;
-import com.quinn.framework.api.message.MessageInstance;
-import com.quinn.framework.api.message.MessageTempContent;
+import com.quinn.framework.api.message.*;
 import com.quinn.framework.util.enums.PlaceTypeEnum;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.quinn.framework.model.DirectMessageInfo.MAX_SUBJECT_LENGTH;
@@ -25,6 +27,11 @@ public class MessageInfoFactory {
      * 消息信息提供者
      */
     private static MessageInfoSupplier messageInfoSupplier;
+
+    /**
+     * 小弟地址解析器
+     */
+    private static Map<String, MessageAddressResolver> addressResolverMap;
 
     /**
      * 创建消息实例
@@ -111,11 +118,92 @@ public class MessageInfoFactory {
     }
 
     /**
+     * 收件对象转化为消息发送记录
+     *
+     * @param receiver     收件对象
+     * @param messageParam 消息发送记录
+     * @return 消息发送记录
+     */
+    public static BaseResult<List<MessageSendRecord>> receiver2SendRecord(
+            MessageReceiver receiver, Map<String, Object> messageParam) {
+
+        String receiverType = receiver.getReceiverType();
+        String receiverValue = receiver.getReceiverValue();
+        String messageType = receiver.getMessageType();
+
+        if (MsgReceiverTypeEnum.PARAM.name().equals(receiverType)) {
+            receiverValue = FreeMarkTemplateLoader.invoke(receiverValue, messageParam);
+            if (StringUtils.isEmpty(receiverValue)) {
+                return BaseResult.fail("未解析到收件对象");
+            }
+
+            String realReceiverType = (String) messageParam.get("receiverType");
+            if (!StringUtils.isEmpty(realReceiverType)) {
+                realReceiverType = FreeMarkTemplateLoader.invoke(realReceiverType, messageParam);
+            }
+
+            if (!StringUtils.isEmpty(realReceiverType)) {
+                receiverType = realReceiverType;
+            } else {
+                receiverType = MsgReceiverTypeEnum.DIRECT.name();
+            }
+
+            receiver.setReceiverValue(receiverValue);
+            receiver.setReceiverType(receiverType);
+        }
+
+        String messageAddressResolverKey = receiverType.toUpperCase() + CharConstant.COLON + messageType.toUpperCase();
+        MessageAddressResolver messageAddressResolver = addressResolverMap.get("messageAddressResolver"
+                + CharConstant.COLON + messageAddressResolverKey);
+
+        if (messageAddressResolver == null) {
+            // FIXME
+            return BaseResult.fail("没有配置地址解析器" + messageAddressResolverKey);
+        }
+
+        BaseResult<List<MessageSendRecord>> result =
+                messageAddressResolver.resolve(receiverValue, messageParam);
+
+        boolean useDefLang = false;
+        if (!ApplicationInfo.getInstance().isSupportLang(receiver.getLangCode())) {
+            useDefLang = true;
+        }
+
+        if (result.isSuccess()) {
+            List<MessageSendRecord> data = result.getData();
+            for (MessageSendRecord record : data) {
+                record.setMessageType(receiver.getMessageType());
+
+                if (useDefLang) {
+                    record.setLangCode(ApplicationInfo.getInstance().getDefaultLangCode());
+                } else {
+                    record.setLangCode(receiver.getLangCode());
+                }
+
+                record.setServerKey(receiver.getServerKey());
+                record.setUrgentLevel(receiver.getUrgentLevel());
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
      * 设置消息信息提供者
      *
      * @param messageInfoSupplier 消息信息提供者
      */
     public static void setMessageInfoSupplier(MessageInfoSupplier messageInfoSupplier) {
         MessageInfoFactory.messageInfoSupplier = messageInfoSupplier;
+    }
+
+    /**
+     * 设置地址解析对象Map
+     *
+     * @param addressResolverMap 地址解析对象Map
+     */
+    public static void setAddressResolverMap(Map<String, MessageAddressResolver> addressResolverMap) {
+        MessageInfoFactory.addressResolverMap = addressResolverMap;
     }
 }
