@@ -25,6 +25,14 @@ public interface MessageHelpService {
     <T extends MessageInstance> BaseResult<T> getInstanceByBiz(String fromSystem, String businessKey);
 
     /**
+     * 通过编码获取消息模板
+     *
+     * @param templateKey 模板编码
+     * @return 消息模板
+     */
+    BaseResult<MessageTemp> getTemplateByKey(String templateKey);
+
+    /**
      * 查找消息内容
      *
      * @param templateKey  消息模板
@@ -33,6 +41,22 @@ public interface MessageHelpService {
      * @return
      */
     BaseResult<List<MessageTempContent>> selectContents(String templateKey, String messageType, String languageCode);
+
+    /**
+     * 根据编码获取消息服务
+     *
+     * @param serverKey 服务编码
+     * @return 查找结果
+     */
+    BaseResult<MessageServer> getMessageServerByKey(String serverKey);
+
+    /**
+     * 根据次级主键查找
+     *
+     * @param subKey 次级主键
+     * @return 消息服务列表
+     */
+    BaseResult<List<MessageServer>> selectMessageServerBySubKey(String subKey);
 
     /**
      * 填充运行时参数
@@ -73,31 +97,8 @@ public interface MessageHelpService {
      * 保存发送记录
      *
      * @param sendRecord 发送记录
+     * @return 保存结果
      */
     BaseResult saveSendRecord(MessageSendRecord sendRecord);
-
-    /**
-     * 通过编码获取消息模板
-     *
-     * @param templateKey 模板编码
-     * @return 消息模板
-     */
-    BaseResult<MessageTemp> getTemplateByKey(String templateKey);
-
-    /**
-     * 根据编码获取消息服务
-     *
-     * @param serverKey 服务编码
-     * @return 查找结果
-     */
-    BaseResult<MessageServer> getMessageServerByKey(String serverKey);
-
-    /**
-     * 根据次级主键查找
-     *
-     * @param subKey 次级主键
-     * @return 消息服务列表
-     */
-    BaseResult<List<MessageServer>> selectMessageServerBySubKey(String subKey);
 
 }

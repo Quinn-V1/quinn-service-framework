@@ -7,20 +7,18 @@ import com.quinn.framework.exception.DataOperationTransactionException;
 import com.quinn.framework.model.CallableObject;
 import com.quinn.framework.model.NextNumSeqValue;
 import com.quinn.framework.service.JdbcService;
+import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.base.enums.DataOperateTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
-import com.quinn.util.base.CollectionUtil;
-import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.base.enums.DataOperateTypeEnum;
-import com.quinn.util.base.enums.CommonMessageEnum;
-import javax.annotation.Resource;
-
 import com.quinn.util.database.enums.CallableTypeEnum;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.CallableStatementCreator;
@@ -28,6 +26,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
@@ -118,7 +117,13 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public <T> BaseResult<T> queryForObject(String sql, Class<T> clazz, Object... params) {
-        T t = (T) jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(clazz));
+        T t;
+        if (BaseConverter.isPrimitive(clazz)) {
+            t = (T) jdbcTemplate.queryForObject(sql, params, clazz);
+        } else {
+            t = (T) jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(clazz));
+        }
+
         if (t == null) {
             return BaseResult.fail()
                     .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)
@@ -131,7 +136,13 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public <T> BaseResult<List<T>> queryForList(String sql, Class<T> clazz, Object... params) {
-        List<T> list = jdbcTemplate.query(sql, params, new BeanPropertyRowMapper(clazz));
+        List<T> list;
+        if (BaseConverter.isPrimitive(clazz)) {
+            list = jdbcTemplate.queryForList(sql, params, clazz);
+        } else {
+            list = jdbcTemplate.query(sql, params, new BeanPropertyRowMapper(clazz));
+        }
+
         if (CollectionUtil.isEmpty(list)) {
             return BaseResult.fail()
                     .buildMessage(CommonMessageEnum.RESULT_NOT_FOUND.key(), 0, 1)
@@ -148,8 +159,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
         CallableObject callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, Long.class, 2)
                         .addOutParam(SqlConstant.PARAM_SEQ_VALUE, Types.BIGINT)
-                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName)
-                ;
+                        .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName);
         return executeCallableForObject(callableObject);
     }
 
@@ -161,8 +171,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
                         .addInParam(SqlConstant.PARAM_SEQ_NAME, seqName)
                         .addInParam(SqlConstant.SEQ_NUMBER, seqNum)
                         .addOutParam(SqlConstant.PARAM_SEQ_VALUE, Types.BIGINT)
-                        .addOutParam(SqlConstant.PARAM_SEQ_STEP, Types.INTEGER)
-                ;
+                        .addOutParam(SqlConstant.PARAM_SEQ_STEP, Types.INTEGER);
         return executeCallableForObject(callableObject);
     }
 

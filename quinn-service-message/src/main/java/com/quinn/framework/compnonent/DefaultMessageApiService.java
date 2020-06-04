@@ -215,6 +215,7 @@ public class DefaultMessageApiService implements MessageApiService {
             return BaseResult.fail("未指定消息发送地址");
         }
 
+        MessageInfoUtil.fillMessageSendParamWithTemp(messageSendParam, messageTemp);
         DirectMessageInfo directMessageInfo = DirectMessageInfo.newInstance();
         tempToDirect(messageSendParam, directMessageInfo);
 

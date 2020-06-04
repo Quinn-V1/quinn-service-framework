@@ -62,5 +62,5 @@ public interface MessageTempContent {
      *
      * @return 语言编码
      */
-    String getLanguageCode();
+    String getLangCode();
 }

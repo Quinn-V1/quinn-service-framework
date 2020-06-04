@@ -1,11 +1,13 @@
 package com.quinn.framework.util;
 
+import com.alibaba.fastjson.JSON;
 import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.base.api.MethodInvokerTwoParam;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
@@ -139,4 +141,30 @@ public final class EntityUtil {
 
         return BaseResult.success(result);
     }
+
+    /**
+     * 将数据从加入Map：源数据有可能是Map、BaseResult、或者其他
+     *
+     * @return 添加是否成功
+     */
+    public static void addDataToMapFromResultOrOther(Map<String, Object> map, Object data, String key) {
+        if (data instanceof Map) {
+            map.putAll((Map) data);
+        } else {
+            if (data instanceof BaseResult) {
+                data = ((BaseResult) data).getData();
+            }
+
+            if (data == null) {
+                return;
+            }
+
+            if (BaseConverter.isPrimitive(data.getClass())) {
+                map.put(key, data);
+            } else {
+                map.put(key, JSON.toJSON(data));
+            }
+        }
+    }
+
 }

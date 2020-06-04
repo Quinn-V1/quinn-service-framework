@@ -56,6 +56,12 @@ public class MessageSendParam {
     private String businessKey;
 
     /**
+     * 消息模板系统主键
+     */
+    @ApiModelProperty("消息模板系统主键")
+    private Long templateId;
+
+    /**
      * 消息模板编码
      */
     @ApiModelProperty("消息模板编码")
@@ -251,7 +257,7 @@ public class MessageSendParam {
         Map<String, Object> param = new HashMap<>();
         defaultInstance.setMessageParam(param);
 
-        param.put(CommonParamName.PARAM_KEY_TYPE, ParamTypeEnum.JSON.name());
+        param.put(CommonParamName.PARAM_KEY_PARAM_TYPE, ParamTypeEnum.JSON.name());
 
         List<Map<String, Object>> paramValue = new ArrayList<>();
         param.put(CommonParamName.PARAM_KEY_RUNTIME_PARAM, paramValue);

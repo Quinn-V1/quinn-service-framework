@@ -2,6 +2,9 @@ package com.quinn.framework.util;
 
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageSendRecord;
+import com.quinn.framework.api.message.MessageTemp;
+import com.quinn.framework.model.MessageSendParam;
+import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 
@@ -74,4 +77,14 @@ public final class MessageInfoUtil {
         return serverSubKey.split(StringConstant.CHAR_COLON);
     }
 
+    /**
+     * 使用模板填充消息发送参数
+     *
+     * @param messageSendParam 消息发送参数
+     * @param messageTemp      消息模板
+     */
+    public static void fillMessageSendParamWithTemp(MessageSendParam messageSendParam, MessageTemp messageTemp) {
+        messageSendParam.setTemplateId(messageTemp.getId());
+        messageSendParam.setTemplateKey(messageTemp.getTemplateKey());
+    }
 }

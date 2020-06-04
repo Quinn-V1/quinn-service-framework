@@ -36,7 +36,7 @@ public class MessageInfoFactory {
     public static MessageInstance createInstance(MessageTempContent content, MessageSendParam messageSendParam) {
         MessageInstance instance = messageInfoSupplier.createInstance();
         instance.setMessageType(content.getMessageType());
-        instance.setLangCode(content.getLanguageCode());
+        instance.setLangCode(content.getLangCode());
 
         instance.setSubject(content.getSubjectTemplate());
         instance.setMsgUrl(content.getUrlTemplate());
