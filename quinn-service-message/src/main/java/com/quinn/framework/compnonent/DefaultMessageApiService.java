@@ -12,6 +12,7 @@ import com.quinn.framework.util.MessageInfoUtil;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.model.BaseResult;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -44,6 +45,7 @@ public class DefaultMessageApiService implements MessageApiService {
      * 消息线程池执行器
      */
     @Resource
+    @Qualifier("messageExecutorService")
     private ExecutorService messageExecutorService;
 
     @Override

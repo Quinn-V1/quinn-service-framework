@@ -2,16 +2,14 @@ package com.quinn.framework.compnonent;
 
 import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageSendRecord;
-import com.quinn.framework.model.DirectMessageInfo;
-import com.quinn.framework.model.MessageInfoFactory;
-import com.quinn.framework.model.MessageSendParam;
-import com.quinn.framework.model.MessageThread;
+import com.quinn.framework.model.*;
 import com.quinn.framework.service.MessageHelpService;
 import com.quinn.framework.util.enums.ThreadType;
 import com.quinn.util.base.model.BaseResult;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +36,7 @@ public class ReceiverToDirect extends MessageThread {
 
     @Override
     public void handle() {
-        List<MessageReceiver> receivers = messageSendParam.getReceivers();
+        List<MessageReceiverAdapter> receivers = messageSendParam.getReceivers();
         try {
             if (CollectionUtils.isEmpty(receivers)) {
                 BaseResult<List<MessageReceiver>> res = messageHelpService.selectReceivers(
@@ -47,8 +45,15 @@ public class ReceiverToDirect extends MessageThread {
                 );
 
                 if (res.isSuccess()) {
-                    receivers = res.getData();
-                    messageSendParam.setReceivers(receivers);
+                    List<MessageReceiver> data = res.getData();
+                    if (receivers == null) {
+                        receivers = new ArrayList<>(res.getData().size());
+                        messageSendParam.setReceivers(receivers);
+                    }
+
+                    for (MessageReceiver receiver : data) {
+                        receivers.add(MessageReceiverAdapter.from(receiver));
+                    }
                 } else {
                     directMessageInfo.appendError(res.getMessage());
                     return;

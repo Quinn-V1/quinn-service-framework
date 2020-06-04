@@ -76,6 +76,7 @@ public class DataSourceConfiguration {
         txMap.put("select*", readOnlyTx);
         txMap.put("query*", readOnlyTx);
         txMap.put("page*", readOnlyTx);
+        txMap.put("load*", readOnlyTx);
 
         // 需要事务
         RuleBasedTransactionAttribute requiredTx = new RuleBasedTransactionAttribute(
@@ -83,6 +84,7 @@ public class DataSourceConfiguration {
                 Collections.singletonList(new RollbackRuleAttribute(Exception.class)));
 
         requiredTx.setTimeout(writeTransactionTimeOut);
+        txMap.put("do*", requiredTx);
         txMap.put("add*", requiredTx);
         txMap.put("save*", requiredTx);
         txMap.put("insert*", requiredTx);

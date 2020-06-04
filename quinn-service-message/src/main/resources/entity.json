@@ -1,0 +1,34 @@
+{
+  "templateWithReceivers": {
+    "fromSystem": "YIQING",
+    "businessKey": "YQ0000001",
+    "templateId": 1,
+    "serverId": 1,
+    "receivers": [
+      {
+        "messageType": "EMAIL",
+        "receiverType": "DIRECT",
+        "languageCode": "zh_CN",
+        "receiverValue": "lqh@mingcloud.com"
+      }
+    ],
+    "messageParam": {
+      "subject": "主题111",
+      "content": "内容111"
+    }
+  },
+  "directSend": {
+    "fromSystem": "WEBTEST",
+    "businessKey": "WEBTEST0026",
+    "subject": "测试主题",
+    "content": "测试内容",
+    "receivers": [
+      {
+        "messageType": "EMAIL",
+        "receiverType": "DIRECT",
+        "languageCode": "zh_CN",
+        "receiverValue": "lqh@mingcloud.com"
+      }
+    ]
+  }
+}

@@ -154,7 +154,7 @@ public class MessageInfoFactory {
 
         String messageAddressResolverKey = receiverType.toUpperCase() + CharConstant.COLON + messageType.toUpperCase();
         MessageAddressResolver messageAddressResolver = addressResolverMap.get("messageAddressResolver"
-                + CharConstant.COLON + messageAddressResolverKey);
+                + CharConstant.UNDERLINE + messageAddressResolverKey);
 
         if (messageAddressResolver == null) {
             // FIXME

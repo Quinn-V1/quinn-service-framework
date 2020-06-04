@@ -1,22 +1,18 @@
 package com.quinn.framework.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.util.MessageParamName;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.CommonParamName;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.ParamTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,11 +33,6 @@ public class MessageSendParam {
      * 参数方案列表
      */
     private static Map<String, MessageSendParam> paramExampleMap = new HashMap<>();
-
-    /**
-     * 漠然参数方案
-     */
-    private static MessageSendParam defaultInstance;
 
     /**
      * 来源系统
@@ -125,7 +116,7 @@ public class MessageSendParam {
      * 收件对象
      */
     @ApiModelProperty("收件对象")
-    private List<MessageReceiver> receivers;
+    private List<MessageReceiverAdapter> receivers;
 
     /**
      * 收件对象类型
@@ -192,7 +183,7 @@ public class MessageSendParam {
             }
 
             for (String rv : rvs) {
-                MessageReceiver receiver = new DefaultMessageReceiver();
+                MessageReceiverAdapter receiver = new MessageReceiverAdapter();
                 receiver.setReceiverType(receiverType);
                 receiver.setReceiverValue(rv);
                 receivers.add(receiver);
@@ -210,84 +201,6 @@ public class MessageSendParam {
 
         // FIXME (根据实际参数返回解决方案)
         return BaseResult.success(NumberConstant.INT_ONE);
-    }
-
-    /**
-     * 从收件对象中获取书香
-     *
-     * @param oneParamOperation 属性获取器
-     * @param <V>               返回对象类型
-     * @return 属性值
-     */
-    public <V> V[] getPropertyFromReceiver(MethodInvokerOneParam<MessageReceiver, V> oneParamOperation) {
-        if (receivers == null) {
-            return null;
-        }
-
-        if (receivers.size() == 1) {
-            V res = oneParamOperation.invoke(receivers.get(0));
-            if (StringUtils.isEmpty(res)) {
-                return null;
-            }
-            V[] result = (V[]) new Objects[1];
-            result[1] = res;
-            return result;
-        } else {
-            Set<V> result = new HashSet<>();
-            for (MessageReceiver receiver : receivers) {
-                V lc = oneParamOperation.invoke(receiver);
-                if (!StringUtils.isEmpty(lc)) {
-                    result.add(lc);
-                }
-            }
-            return (V[]) result.toArray(new Objects[result.size()]);
-        }
-    }
-
-    static {
-        defaultInstance = new MessageSendParam();
-        defaultInstance.setFromSystem("WORK_ORDER_NOTIFY");
-        defaultInstance.setBusinessKey("WO_NO000001");
-        defaultInstance.setTemplateKey(StringConstant.NONE_OF_DATA);
-
-        List<MessageReceiver> receiverList = new ArrayList<>();
-        defaultInstance.setReceivers(receiverList);
-        // FIXME 添加消息接受对象
-
-        Map<String, Object> param = new HashMap<>();
-        defaultInstance.setMessageParam(param);
-
-        param.put(CommonParamName.PARAM_KEY_PARAM_TYPE, ParamTypeEnum.JSON.name());
-
-        List<Map<String, Object>> paramValue = new ArrayList<>();
-        param.put(CommonParamName.PARAM_KEY_RUNTIME_PARAM, paramValue);
-
-        Map<String, Object> cond = new HashMap<>();
-        paramValue.add(cond);
-        cond.put("workNo", "workNo0001");
-        cond.put("content", "content0001");
-        cond.put("equipment", "equipment0001");
-        cond.put("reportUser", "reportUser0001");
-
-        paramExampleMap.put("DEFAULT", defaultInstance);
-    }
-
-    /**
-     * 消息参赛断裂参数实例
-     *
-     * @param caseNo 参数方案
-     * @return 消息参数实例
-     */
-    public static MessageSendParam getInstance(String caseNo) {
-        if (StringUtils.isEmpty(caseNo)) {
-            return defaultInstance;
-        }
-
-        MessageSendParam param = paramExampleMap.get(caseNo.toUpperCase());
-        if (param == null) {
-            return defaultInstance;
-        }
-        return param;
     }
 
 }

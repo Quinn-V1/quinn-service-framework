@@ -3,10 +3,7 @@ package com.quinn.framework.compnonent;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageTempContent;
-import com.quinn.framework.model.DirectMessageInfo;
-import com.quinn.framework.model.MessageInfoFactory;
-import com.quinn.framework.model.MessageSendParam;
-import com.quinn.framework.model.MessageThread;
+import com.quinn.framework.model.*;
 import com.quinn.framework.service.MessageHelpService;
 import com.quinn.framework.util.enums.ThreadType;
 import com.quinn.util.base.CollectionUtil;
@@ -111,8 +108,8 @@ public class ContentToDirect extends MessageThread {
      * @param receivers    发送对象
      * @return 过滤后的消息模板
      */
-    private BaseResult<Map<String, MessageTempContent>> filter(
-            Map<String, MessageTempContent> tempContents, List<MessageReceiver> receivers) {
+    private <T extends MessageReceiver> BaseResult<Map<String, MessageTempContent>> filter(
+            Map<String, MessageTempContent> tempContents, List<T> receivers) {
 
         if (CollectionUtils.isEmpty(receivers)) {
             return BaseResult.fail("没有解析到发送对象");
