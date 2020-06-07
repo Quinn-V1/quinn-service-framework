@@ -14,6 +14,11 @@ import java.util.Map;
 public interface MessageAddressResolver {
 
     /**
+     * Bean名称前缀
+     */
+    String BEAN_NAME_PREFIX = "messageAddressResolver";
+
+    /**
      * 解析动作：生成address、receiver两个属性消息
      *
      * @param resolveValue 解析值

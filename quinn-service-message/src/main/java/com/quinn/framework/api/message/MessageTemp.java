@@ -29,4 +29,11 @@ public interface MessageTemp {
      */
     boolean hasDefaultAddress();
 
+    /**
+     * 获取消息紧急程度
+     *
+     * @return 消息紧急程度
+     */
+    Integer getUrgentLevel();
+
 }

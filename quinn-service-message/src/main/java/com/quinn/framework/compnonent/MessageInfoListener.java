@@ -2,6 +2,7 @@ package com.quinn.framework.compnonent;
 
 import com.quinn.framework.api.message.MessageAddressResolver;
 import com.quinn.framework.api.message.MessageInfoSupplier;
+import com.quinn.framework.api.message.MessageSenderSupplier;
 import com.quinn.framework.model.MessageInfoFactory;
 import com.quinn.framework.model.MessageSenderFactory;
 import com.quinn.framework.service.MessageHelpService;
@@ -28,6 +29,12 @@ public class MessageInfoListener implements ApplicationListener<ContextRefreshed
         // 消息信息提供者
         MessageInfoSupplier supplier = applicationContext.getBean(MessageInfoSupplier.class);
         MessageInfoFactory.setMessageInfoSupplier(supplier);
+
+        // 消息发送器
+        Map<String, MessageSenderSupplier> sendMap = applicationContext.getBeansOfType(MessageSenderSupplier.class);
+        for (Map.Entry<String, MessageSenderSupplier> entry : sendMap.entrySet()) {
+            MessageSenderFactory.addMessageSenderSupplier(entry.getValue());
+        }
 
         // 设置地址解析器
         Map<String, MessageAddressResolver> resolverMap = applicationContext.getBeansOfType(MessageAddressResolver.class);

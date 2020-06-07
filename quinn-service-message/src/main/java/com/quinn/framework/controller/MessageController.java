@@ -35,7 +35,7 @@ public class MessageController extends AbstractController {
             @ApiParam(name = "messageSendParam", value = "消息发送参数", required = true)
             @RequestBody MessageSendParam messageSendParam
     ) {
-        return messageApiService.send(messageSendParam);
+        return messageApiService.doSend(messageSendParam);
     }
 
     @PostMapping(value = "preview")

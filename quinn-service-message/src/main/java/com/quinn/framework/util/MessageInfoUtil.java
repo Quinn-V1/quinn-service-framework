@@ -3,10 +3,13 @@ package com.quinn.framework.util;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageTemp;
+import com.quinn.framework.model.MessageReceiverAdapter;
 import com.quinn.framework.model.MessageSendParam;
 import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
+
+import java.util.List;
 
 /**
  * 消息对象操作工具类
@@ -19,8 +22,16 @@ public final class MessageInfoUtil {
     private MessageInfoUtil() {
     }
 
+    /**
+     * 适用消息实例填充消息发送记录
+     *
+     * @param sendRecord 消息发送记录
+     * @param instance   消息发送记录
+     */
     public static void fillSendRecordWithInstance(MessageSendRecord sendRecord, MessageInstance instance) {
-
+        sendRecord.setMessageInstance(instance);
+        sendRecord.setMsgInstanceId(instance.getId());
+        sendRecord.setBatchKey(instance.getBatchKey());
     }
 
     /**
@@ -86,5 +97,15 @@ public final class MessageInfoUtil {
     public static void fillMessageSendParamWithTemp(MessageSendParam messageSendParam, MessageTemp messageTemp) {
         messageSendParam.setTemplateId(messageTemp.getId());
         messageSendParam.setTemplateKey(messageTemp.getTemplateKey());
+
+        if (NumberUtil.isEmptyInFrame(messageSendParam.getUrgentLevel())) {
+            messageSendParam.setUrgentLevel(messageTemp.getUrgentLevel());
+            List<MessageReceiverAdapter> receivers = messageSendParam.getReceivers();
+            if (receivers != null) {
+                for (MessageReceiverAdapter receiver : receivers) {
+                    receiver.setUrgentLevel(messageTemp.getUrgentLevel());
+                }
+            }
+        }
     }
 }

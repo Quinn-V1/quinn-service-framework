@@ -49,7 +49,7 @@ public class DefaultMessageApiService implements MessageApiService {
     private ExecutorService messageExecutorService;
 
     @Override
-    public BaseResult send(MessageSendParam messageSendParam) {
+    public BaseResult doSend(MessageSendParam messageSendParam) {
         // 参数内部校验
         BaseResult validate = messageSendParam.validate();
         if (!validate.isSuccess()) {

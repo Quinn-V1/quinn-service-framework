@@ -1,6 +1,5 @@
 package com.quinn.framework.api.message;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -171,5 +170,47 @@ public interface MessageInstance {
      * @return 收件人
      */
     Set<String> getReceiverAddresses();
+
+    /**
+     * 设置模板ID
+     *
+     * @param templateId 模板ID
+     */
+    void setTemplateId(Long templateId);
+
+    /**
+     * 设置模板编码
+     *
+     * @param templateKey 模板编码
+     */
+    void setTemplateKey(String templateKey);
+
+    /**
+     * 设置消息紧急程度
+     *
+     * @param urgentLevel 紧急程度
+     */
+    void setUrgentLevel(Integer urgentLevel);
+
+    /**
+     * 获取模板ID
+     *
+     * @return templateId 模板ID
+     */
+    Long getTemplateId();
+
+    /**
+     * 获取模板编码
+     *
+     * @return templateKey 模板编码
+     */
+    String getTemplateKey();
+
+    /**
+     * 获取消息紧急程度
+     *
+     * @return urgentLevel 紧急程度
+     */
+    Integer getUrgentLevel();
 
 }

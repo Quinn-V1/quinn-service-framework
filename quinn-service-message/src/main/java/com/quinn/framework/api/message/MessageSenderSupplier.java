@@ -16,7 +16,14 @@ public interface MessageSenderSupplier {
     /**
      * Bean名称前缀
      */
-    String BEAN_NAME_PREFIX = "messageSenderFactory";
+    String BEAN_NAME_PREFIX = "messageSenderSupplier";
+
+    /**
+     * 消息类型
+     *
+     * @return 消息类型
+     */
+    String messageType();
 
     /**
      * 创建消息发送器
@@ -27,18 +34,18 @@ public interface MessageSenderSupplier {
     BaseResult<MessageSender> create(JSONObject jsonObject);
 
     /**
-     * 连接参数示例
-     *
-     * @return 连接参数示例
-     */
-    BaseResult<Map> connectParamExample();
-
-    /**
      * 创建发送服务
      *
      * @param messageServer 发送服务参数
      * @return 发送服务
      */
     BaseResult<MessageSender> create(MessageServer messageServer);
+
+    /**
+     * 连接参数示例
+     *
+     * @return 连接参数示例
+     */
+    BaseResult<Map> connectParamExample();
 
 }

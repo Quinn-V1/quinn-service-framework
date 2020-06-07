@@ -53,7 +53,7 @@ public class MessageSenderFactory {
      */
     public static MessageSender findMessageSender(MessageSendRecord sendRecord) {
         String serverKey = sendRecord.getServerKey();
-        if (StringUtil.isEmptyInFrame(serverKey)) {
+        if (!StringUtil.isEmptyInFrame(serverKey)) {
             MessageSender messageSender = messageSenderMap.get(serverKey);
             if (messageSender != null) {
                 return messageSender;
@@ -61,21 +61,7 @@ public class MessageSenderFactory {
 
             BaseResult<MessageServer> serverRes = messageHelpService.getMessageServerByKey(serverKey);
             if (serverRes.isSuccess()) {
-                MessageSenderSupplier supplier = messageSenderSupplierMap.get(sendRecord.getMessageType());
-                if (supplier == null) {
-                    // FIXME
-                    throw new BaseBusinessException();
-                }
-                BaseResult<MessageSender> senderRes = supplier.create(serverRes.getData());
-                if (!senderRes.isSuccess()) {
-                    // FIXME
-                    throw new BaseBusinessException();
-                }
-
-                messageSender = senderRes.getData();
-                messageSenderMap.put(serverKey, messageSender);
-                CollectionUtil.nullSafePutList(messageSenderListMap, messageSender, messageSender.subKey());
-                return messageSender;
+                return addMessageSender(serverRes.getData());
             }
         }
 
@@ -95,7 +81,7 @@ public class MessageSenderFactory {
             }
 
             List<MessageServer> messageServers = res.getData();
-            messageSenders = new ArrayList<>(messageSenders.size());
+            messageSenders = new ArrayList<>(messageServers.size());
 
             for (MessageServer server : messageServers) {
                 BaseResult<MessageSender> senderRes = supplier.create(server);
@@ -129,6 +115,39 @@ public class MessageSenderFactory {
      */
     public static void setMessageServerService(MessageHelpService messageHelpService) {
         MessageSenderFactory.messageHelpService = messageHelpService;
+    }
+
+    /**
+     * 添加发送对象提供器
+     *
+     * @param supplier 发送对象提供器
+     */
+    public static void addMessageSenderSupplier(MessageSenderSupplier supplier) {
+        messageSenderSupplierMap.put(supplier.messageType(), supplier);
+    }
+
+    /**
+     * 消息发送对象
+     *
+     * @param messageServer 消息发送对象
+     */
+    public static MessageSender addMessageSender(MessageServer messageServer) {
+        MessageSenderSupplier messageSenderSupplier = messageSenderSupplierMap.get(messageServer.getMessageType());
+        if (messageSenderSupplier == null) {
+            // FIXME
+            throw new BaseBusinessException("没有提供消息");
+        }
+
+        BaseResult<MessageSender> messageSenderBaseResult = messageSenderSupplier.create(messageServer);
+        if (!messageSenderBaseResult.isSuccess()) {
+            // FIXME
+            throw new BaseBusinessException("没有提供消息");
+        }
+
+        MessageSender messageSender = messageSenderBaseResult.getData();
+        messageSenderMap.put(messageServer.getServerKey(), messageSender);
+        CollectionUtil.nullSafePutList(messageSenderListMap, messageSender, messageServer.subKey());
+        return messageSender;
     }
 
 }

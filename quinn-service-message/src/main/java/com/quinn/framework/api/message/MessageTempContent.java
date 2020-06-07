@@ -63,4 +63,19 @@ public interface MessageTempContent {
      * @return 语言编码
      */
     String getLangCode();
+
+    /**
+     * 获取模板主键
+     *
+     * @return 模板主键
+     */
+    Long getTemplateId();
+
+    /**
+     * 获取模板编码
+     *
+     * @return 模板编码
+     */
+    String getTemplateKey();
+
 }

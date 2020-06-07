@@ -3,10 +3,14 @@ package com.quinn.framework.model;
 import com.quinn.framework.api.message.*;
 import com.quinn.framework.util.enums.PlaceTypeEnum;
 import com.quinn.util.FreeMarkTemplateLoader;
+import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.CharConstant;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.UrgentLevelEnum;
 import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.util.StringUtils;
 
@@ -50,6 +54,9 @@ public class MessageInfoFactory {
         instance.setAttachment(content.getAttachmentTemplate());
         instance.setContent(content.getContentTemplate());
 
+        instance.setTemplateId(content.getTemplateId());
+        instance.setTemplateKey(content.getTemplateKey());
+
         // 替换方案 , String fromSystem, String businessKey
         Integer placeType = content.getPlaceTypes();
         if (placeType != null) {
@@ -71,6 +78,12 @@ public class MessageInfoFactory {
         instance.setFromSystem(messageSendParam.getFromSystem());
         instance.setBusinessKey(messageSendParam.getBusinessKey());
         instance.setSender(messageSendParam.senderOfSave());
+
+        Integer urgentLevel = messageSendParam.getUrgentLevel();
+        if (NumberUtil.isEmptyInFrame(urgentLevel)) {
+            urgentLevel = UrgentLevelEnum.NORMAL.code;
+        }
+        instance.setUrgentLevel(urgentLevel);
         return instance;
     }
 
@@ -93,9 +106,12 @@ public class MessageInfoFactory {
         }
 
         instance.setSubject(subject);
-        instance.setMsgUrl(messageSendParam.getUrl());
-        instance.setAttachment(messageSendParam.getAttachment());
+        instance.setMsgUrl(BaseUtil.ifNull(messageSendParam.getUrl(), StringConstant.NONE_OF_DATA));
+        instance.setAttachment(BaseUtil.ifNull(messageSendParam.getAttachment(), StringConstant.NONE_OF_DATA));
         instance.setContent(content);
+
+        instance.setTemplateId(NumberConstant.NONE_OF_DATA_ID);
+        instance.setTemplateKey(StringConstant.NONE_OF_DATA);
 
         instance.setFromSystem(messageSendParam.getFromSystem());
         instance.setBusinessKey(messageSendParam.getBusinessKey());
@@ -113,6 +129,12 @@ public class MessageInfoFactory {
         } else {
             instance.setMessageType(StringConstant.ALL_OF_DATA);
         }
+
+        Integer urgentLevel = messageSendParam.getUrgentLevel();
+        if (NumberUtil.isEmptyInFrame(urgentLevel)) {
+            urgentLevel = UrgentLevelEnum.NORMAL.code;
+        }
+        instance.setUrgentLevel(urgentLevel);
 
         return instance;
     }
@@ -152,8 +174,9 @@ public class MessageInfoFactory {
             receiver.setReceiverType(receiverType);
         }
 
-        String messageAddressResolverKey = receiverType.toUpperCase() + CharConstant.COLON + messageType.toUpperCase();
-        MessageAddressResolver messageAddressResolver = addressResolverMap.get("messageAddressResolver"
+        String messageAddressResolverKey = receiverType.toUpperCase() + CharConstant.UNDERLINE
+                + messageType.toUpperCase();
+        MessageAddressResolver messageAddressResolver = addressResolverMap.get(MessageAddressResolver.BEAN_NAME_PREFIX
                 + CharConstant.UNDERLINE + messageAddressResolverKey);
 
         if (messageAddressResolver == null) {
@@ -164,24 +187,31 @@ public class MessageInfoFactory {
         BaseResult<List<MessageSendRecord>> result =
                 messageAddressResolver.resolve(receiverValue, messageParam);
 
-        boolean useDefLang = false;
-        if (!ApplicationInfo.getInstance().isSupportLang(receiver.getLangCode())) {
-            useDefLang = true;
-        }
-
         if (result.isSuccess()) {
             List<MessageSendRecord> data = result.getData();
+
+            String langCode = receiver.getLangCode();
             for (MessageSendRecord record : data) {
                 record.setMessageType(receiver.getMessageType());
-
-                if (useDefLang) {
-                    record.setLangCode(ApplicationInfo.getInstance().getDefaultLangCode());
-                } else {
-                    record.setLangCode(receiver.getLangCode());
+                if (StringUtil.isNotEmpty(langCode)) {
+                    record.setLangCode(langCode);
                 }
 
-                record.setServerKey(receiver.getServerKey());
-                record.setUrgentLevel(receiver.getUrgentLevel());
+                if (ApplicationInfo.getInstance().isSupportLang(record.getLangCode())) {
+                    record.setLangCode(receiver.getLangCode());
+                } else {
+                    record.setLangCode(ApplicationInfo.getInstance().getDefaultLangCode());
+                }
+
+                if (!StringUtil.isEmptyInFrame(receiver.getServerKey())) {
+                    record.setServerKey(receiver.getServerKey());
+                }
+
+                Integer urgentLevel = receiver.getUrgentLevel();
+                if (NumberUtil.isEmptyInFrame(urgentLevel)) {
+                    urgentLevel = UrgentLevelEnum.NORMAL.code;
+                }
+                record.setUrgentLevel(urgentLevel);
             }
         }
 

@@ -17,7 +17,7 @@ public interface MessageApiService {
      * @param messageSendParam 消息发送参数
      * @return 消息发送结果
      */
-    BaseResult send(MessageSendParam messageSendParam);
+    BaseResult doSend(MessageSendParam messageSendParam);
 
     /**
      * 消息预览接口

@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageSender;
+import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.HttpHeadersConstant;
 import com.quinn.util.constant.StringConstant;
@@ -27,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -87,7 +91,9 @@ public class EmailSender implements MessageSender {
         try {
             MailSSLSocketFactory sf = new MailSSLSocketFactory();
             sf.setTrustAllHosts(true);
-            javaMailProperties.put("mail.smtp.ssl.enable", "true");
+
+            javaMailProperties.put("mail.smtp.ssl.enable",
+                    BaseConverter.staticConvert(param.get("mail.smtp.ssl.enable"), Boolean.class, false));
             javaMailProperties.put("mail.smtp.ssl.socketFactory", sf);
         } catch (GeneralSecurityException e) {
         }
@@ -123,38 +129,45 @@ public class EmailSender implements MessageSender {
     /**
      * 创建消息内容
      *
-     * @param messageInfo 消息实例
+     * @param sendRecord 消息实例
      * @return 消息内容
      */
     @Override
-    public BaseResult send(MessageInstance messageInfo) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+    public BaseResult send(MessageSendRecord sendRecord) {
+        MessageInstance messageInfo = sendRecord.getMessageInstance();
         try {
-            mimeMessage.setFrom(fromAddress);
-            mimeMessage.setSubject(MimeUtility.encodeText(messageInfo.getSubject(), "utf-8", null));
+            MimeMessage mimeMessage = createMessage(messageInfo);
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(sendRecord.getReceiverAddress()));
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            // FIXME
+            e.printStackTrace();
+        }
 
-            Multipart mp = new MimeMultipart();
-            MimeBodyPart mbp = new MimeBodyPart();
-            mbp.setContent(messageInfo.getContent(), HttpHeadersConstant.CONTENT_TYPE_HTML);
-            mp.addBodyPart(mbp);
+        return BaseResult.SUCCESS;
+    }
 
-            String attachments = messageInfo.getAttachment();
-            if (!StringUtils.isEmpty(attachments)) {
-                String[] files = attachments.split(";");
-                for (int i = 0; i < files.length; i++) {
-                    mbp = new MimeBodyPart();
-                    FileDataSource fds = new FileDataSource(files[i]);
-                    mbp.setDataHandler(new DataHandler(fds));
-                    mbp.setFileName(MimeUtility.encodeText("附件" + (i + 1), "utf-8", null));
-                    mp.addBodyPart(mbp);
+    @Override
+    public BaseResult sendAll(List<MessageSendRecord> sendRecords) {
+        Map<MessageInstance, List<MessageSendRecord>> sendRecordMap = CollectionUtil.collectionToListMap(sendRecords,
+                messageSendRecord -> messageSendRecord.getMessageInstance());
+        for (Map.Entry<MessageInstance, List<MessageSendRecord>> entry : sendRecordMap.entrySet()) {
+            MimeMessage mimeMessage = createMessage(entry.getKey());
+            List<MessageSendRecord> sendRecordList = entry.getValue();
+
+            try {
+                int size = sendRecordList.size();
+                Address[] toAdd = new InternetAddress[size];
+                for (int i = 0; i < size; i++) {
+                    toAdd[i] = new InternetAddress(sendRecordList.get(i).getReceiverAddress());
                 }
+
+                mimeMessage.setRecipients(Message.RecipientType.TO, toAdd);
+                javaMailSender.send(mimeMessage);
+            } catch (MessagingException e) {
+                // FIXME
+                e.printStackTrace();
             }
-
-            mimeMessage.setContent(mp);
-            mimeMessage.setSentDate(new Date());
-            mimeMessage.saveChanges();
-
-        } catch (MessagingException | UnsupportedEncodingException e) {
         }
 
         return BaseResult.SUCCESS;
@@ -187,13 +200,45 @@ public class EmailSender implements MessageSender {
         }
     }
 
-    @Override
-    public BaseResult sendAll(List<MessageSendRecord> sendRecords) {
-        return null;
+    /**
+     * 创建消息内容
+     *
+     * @param messageInstance 消息实例
+     * @return 消息内容
+     */
+    public MimeMessage createMessage(MessageInstance messageInstance) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            mimeMessage.setFrom(fromAddress);
+            mimeMessage.setSubject(MimeUtility.encodeText(messageInstance.getSubject(), "utf-8", null));
+
+            Multipart mp = new MimeMultipart();
+            MimeBodyPart mbp = new MimeBodyPart();
+            mbp.setContent(messageInstance.getContent(), "text/html;charset=UTF-8");
+            mp.addBodyPart(mbp);
+
+            String attachments = messageInstance.getAttachment();
+            if (!StringUtil.isEmptyInFrame(attachments)) {
+                String[] files = attachments.split(";");
+                for (int i = 0; i < files.length; i++) {
+                    mbp = new MimeBodyPart();
+                    FileDataSource fds = new FileDataSource(files[i]);
+                    mbp.setDataHandler(new DataHandler(fds));
+                    mbp.setFileName(MimeUtility.encodeText("附件" + (i + 1), "utf-8", null));
+                    mp.addBodyPart(mbp);
+                }
+            }
+
+            mimeMessage.setContent(mp);
+            mimeMessage.setSentDate(new Date());
+            mimeMessage.saveChanges();
+
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            // FIXME
+            e.printStackTrace();
+        }
+
+        return mimeMessage;
     }
 
-    @Override
-    public String subKey() {
-        return null;
-    }
 }

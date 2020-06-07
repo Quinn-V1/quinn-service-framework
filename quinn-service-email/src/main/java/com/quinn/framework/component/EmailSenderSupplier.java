@@ -5,6 +5,7 @@ import com.quinn.framework.api.message.MessageSender;
 import com.quinn.framework.api.message.MessageSenderSupplier;
 import com.quinn.framework.api.message.MessageServer;
 import com.quinn.framework.model.EmailSender;
+import com.quinn.util.base.enums.MessageTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 
 import java.util.LinkedHashMap;
@@ -41,6 +42,11 @@ public class EmailSenderSupplier implements MessageSenderSupplier {
     }
 
     @Override
+    public String messageType() {
+        return MessageTypeEnum.EMAIL.name();
+    }
+
+    @Override
     public BaseResult<MessageSender> create(JSONObject jsonObject) {
         EmailSender emailSender = new EmailSender();
         return emailSender.init(jsonObject);
@@ -53,8 +59,9 @@ public class EmailSenderSupplier implements MessageSenderSupplier {
 
     @Override
     public BaseResult<MessageSender> create(MessageServer messageServer) {
-        // TODO
-        return null;
+        EmailSender emailSender = new EmailSender();
+        JSONObject connectParam = messageServer.getConnectParam();
+        return emailSender.init(connectParam);
     }
 
 }

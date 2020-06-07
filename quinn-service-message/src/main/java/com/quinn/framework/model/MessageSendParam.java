@@ -131,6 +131,12 @@ public class MessageSendParam {
     private String receiverValue;
 
     /**
+     * 消息优先级
+     */
+    @ApiModelProperty("消息优先级")
+    private Integer urgentLevel;
+
+    /**
      * 发送用户
      */
     @ApiModelProperty("发送用户")
@@ -185,6 +191,7 @@ public class MessageSendParam {
             for (String rv : rvs) {
                 MessageReceiverAdapter receiver = new MessageReceiverAdapter();
                 receiver.setReceiverType(receiverType);
+                receiver.setUrgentLevel(urgentLevel);
                 receiver.setReceiverValue(rv);
                 receivers.add(receiver);
             }

@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EmailConfiguration {
 
-    @Bean("messageSenderFactoryEMAIL")
-    public MessageSenderSupplier messageSenderFactoryEmail() {
+    @Bean("messageSenderSupplierEMAIL")
+    public MessageSenderSupplier messageSenderSupplierEmail() {
         return new EmailSenderSupplier();
     }
 
