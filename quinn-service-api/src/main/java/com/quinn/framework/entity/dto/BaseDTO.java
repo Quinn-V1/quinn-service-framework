@@ -333,7 +333,7 @@ public abstract class BaseDTO<T> {
      */
     public void cacheKey(String cacheKey, String delimiter) {
         if (entityClass != null) {
-            cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + CACHE_KEY_DELIMITER.length());
+            cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + delimiter.length());
         }
         dataKey(cacheKey, delimiter);
     }
