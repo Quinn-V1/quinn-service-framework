@@ -66,6 +66,12 @@ public enum CommonDataTypeEnum implements MessageEnumFlag {
         return wrapperKey(this.name());
     }
 
+    @Override
+    public String key() {
+        return StringConstant.DADA_TYPE_OF_DATA_TYPE + StringConstant.CHAR_COLON + name()
+                + StringConstant.CHAR_POUND_SIGN + StringConstant.NONE_OF_DATA;
+    }
+
     /**
      * 拼接消息主键编码
      *
@@ -73,7 +79,7 @@ public enum CommonDataTypeEnum implements MessageEnumFlag {
      * @return Message Key
      */
     public static final String wrapperKey(String dataType) {
-        return DADA_TYPE_OF_DATA_TYPE + StringConstant.CHAR_COLON + dataType
+        return StringConstant.DADA_TYPE_OF_DATA_TYPE + StringConstant.CHAR_COLON + dataType
                 + StringConstant.CHAR_POUND_SIGN + StringConstant.NONE_OF_DATA;
     }
 
