@@ -23,7 +23,15 @@ public enum CommonDataTypeEnum implements MessageEnumFlag {
     // 证书比较类型 (Credentials Matcher)
     CM_TYPE("CmTypeEnum", "证书比较类型"),
 
+    // 证书比较类型 (Credentials Matcher)
+    HEAT_RATE_DATA("HeatRateDataEnum", "热点数据"),
+
     ;
+
+    /**
+     * 数据类型的数据类型
+     */
+    public static final String DADA_TYPE_OF_DATA_TYPE = "DataTypeEnum";
 
     /**
      * 实际编码（对应数据库实体）
@@ -55,13 +63,22 @@ public enum CommonDataTypeEnum implements MessageEnumFlag {
     }
 
     /**
+     * 包装成消息键编码
+     *
+     * @return 消息键编码
+     */
+    public String wrapperAsMessageKey() {
+        return wrapperKey(this.name());
+    }
+
+    /**
      * 拼接消息主键编码
      *
      * @param dataType 数据类型
      * @return Message Key
      */
     public static final String wrapperKey(String dataType) {
-        return "DataTypeEnum" + StringConstant.CHAR_COLON + dataType
+        return DADA_TYPE_OF_DATA_TYPE + StringConstant.CHAR_COLON + dataType
                 + StringConstant.CHAR_POUND_SIGN + StringConstant.NONE_OF_DATA;
     }
 
