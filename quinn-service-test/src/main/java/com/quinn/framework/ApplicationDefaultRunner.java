@@ -18,6 +18,10 @@ public class ApplicationDefaultRunner extends SpringJUnit4ClassRunner {
 
     public ApplicationDefaultRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
+
+        // Caused by: java.net.MalformedURLException: unknown protocol: classpath
+        org.apache.catalina.webresources.TomcatURLStreamHandlerFactory.getInstance();
+
         Properties properties = SpringApplicationFactory.collectProperties(new String[0]);
         BaseConfigInfoReWriter.decryptProperties(properties);
 

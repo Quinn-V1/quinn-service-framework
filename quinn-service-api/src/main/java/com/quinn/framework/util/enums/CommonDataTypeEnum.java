@@ -29,11 +29,6 @@ public enum CommonDataTypeEnum implements MessageEnumFlag {
     ;
 
     /**
-     * 数据类型的数据类型
-     */
-    public static final String DADA_TYPE_OF_DATA_TYPE = "DataTypeEnum";
-
-    /**
      * 实际编码（对应数据库实体）
      */
     public final String code;
