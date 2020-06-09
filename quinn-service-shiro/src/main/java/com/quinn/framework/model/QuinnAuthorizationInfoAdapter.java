@@ -31,8 +31,8 @@ public class QuinnAuthorizationInfoAdapter extends DefaultPermission implements 
 
     @Override
     public Collection<String> getStringPermissions() {
-        return CollectionUtil.mergeSet(permissionOf(FunctionTypeEnum.INTERFACE.name()),
-                permissionOf(FunctionTypeEnum.MATCH.name()));
+        return CollectionUtil.mergeSet(permissionOf(String.valueOf(FunctionTypeEnum.INTERFACE.code)),
+                permissionOf(String.valueOf(FunctionTypeEnum.MATCH.code)));
     }
 
     @Override
