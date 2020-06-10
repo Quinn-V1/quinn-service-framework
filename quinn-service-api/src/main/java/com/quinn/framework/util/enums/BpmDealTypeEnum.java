@@ -9,46 +9,46 @@ package com.quinn.framework.util.enums;
 public enum BpmDealTypeEnum {
 
     // 启动
-    START(0),
+    START(-16),
 
-    // 沟通
+    // 跳过
+    SKIP(-8),
+
+    // 系统自动
+    AUTO(-4),
+
+    // 结束
+    END(-2),
+
+    // 系统转办
+    ASSIGN_SYS(-1),
+
+    // 反馈
     FEEDBACK(0),
 
     // 沟通
     READ(0),
 
-    // 结束
-    END(0),
-
-    // 跳过
-    SKIP(1),
-
-    // 系统自动
-    AUTO(2),
-
-    // 系统转办
-    ASSIGN_SYS(2 << 1),
-
     // 人工同意
-    AGREE(2 << 2),
+    AGREE(0),
 
     // 人工拒绝
-    REJECT(2 << 3),
+    REJECT(1),
 
     // 人工转办
-    ASSIGN(2 << 4),
+    ASSIGN(2),
 
     // 人工撤回
-    REVOKE(2 << 5),
+    REVOKE(4),
 
     // 人工终止
-    TERMINATE(2 << 6),
+    TERMINATE(8),
 
     // 抄送
-    COPY(2 << 7),
+    COPY(16),
 
     // 沟通
-    COMMUNICATE(2 << 8),
+    COMMUNICATE(32),
 
     ;
 

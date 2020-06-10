@@ -67,7 +67,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public BatchResult<String> updateBatch(String sql, boolean transaction) {
-        LOGGER.info("updateBatch: ${}", sql);
+        LOGGER.info("updateBatch: ${0}", sql);
 
         if (StringUtil.isEmpty(sql)) {
             return BatchResult.build(sql, true, 0).getRecentItem()
@@ -91,7 +91,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
                 count += update;
                 result.successData(sqlArray[i]).ofLevel(update);
             } catch (Exception e) {
-                LOGGER.errorError("updateBatch: ${}", e, sqlArray[i]);
+                LOGGER.errorError("updateBatch: ${0}", e, sqlArray[i]);
                 if (transaction) {
                     throw new DataOperationTransactionException()
                             .getMessageProp()
@@ -112,7 +112,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     public BaseResult<Integer> executeUpdate(String sql, Object... params) {
-        LOGGER.info("updateBatch: ${} with params ${}", sql, CollectionUtil.join(params));
+        LOGGER.info("updateBatch: ${0} with params ${1}", sql, CollectionUtil.join(params));
         return BaseResult.success(jdbcTemplate.update(sql, params));
     }
 

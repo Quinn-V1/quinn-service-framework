@@ -14,16 +14,16 @@ public enum BpmTodoTypeEnum {
     // 系统自动
     AUTO(BpmDealTypeEnum.AUTO.name()),
 
-    // 人工审批
-    AUDIT(BpmDealTypeEnum.AGREE.name()),
-
-    // 人工审批-等待反馈
+    // 等待反馈
     AUDIT_WFB(BpmDealTypeEnum.AGREE.name()),
 
-    // 人工同意
+    // 待审批
+    AUDIT(BpmDealTypeEnum.AGREE.name()),
+
+    // 待阅
     READ(BpmDealTypeEnum.READ.name()),
 
-    // 沟通
+    // 待反馈
     FEEDBACK(BpmDealTypeEnum.FEEDBACK.name()),
 
     ;

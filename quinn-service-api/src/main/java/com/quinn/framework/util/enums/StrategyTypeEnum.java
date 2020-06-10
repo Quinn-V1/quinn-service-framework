@@ -6,7 +6,7 @@ package com.quinn.framework.util.enums;
  * @author Qunhu.Liao
  * @since 2020-04-25
  */
-public enum StrategyEnum {
+public enum StrategyTypeEnum {
 
     // Get外部请求
     HTTP_GET,
