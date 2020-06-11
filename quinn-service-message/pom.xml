@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>quinn-service-framework</artifactId>
-        <groupId>com.quinn.framework</groupId>
+        <artifactId>quinn-service-parent</artifactId>
+        <groupId>com.quinn</groupId>
         <version>1.0.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath />
     </parent>
 
     <groupId>com.quinn.framework</groupId>
@@ -21,6 +21,12 @@
         <dependency>
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

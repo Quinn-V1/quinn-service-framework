@@ -23,11 +23,11 @@
         <module>quinn-service-biz</module>
         <module>quinn-service-datasource</module>
         <module>quinn-service-ehcache</module>
-        <module>quinn-service-email</module>
+<!--        <module>quinn-service-email</module>-->
         <module>quinn-service-file-fast</module>
         <module>quinn-service-file-miniio</module>
         <module>quinn-service-jasypt</module>
-        <module>quinn-service-message</module>
+<!--        <module>quinn-service-message</module>-->
         <module>quinn-service-mq</module>
         <module>quinn-service-quartz</module>
         <module>quinn-service-rabbitmq</module>
@@ -51,13 +51,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.quinn.util</groupId>
-            <artifactId>quinn-util-licence</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

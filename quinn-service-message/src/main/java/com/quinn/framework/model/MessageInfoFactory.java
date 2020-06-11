@@ -11,7 +11,7 @@ import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.UrgentLevelEnum;
-import com.quinn.util.licence.model.ApplicationInfo;
+//import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -197,11 +197,11 @@ public class MessageInfoFactory {
                     record.setLangCode(langCode);
                 }
 
-                if (ApplicationInfo.getInstance().isSupportLang(record.getLangCode())) {
-                    record.setLangCode(receiver.getLangCode());
-                } else {
-                    record.setLangCode(ApplicationInfo.getInstance().getDefaultLangCode());
-                }
+//                if (ApplicationInfo.getInstance().isSupportLang(record.getLangCode())) {
+//                    record.setLangCode(receiver.getLangCode());
+//                } else {
+//                    record.setLangCode(ApplicationInfo.getInstance().getDefaultLangCode());
+//                }
 
                 if (!StringUtil.isEmptyInFrame(receiver.getServerKey())) {
                     record.setServerKey(receiver.getServerKey());

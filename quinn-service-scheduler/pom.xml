@@ -22,6 +22,13 @@
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.quinn.util</groupId>
+            <artifactId>quinn-util-licence</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
