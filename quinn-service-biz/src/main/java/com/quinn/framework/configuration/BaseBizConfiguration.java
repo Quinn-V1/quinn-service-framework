@@ -167,4 +167,10 @@ public class BaseBizConfiguration {
         return lci;
     }
 
+    @Bean("messageDegreeCacheService")
+    public DegreeCacheService<String> messageDegreeCacheService() {
+        DegreeCacheService degreeCacheService = new DegreeCacheService();
+        return degreeCacheService;
+    }
+
 }

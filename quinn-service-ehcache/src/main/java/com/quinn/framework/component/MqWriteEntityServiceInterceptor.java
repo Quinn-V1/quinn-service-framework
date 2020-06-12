@@ -7,9 +7,6 @@ import com.quinn.framework.api.methodflag.MethodFlag;
 import com.quinn.framework.api.methodflag.WriteFlag;
 import com.quinn.util.base.model.BaseResult;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 消息队列写拦截
@@ -35,7 +32,6 @@ public class MqWriteEntityServiceInterceptor implements EntityServiceInterceptor
     @Value("${com.quinn-service.mq.cache-able-queue-name:eh-cache-refresh-listener}")
     private String[] queueNames;
 
-    @Resource
     private MqService mqService;
 
     @Override

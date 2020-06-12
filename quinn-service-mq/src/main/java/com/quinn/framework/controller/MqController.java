@@ -1,18 +1,16 @@
-package com.quinn.framework.rabbitmq.controller;
+package com.quinn.framework.controller;
 
 import com.quinn.framework.api.MqService;
-import com.quinn.framework.controller.AbstractController;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 /**
  * 缓存操作
@@ -25,8 +23,11 @@ import javax.annotation.Resource;
 @Api(tags = {"0ZY060通用：消息队列"})
 public class MqController extends AbstractController {
 
-    @Resource
-    @Qualifier("mqService")
+    @Autowired(required = false)
+    public MqController(@Qualifier("mqService") MqService mqService) {
+        this.mqService = mqService;
+    }
+
     private MqService mqService;
 
     @PostMapping(value = "send-direct")

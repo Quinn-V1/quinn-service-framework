@@ -8,7 +8,6 @@ import com.quinn.framework.api.cache.CacheServiceManager;
 import com.quinn.framework.component.EhCacheServiceManager;
 import com.quinn.framework.component.MqWriteEntityServiceInterceptor;
 import com.quinn.framework.listener.EhCacheRefreshListener;
-import com.quinn.util.base.constant.ConfigConstant;
 import lombok.SneakyThrows;
 import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;

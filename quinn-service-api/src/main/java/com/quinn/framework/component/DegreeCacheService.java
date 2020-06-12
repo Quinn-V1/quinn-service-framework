@@ -3,6 +3,7 @@ package com.quinn.framework.component;
 import com.quinn.framework.api.cache.CacheCommonService;
 import com.quinn.framework.model.HeatRateObject;
 import com.quinn.util.base.api.MethodInvokerOneParam;
+import com.quinn.util.constant.StringConstant;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,10 @@ public class DegreeCacheService<T> {
             if (value != null) {
                 return (T) value;
             }
+        }
+
+        if (backup == null) {
+            return null;
         }
 
         HeatRateObject<T> value = backup.invoke(key);
