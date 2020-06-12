@@ -25,6 +25,14 @@ import java.util.Map;
 @Setter
 public class BatchUpdateInfo<T extends BaseDO> {
 
+    public BatchUpdateInfo() {
+    }
+
+    public BatchUpdateInfo(List<T> oldValues, List<T> newList) {
+        this.oldValues = oldValues;
+        this.newList = newList;
+    }
+
     /**
      * 旧列表值
      */
