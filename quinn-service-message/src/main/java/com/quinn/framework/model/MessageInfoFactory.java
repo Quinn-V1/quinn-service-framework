@@ -1,7 +1,7 @@
 package com.quinn.framework.model;
 
 import com.quinn.framework.api.message.*;
-import com.quinn.framework.util.enums.PlaceTypeEnum;
+import com.quinn.framework.util.enums.MessagePlaceTypeEnum;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.BaseUtil;
 import com.quinn.util.base.NumberUtil;
@@ -61,16 +61,16 @@ public class MessageInfoFactory {
         Integer placeType = content.getPlaceTypes();
         if (placeType != null) {
             Map<String, Object> messageParam = messageSendParam.getMessageParam();
-            if ((PlaceTypeEnum.SUBJECT.code & placeType) > 0) {
+            if (MessagePlaceTypeEnum.SUBJECT.accept(placeType)) {
                 instance.setSubject(FreeMarkTemplateLoader.invoke(instance.getSubject(), messageParam));
             }
-            if ((PlaceTypeEnum.URL.code & placeType) > 0) {
+            if (MessagePlaceTypeEnum.URL.accept(placeType)) {
                 instance.setMsgUrl(FreeMarkTemplateLoader.invoke(instance.getMsgUrl(), messageParam));
             }
-            if ((PlaceTypeEnum.ATTACHMENT.code & placeType) > 0) {
+            if (MessagePlaceTypeEnum.ATTACHMENT.accept(placeType)) {
                 instance.setAttachment(FreeMarkTemplateLoader.invoke(instance.getAttachment(), messageParam));
             }
-            if ((PlaceTypeEnum.CONTENT.code & placeType) > 0) {
+            if (MessagePlaceTypeEnum.CONTENT.accept(placeType)) {
                 instance.setContent(FreeMarkTemplateLoader.invoke(instance.getContent(), messageParam));
             }
         }

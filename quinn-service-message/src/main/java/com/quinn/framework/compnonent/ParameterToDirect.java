@@ -4,7 +4,7 @@ import com.quinn.framework.model.DirectMessageInfo;
 import com.quinn.framework.model.MessageSendParam;
 import com.quinn.framework.model.MessageThread;
 import com.quinn.framework.service.MessageHelpService;
-import com.quinn.framework.util.enums.ThreadType;
+import com.quinn.framework.util.enums.MessageThreadType;
 import com.quinn.util.base.model.BaseResult;
 import lombok.Setter;
 
@@ -48,7 +48,7 @@ public class ParameterToDirect extends MessageThread {
     }
 
     @Override
-    public ThreadType threadType() {
-        return ThreadType.PARAM;
+    public MessageThreadType threadType() {
+        return MessageThreadType.PARAM;
     }
 }

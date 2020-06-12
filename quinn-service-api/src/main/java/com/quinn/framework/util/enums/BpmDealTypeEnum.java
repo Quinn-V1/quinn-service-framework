@@ -62,6 +62,18 @@ public enum BpmDealTypeEnum {
     }
 
     /**
+     * 是否支持本操作
+     *
+     * @return 是否支持
+     */
+    public boolean accept(Integer dealTypes) {
+        if (code <= 0) {
+            return true;
+        }
+        return (code & dealTypes) > 0;
+    }
+
+    /**
      * 处理类型是否被支持
      *
      * @param dealTypeCodes 处理类型（选项位存储）

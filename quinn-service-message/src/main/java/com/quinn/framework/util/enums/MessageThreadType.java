@@ -6,7 +6,7 @@ package com.quinn.framework.util.enums;
  * @author Qunhua.Liao
  * @since 2020-02-12
  */
-public enum ThreadType {
+public enum MessageThreadType {
 
     // 参数线程
     PARAM(10),
@@ -21,7 +21,7 @@ public enum ThreadType {
 
     public final int code;
 
-    ThreadType(int code) {
+    MessageThreadType(int code) {
         this.code = code;
     }
 

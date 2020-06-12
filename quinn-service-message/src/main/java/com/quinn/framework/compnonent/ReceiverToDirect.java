@@ -4,7 +4,7 @@ import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.model.*;
 import com.quinn.framework.service.MessageHelpService;
-import com.quinn.framework.util.enums.ThreadType;
+import com.quinn.framework.util.enums.MessageThreadType;
 import com.quinn.util.base.model.BaseResult;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
@@ -88,8 +88,8 @@ public class ReceiverToDirect extends MessageThread {
     }
 
     @Override
-    public ThreadType threadType() {
-        return ThreadType.RECEIVER;
+    public MessageThreadType threadType() {
+        return MessageThreadType.RECEIVER;
     }
 
 }

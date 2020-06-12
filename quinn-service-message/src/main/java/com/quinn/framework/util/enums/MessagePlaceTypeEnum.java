@@ -6,7 +6,7 @@ package com.quinn.framework.util.enums;
  * @author Qunhua.Liao
  * @since 2020-02-12
  */
-public enum PlaceTypeEnum {
+public enum MessagePlaceTypeEnum {
 
     // 内容
     CONTENT(1),
@@ -27,8 +27,17 @@ public enum PlaceTypeEnum {
      */
     public final int code;
 
-    PlaceTypeEnum(int code) {
+    MessagePlaceTypeEnum(int code) {
         this.code = code;
+    }
+
+    /**
+     * 是否支持本操作
+     *
+     * @return 是否支持
+     */
+    public boolean accept(Integer dealTypes) {
+        return (code & dealTypes) > 0;
     }
 
     /**
@@ -38,7 +47,7 @@ public enum PlaceTypeEnum {
      * @return 名称
      */
     public static String codeToName(int code) {
-        for (PlaceTypeEnum e : values()) {
+        for (MessagePlaceTypeEnum e : values()) {
             if (code == e.code) {
                 return e.name();
             }
@@ -53,7 +62,7 @@ public enum PlaceTypeEnum {
      * @return 编码
      */
     public static int nameToCode(String name) {
-        for (PlaceTypeEnum e : values()) {
+        for (MessagePlaceTypeEnum e : values()) {
             if (e.name().equals(name)) {
                 return e.code;
             }

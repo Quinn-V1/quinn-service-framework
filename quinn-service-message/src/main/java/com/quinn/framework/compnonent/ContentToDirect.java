@@ -5,7 +5,7 @@ import com.quinn.framework.api.message.MessageReceiver;
 import com.quinn.framework.api.message.MessageTempContent;
 import com.quinn.framework.model.*;
 import com.quinn.framework.service.MessageHelpService;
-import com.quinn.framework.util.enums.ThreadType;
+import com.quinn.framework.util.enums.MessageThreadType;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.model.BaseResult;
@@ -129,8 +129,8 @@ public class ContentToDirect extends MessageThread {
     }
 
     @Override
-    public ThreadType threadType() {
-        return ThreadType.CONTENT;
+    public MessageThreadType threadType() {
+        return MessageThreadType.CONTENT;
     }
 
 }

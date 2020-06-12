@@ -1,6 +1,6 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.util.enums.ThreadType;
+import com.quinn.framework.util.enums.MessageThreadType;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -76,6 +76,6 @@ public abstract class MessageThread extends Thread {
      *
      * @return
      */
-    public abstract ThreadType threadType();
+    public abstract MessageThreadType threadType();
 
 }
