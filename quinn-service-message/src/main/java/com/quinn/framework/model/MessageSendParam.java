@@ -192,6 +192,7 @@ public class MessageSendParam {
                 MessageReceiverAdapter receiver = new MessageReceiverAdapter();
                 receiver.setReceiverType(receiverType);
                 receiver.setUrgentLevel(urgentLevel);
+                receiver.setLangCode(langCode);
                 receiver.setReceiverValue(rv);
                 receivers.add(receiver);
             }

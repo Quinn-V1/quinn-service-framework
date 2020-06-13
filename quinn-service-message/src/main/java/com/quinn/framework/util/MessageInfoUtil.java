@@ -8,8 +8,10 @@ import com.quinn.framework.model.MessageSendParam;
 import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
+import org.springframework.cglib.core.Local;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 消息对象操作工具类
@@ -43,7 +45,7 @@ public final class MessageInfoUtil {
      */
     public static String sendGroup(String messageType, String langCode) {
         messageType = StringUtil.isEmptyInFrame(messageType) ? StringConstant.ALL_OF_DATA : messageType;
-        langCode = StringUtil.isEmptyInFrame(langCode) ? StringConstant.ALL_OF_DATA : langCode;
+        langCode = StringUtil.isEmptyInFrame(langCode) ? Locale.getDefault().toString() : langCode;
         return messageType + StringConstant.CHAR_COLON + langCode;
     }
 

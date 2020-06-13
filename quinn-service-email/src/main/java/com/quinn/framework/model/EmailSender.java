@@ -28,10 +28,8 @@ import javax.mail.Multipart;
 import javax.mail.internet.*;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 邮件服务
@@ -156,10 +154,13 @@ public class EmailSender implements MessageSender {
             List<MessageSendRecord> sendRecordList = entry.getValue();
 
             try {
-                int size = sendRecordList.size();
-                Address[] toAdd = new InternetAddress[size];
-                for (int i = 0; i < size; i++) {
-                    toAdd[i] = new InternetAddress(sendRecordList.get(i).getReceiverAddress());
+                Set<String> collect = sendRecordList.stream().map(MessageSendRecord::getReceiverAddress)
+                        .collect(Collectors.toSet());
+
+                int i = 0;
+                Address[] toAdd = new InternetAddress[collect.size()];
+                for (String add : collect) {
+                    toAdd[i++] = new InternetAddress(add);
                 }
 
                 mimeMessage.setRecipients(Message.RecipientType.TO, toAdd);

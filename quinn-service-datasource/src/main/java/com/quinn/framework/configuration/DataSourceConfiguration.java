@@ -35,10 +35,10 @@ import java.util.Map;
 @Configuration
 public class DataSourceConfiguration {
 
-    @Value("${com.quinn-service.database.transaction.timeout.read:5}")
+    @Value("${com.quinn-service.database.transaction.timeout.read:15}")
     private int readTransactionTimeOut;
 
-    @Value("${com.quinn-service.database.transaction.timeout.write:5}")
+    @Value("${com.quinn-service.database.transaction.timeout.write:15}")
     private int writeTransactionTimeOut;
 
     @Bean

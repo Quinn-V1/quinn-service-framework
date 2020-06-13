@@ -30,5 +30,44 @@
         "receiverValue": "lqh@mingcloud.com"
       }
     ]
+  },
+  "directAddWithTempSend": {
+    "fromSystem": "WEBTEST",
+    "businessKey": "WEBTEST00291",
+    "templateKey": "BpmTodo001",
+    "receivers": [
+      {
+        "messageType": "EMAIL",
+        "receiverType": "DIRECT",
+        "langCode": "zh_CN",
+        "receiverValue": "lqh@mingcloud.com"
+      }
+    ]
+  },
+  "userAddWithTempSend": {
+    "fromSystem": "WEBTEST",
+    "businessKey": "WEBTEST00291",
+    "templateKey": "BpmTodo002",
+    "receivers": [
+      {
+        "messageType": "EMAIL",
+        "receiverType": "USER",
+        "langCode": "zh_CN",
+        "receiverValue": "lqh"
+      }
+    ]
+  },
+  "roleAddWithTempSend": {
+    "fromSystem": "WEBTEST",
+    "businessKey": "WEBTEST00294",
+    "templateKey": "BpmTodo002",
+    "receivers": [
+      {
+        "messageType": "EMAIL",
+        "receiverType": "ROLE",
+        "langCode": "zh_CN",
+        "receiverValue": "zyfzr"
+      }
+    ]
   }
 }
