@@ -21,32 +21,10 @@
     </properties>
 
     <dependencies>
-        <!-- dependencies blow supports websocket -->
+        <!-- dependencies blow supports swagger-ui test -->
         <dependency>
             <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-websocket</artifactId>
-        </dependency>
-
-        <!-- dependencies blow supports fast dfs -->
-        <dependency>
-            <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-file-fast</artifactId>
-        </dependency>
-
-        <!-- dependencies blow supports database connect mysql -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <artifactId>quinn-service-swagger</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -56,17 +34,16 @@
             <artifactId>quinn-service-datasource</artifactId>
         </dependency>
 
-        <!-- dependencies blow supports base operation of data(crud\cache\file-local...) -->
+        <!-- dependencies blow supports mybatis -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- dependencies blow supports base operation of data(crud\file-local...) -->
         <dependency>
             <groupId>com.quinn.framework</groupId>
             <artifactId>quinn-service-biz</artifactId>
-        </dependency>
-
-        <!-- dependencies blow supports swagger-ui test -->
-        <dependency>
-            <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-swagger</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <!-- dependencies blow is must for this web -->

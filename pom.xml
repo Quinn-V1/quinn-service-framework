@@ -21,6 +21,7 @@
     <modules>
         <module>quinn-service-api</module>
         <module>quinn-service-biz</module>
+        <module>quinn-service-cache</module>
         <module>quinn-service-datasource</module>
         <module>quinn-service-ehcache</module>
 <!--        <module>quinn-service-email</module>-->
@@ -29,6 +30,7 @@
         <module>quinn-service-jasypt</module>
 <!--        <module>quinn-service-message</module>-->
         <module>quinn-service-mq</module>
+        <module>quinn-service-mq-ehcache</module>
         <module>quinn-service-quartz</module>
         <module>quinn-service-rabbitmq</module>
         <module>quinn-service-redis</module>
@@ -88,7 +90,19 @@
 
             <dependency>
                 <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-cache</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-datasource</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-ehcache</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 
@@ -100,13 +114,13 @@
 
             <dependency>
                 <groupId>com.quinn.framework</groupId>
-                <artifactId>quinn-service-file-default</artifactId>
+                <artifactId>quinn-service-file-fast</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.quinn.framework</groupId>
-                <artifactId>quinn-service-file-fast</artifactId>
+                <artifactId>quinn-service-file-miniio</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 
@@ -124,13 +138,43 @@
 
             <dependency>
                 <groupId>com.quinn.framework</groupId>
-                <artifactId>quinn-service-licence</artifactId>
+                <artifactId>quinn-service-message</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-mq</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-quartz</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-rabbitmq</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-redis</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-run</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-scheduler</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 

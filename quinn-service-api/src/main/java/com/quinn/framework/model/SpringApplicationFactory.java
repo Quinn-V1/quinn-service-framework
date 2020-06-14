@@ -2,8 +2,8 @@ package com.quinn.framework.model;
 
 import com.quinn.framework.api.SpringApplicationDecorator;
 import com.quinn.framework.component.configcollector.BaseConfigInfoCollector;
-import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.constant.CharConstant;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
@@ -54,8 +54,8 @@ public class SpringApplicationFactory {
     /**
      * 添加系统参数，并标记命令行参数的最高优先级
      *
-     * @param args  命令行参数
-     * @return      具有优先级标识的配置信息
+     * @param args 命令行参数
+     * @return 具有优先级标识的配置信息
      */
     private static PriorityProperties generatePropertyFromArgs(String[] args) {
         PriorityProperties priorityProperties = new PriorityProperties();

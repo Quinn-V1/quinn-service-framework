@@ -5,7 +5,6 @@ import com.quinn.framework.api.cache.CacheServiceManager;
 import com.quinn.framework.api.entityflag.CacheAble;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 

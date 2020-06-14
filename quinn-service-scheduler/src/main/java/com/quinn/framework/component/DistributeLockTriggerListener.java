@@ -7,7 +7,6 @@ import com.quinn.util.base.api.MethodInvokerTwoParam;
 import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.constant.OrderedConstant;
 import com.quinn.util.constant.enums.SyncTypeEnum;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,7 +21,6 @@ import javax.annotation.Resource;
 public class DistributeLockTriggerListener implements SortTriggerListener {
 
     @Resource
-    @Qualifier("cacheLockService")
     private CacheAllService cacheLockService;
 
     @Override

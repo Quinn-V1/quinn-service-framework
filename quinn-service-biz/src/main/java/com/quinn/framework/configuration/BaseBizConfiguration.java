@@ -20,10 +20,8 @@ import com.quinn.util.base.factory.PrefixThreadFactory;
 import com.quinn.util.base.handler.PlaceholderHandler;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.FilterOrderGroupEnum;
 import com.quinn.util.licence.model.ApplicationInfo;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -165,12 +163,6 @@ public class BaseBizConfiguration {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
         lci.setParamName(localeParamName);
         return lci;
-    }
-
-    @Bean("messageDegreeCacheService")
-    public DegreeCacheService<String> messageDegreeCacheService() {
-        DegreeCacheService degreeCacheService = new DegreeCacheService();
-        return degreeCacheService;
     }
 
 }

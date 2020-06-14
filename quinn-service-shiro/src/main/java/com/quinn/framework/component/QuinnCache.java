@@ -1,6 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.cache.CacheAllService;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.DataConverter;
 import com.quinn.util.base.constant.ConfigConstant;
@@ -11,12 +12,10 @@ import com.quinn.util.base.exception.KeyInfoMissException;
 import com.quinn.util.base.exception.MethodNotFoundException;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.constant.NumberConstant;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -139,7 +138,7 @@ public class QuinnCache<K, V> implements Cache<K, V> {
             return Collections.emptySet();
         }
 
-        if (CollectionUtils.isEmpty(keys)) {
+        if (CollectionUtil.isEmpty(keys)) {
             return Collections.emptySet();
         }
 

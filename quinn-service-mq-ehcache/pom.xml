@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.quinn.framework</groupId>
-    <artifactId>quinn-service-ehcache</artifactId>
+    <artifactId>quinn-service-mq-ehcache</artifactId>
     <version>1.0.0</version>
-    <name>quinn-service-ehcache</name>
-    <description>Quinn服务框架：本地缓存</description>
+    <name>quinn-service-mq-ehcache</name>
+    <description>Quinn服务框架：消息队列刷新EHCACHE</description>
 
     <dependencies>
         <dependency>
@@ -24,8 +24,13 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
+            <groupId>com.quinn.framework</groupId>
+            <artifactId>quinn-service-mq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.quinn.framework</groupId>
+            <artifactId>quinn-service-ehcache</artifactId>
         </dependency>
     </dependencies>
 

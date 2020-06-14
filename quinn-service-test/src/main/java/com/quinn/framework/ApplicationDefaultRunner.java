@@ -5,6 +5,7 @@ import com.quinn.framework.component.BaseConfigInfoReWriter;
 import com.quinn.framework.model.SpringApplicationFactory;
 import org.junit.runners.model.InitializationError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.ResourceUtils;
 
 import java.util.Properties;
 

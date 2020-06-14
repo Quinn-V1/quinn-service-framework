@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -35,7 +36,7 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
                 ConfigConstant.DEFAULT_LICENCE_PATH);
 
         URL resource = null;
-        File file = new File(licenceDir);
+        File file = ResourceUtils.getFile(licenceDir);
         if (!file.exists()) {
             if (licenceDir.startsWith(ConfigConstant.CONFIG_KEY_PREFIX_CLASSPATH) ||
                     licenceDir.startsWith(ConfigConstant.CONFIG_KEY_PREFIX_CLASSPATH_ALL)) {

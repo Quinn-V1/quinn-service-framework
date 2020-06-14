@@ -1,6 +1,8 @@
 package com.quinn.framework.listener;
 
+import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CacheServicePostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(CacheServicePostProcessor.class);
 
     /**
      * 主缓存别名
@@ -42,16 +46,27 @@ public class CacheServicePostProcessor implements BeanDefinitionRegistryPostProc
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        BeanDefinition beanDefinition = registry.getBeanDefinition(mainCacheAllService);
-        if (beanDefinition != null) {
+        BeanDefinition beanDefinition;
+        try {
+            beanDefinition = registry.getBeanDefinition(mainCacheAllService);
             for (String alias : MAIN_CACHE_ALIAS) {
                 registry.registerBeanDefinition(alias, beanDefinition);
             }
+        } catch (Exception e) {
+            LOGGER.error("Main cache {0} not exists in BeanDefinitionRegistry," +
+                            " we suggest that you should config one using {1}", mainCacheAllService,
+                    ConfigConstant.PROP_KEY_OF_MAIN_CACHE_NAME);
+            System.exit(-1);
         }
 
-        beanDefinition = registry.getBeanDefinition(sessionCacheAllService);
-        if (beanDefinition != null) {
+        try {
+            beanDefinition = registry.getBeanDefinition(sessionCacheAllService);
             registry.registerBeanDefinition(SESSION_CACHE_ALIAS, beanDefinition);
+        } catch (Exception e) {
+            LOGGER.error("Main cache {0} not exists in BeanDefinitionRegistry," +
+                            " we suggest that you should config one using {1}", sessionCacheAllService,
+                    ConfigConstant.PROP_KEY_OF_SESSION_CACHE_NAME);
+            System.exit(-1);
         }
     }
 
