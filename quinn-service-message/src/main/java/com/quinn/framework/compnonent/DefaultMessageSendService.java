@@ -7,8 +7,10 @@ import com.quinn.framework.service.MessageSendService;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.model.BaseResult;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 默认消息发送服务，消息类型分发
@@ -18,6 +20,9 @@ import java.util.Map;
  */
 public class DefaultMessageSendService implements MessageSendService {
 
+    @Resource
+    private ScheduledExecutorService messageExecutorService;
+
     @Override
     public BaseResult sendAll(List<MessageSendRecord> sendRecordList) {
         // Key为发送服务对象；键为发送消息记录
@@ -26,7 +31,9 @@ public class DefaultMessageSendService implements MessageSendService {
                         MessageSenderFactory.findMessageSender(messageSendRecord));
 
         for (Map.Entry<MessageSender, List<MessageSendRecord>> entry : messageSendRecordListMap.entrySet()) {
-            entry.getKey().sendAll(entry.getValue());
+            messageExecutorService.execute(() -> {
+                entry.getKey().sendAll(entry.getValue());
+            });
         }
 
         return BaseResult.SUCCESS;
