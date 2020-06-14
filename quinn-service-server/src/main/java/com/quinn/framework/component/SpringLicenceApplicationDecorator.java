@@ -36,13 +36,14 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
                 ConfigConstant.DEFAULT_LICENCE_PATH);
 
         URL resource = null;
-        File file = ResourceUtils.getFile(licenceDir);
-        if (!file.exists()) {
+        try {
+            resource = ResourceUtils.getURL(licenceDir);
+        } catch (Exception e) {
             if (licenceDir.startsWith(ConfigConstant.CONFIG_KEY_PREFIX_CLASSPATH) ||
                     licenceDir.startsWith(ConfigConstant.CONFIG_KEY_PREFIX_CLASSPATH_ALL)) {
 
                 String licenceDirTemp = licenceDir.substring(licenceDir.indexOf(StringConstant.CHAR_COLON) + 1);
-                file = new File(licenceDirTemp);
+                File file = new File(licenceDirTemp);
                 if (file.exists()) {
                     resource = file.toURI().toURL();
                 }
@@ -55,8 +56,6 @@ public class SpringLicenceApplicationDecorator implements SpringApplicationDecor
                     resource = resources[0].getURL();
                 }
             }
-        } else {
-            resource = file.toURI().toURL();
         }
 
         if (resource == null) {

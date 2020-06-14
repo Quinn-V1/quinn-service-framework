@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.model.AuthInfoFactory;
 import com.quinn.framework.model.DefaultPermission;
+import com.quinn.framework.model.QuinnAuthorizationInfoAdapter;
 import com.quinn.framework.util.MultiAuthInfoFetcher;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.convertor.BaseConverter;
@@ -33,7 +34,9 @@ public class QuinnSubjectDao extends DefaultSubjectDAO {
             DefaultPermission permission = cache.get(authInfo.authCacheKey());
             if (permission == null) {
                 permission = MultiAuthInfoFetcher.fetchPermissions(authInfo);
-                cache.put(authInfo.authCacheKey(), permission);
+                if (permission != null) {
+                    cache.put(authInfo.authCacheKey(), new QuinnAuthorizationInfoAdapter(permission));
+                }
             }
 
             SessionUtil.setValue(SessionUtil.SESSION_KEY_USER_ID, authInfo.attr(AuthInfo.ATTR_NAME_ID));

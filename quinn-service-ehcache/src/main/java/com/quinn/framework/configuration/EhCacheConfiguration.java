@@ -28,7 +28,7 @@ public class EhCacheConfiguration {
     @SneakyThrows
     @Bean("ehCacheManager")
     public CacheManager ehCacheManager() {
-        CacheManager cacheManager = CacheManager.create(ResourceUtils.getFile(configUrl).toURI().toURL());
+        CacheManager cacheManager = CacheManager.create(ResourceUtils.getURL(configUrl));
         return cacheManager;
     }
 
