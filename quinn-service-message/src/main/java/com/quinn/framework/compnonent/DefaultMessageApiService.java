@@ -1,5 +1,6 @@
 package com.quinn.framework.compnonent;
 
+import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageTemp;
@@ -11,6 +12,8 @@ import com.quinn.framework.service.MessageSendService;
 import com.quinn.framework.util.MessageInfoUtil;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
@@ -30,6 +33,8 @@ import java.util.concurrent.ExecutorService;
  * @since 2020-05-31
  */
 public class DefaultMessageApiService implements MessageApiService {
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DefaultMessageApiService.class);
 
     /**
      * 消息模板业务操作接口
@@ -53,14 +58,17 @@ public class DefaultMessageApiService implements MessageApiService {
     @Override
     public BaseResult doSend(MessageSendParam messageSendParam) {
         // 参数内部校验
+        LOGGER.error("Message validate {0}", JSONObject.toJSONString(messageSendParam));
         BaseResult validate = messageSendParam.validate();
         if (!validate.isSuccess()) {
             return BaseResult.fromPrev(validate);
         }
 
         // 生成可直接发送的对象
+        LOGGER.error("Message directMessageInfoRes");
         BaseResult<DirectMessageInfo> directMessageInfoRes = generateInfo(messageSendParam);
         if (!directMessageInfoRes.isSuccess()) {
+            LOGGER.error("Message directMessageInfoRes {0}", directMessageInfoRes.getMessage());
             return BaseResult.fromPrev(directMessageInfoRes);
         }
 
@@ -68,6 +76,7 @@ public class DefaultMessageApiService implements MessageApiService {
         DirectMessageInfo directMessageInfo = directMessageInfoRes.getData();
         Map<String, List<MessageSendRecord>> sendRecordListMap = directMessageInfo.getSendRecordListMap();
         BaseResult result = new BaseResult<>();
+        LOGGER.error("Message start save {0}", sendRecordListMap.size());
 
         Set<String> sendRecordKeys = new HashSet<>();
         for (Map.Entry<String, List<MessageSendRecord>> entry : sendRecordListMap.entrySet()) {
@@ -76,6 +85,7 @@ public class DefaultMessageApiService implements MessageApiService {
 
             // 保存消息实例
             MessageInstance instance = directMessageInfo.getInstance(key);
+            LOGGER.error("Message saveInstance");
             messageHelpService.saveInstance(instance);
 
             if (instance != null) {
@@ -88,10 +98,12 @@ public class DefaultMessageApiService implements MessageApiService {
                         continue;
                     }
                     sendRecordKeys.add(dataKey);
+                    LOGGER.error("Message saveSendRecord");
                     messageHelpService.saveSendRecord(sendRecord);
                 }
 
                 // 发送消息
+                LOGGER.error("Message sendAll");
                 BaseResult res = messageSendService.sendAll(sendRecordList);
                 if (!res.isSuccess()) {
                     result.appendMessage(res.getMessage());

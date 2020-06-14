@@ -3,8 +3,11 @@ package com.quinn.framework.model;
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.CharConstant;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Getter
 public class DirectMessageInfo {
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(DirectMessageInfo.class);
 
     /**
      * 消息主题最大长度
@@ -272,10 +277,12 @@ public class DirectMessageInfo {
         }
 
         try {
-            countDownLatchTotal.await(30, TimeUnit.SECONDS);
+            LOGGER.error("Message await countDownLatchTotal");
+            countDownLatchTotal.await(NumberConstant.INT_FIVE, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
         }
 
+        LOGGER.error("Message await finished {0}", errorMessage);
         if (errorMessage.length() > 0) {
             return BaseResult.fail(errorMessage.substring(1));
         }

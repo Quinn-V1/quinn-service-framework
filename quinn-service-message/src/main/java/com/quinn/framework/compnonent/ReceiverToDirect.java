@@ -5,7 +5,9 @@ import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.model.*;
 import com.quinn.framework.service.MessageHelpService;
 import com.quinn.framework.util.enums.MessageThreadType;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.enums.LanguageEnum;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +39,7 @@ public class ReceiverToDirect extends MessageThread {
     @Override
     public void handle() {
         List<MessageReceiverAdapter> receivers = messageSendParam.getReceivers();
+        boolean fastDown = true;
         try {
             if (CollectionUtils.isEmpty(receivers)) {
                 BaseResult<List<MessageReceiver>> res = messageHelpService.selectReceivers(
@@ -52,15 +55,25 @@ public class ReceiverToDirect extends MessageThread {
                     }
 
                     for (MessageReceiver receiver : data) {
+                        if (LanguageEnum.by_user.name().equals(receiver.getLangCode())) {
+                            fastDown = false;
+                        }
                         receivers.add(MessageReceiverAdapter.from(receiver));
                     }
                 } else {
                     directMessageInfo.appendError(res.getMessage());
                     return;
                 }
+            } else {
+                for (MessageReceiverAdapter receiver : receivers) {
+                    if (StringUtil.isEmptyInFrame(receiver.getLangCode())
+                            || LanguageEnum.by_user.name().equals(receiver.getLangCode())) {
+                        fastDown = false;
+                    }
+                }
             }
         } finally {
-            if (latchForReceiver != null) {
+            if (latchForReceiver != null && fastDown) {
                 latchForReceiver.countDown();
             }
         }
@@ -73,18 +86,24 @@ public class ReceiverToDirect extends MessageThread {
             }
         }
 
-        receivers.parallelStream().forEach((receiver) -> {
-            BaseResult<List<MessageSendRecord>> sendRecordListResult =
-                    MessageInfoFactory.receiver2SendRecord(receiver, messageSendParam.getMessageParam());
+        try {
+            List<MessageSendRecord> sendRecords = new ArrayList<>();
+            receivers.parallelStream().forEach((receiver) -> {
+                BaseResult<List<MessageSendRecord>> sendRecordListResult =
+                        MessageInfoFactory.receiver2SendRecord(receiver, messageSendParam.getMessageParam());
 
-            if (sendRecordListResult.isSuccess()) {
-                synchronized (directMessageInfo.getSendRecordListMap()) {
-                    directMessageInfo.addSendRecords(sendRecordListResult.getData());
+                if (sendRecordListResult.isSuccess()) {
+                    synchronized (directMessageInfo.getSendRecordListMap()) {
+                        sendRecords.addAll(sendRecordListResult.getData());
+                    }
                 }
-            } else {
-                directMessageInfo.appendError(sendRecordListResult.getMessage());
+            });
+            directMessageInfo.addSendRecords(sendRecords);
+        } finally {
+            if (!fastDown) {
+                latchForReceiver.countDown();
             }
-        });
+        }
     }
 
     @Override

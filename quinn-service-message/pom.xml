@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>quinn-service-parent</artifactId>
-        <groupId>com.quinn</groupId>
+        <artifactId>quinn-service-framework</artifactId>
+        <groupId>com.quinn.framework</groupId>
         <version>1.0.0</version>
-        <relativePath />
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>com.quinn.framework</groupId>

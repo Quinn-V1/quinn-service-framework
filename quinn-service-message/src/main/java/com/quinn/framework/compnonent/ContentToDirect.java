@@ -2,6 +2,7 @@ package com.quinn.framework.compnonent;
 
 import com.quinn.framework.api.message.MessageInstance;
 import com.quinn.framework.api.message.MessageReceiver;
+import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageTempContent;
 import com.quinn.framework.model.*;
 import com.quinn.framework.service.MessageHelpService;
@@ -65,7 +66,8 @@ public class ContentToDirect extends MessageThread {
                 } catch (InterruptedException e) {
                 }
 
-                BaseResult res = filter(tempContents, messageSendParam.getReceivers());
+                BaseResult res = filter(tempContents, directMessageInfo.getSendRecordListMap(),
+                        messageSendParam.getReceivers());
                 if (!res.isSuccess()) {
                     directMessageInfo.appendError(res.getMessage());
                     return;
@@ -109,7 +111,12 @@ public class ContentToDirect extends MessageThread {
      * @return 过滤后的消息模板
      */
     private <T extends MessageReceiver> BaseResult<Map<String, MessageTempContent>> filter(
-            Map<String, MessageTempContent> tempContents, List<T> receivers) {
+            Map<String, MessageTempContent> tempContents, Map<String, List<MessageSendRecord>> sendRecordMap,
+            List<T> receivers) {
+
+        if (!CollectionUtil.isEmpty(sendRecordMap)) {
+            tempContents.keySet().retainAll(sendRecordMap.keySet());
+        }
 
         if (CollectionUtils.isEmpty(receivers)) {
             return BaseResult.fail("没有解析到发送对象");
