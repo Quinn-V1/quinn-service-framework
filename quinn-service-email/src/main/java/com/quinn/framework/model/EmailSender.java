@@ -6,6 +6,7 @@ import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageSender;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.HttpHeadersConstant;
@@ -87,12 +88,18 @@ public class EmailSender implements MessageSender {
 
         Properties javaMailProperties = new Properties();
         try {
-            MailSSLSocketFactory sf = new MailSSLSocketFactory();
-            sf.setTrustAllHosts(true);
+            Object ssl = param.get("mail.smtp.ssl.enable");
+            if (ssl == null) {
+                ssl = System.getProperty(ConfigConstant.PROP_KEY_OF_EMAIL_SSL_ENABLE);
+            }
+            Boolean enSsl = BaseConverter.staticConvert(ssl, Boolean.class, ConfigConstant.DEFAULT_EMAIL_SSL_ENABLE);
+            javaMailProperties.put("mail.smtp.ssl.enable", enSsl);
 
-            javaMailProperties.put("mail.smtp.ssl.enable",
-                    BaseConverter.staticConvert(param.get("mail.smtp.ssl.enable"), Boolean.class, false));
-            javaMailProperties.put("mail.smtp.ssl.socketFactory", sf);
+            if (enSsl) {
+                MailSSLSocketFactory sf = new MailSSLSocketFactory();
+                sf.setTrustAllHosts(true);
+                javaMailProperties.put("mail.smtp.ssl.socketFactory", sf);
+            }
         } catch (GeneralSecurityException e) {
         }
 

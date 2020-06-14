@@ -18,7 +18,9 @@ import com.quinn.framework.service.BaseEntityService;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.base.enums.DataOperateTypeEnum;
@@ -53,6 +55,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         VOClass = (Class<VO>) actualTypeArguments[2];
         SpringBeanHolder.registerEntityClass(this, this.DOClass, this.TOClass, this.VOClass);
     }
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(BaseEntityServiceImpl.class);
 
     /**
      * 带数据操作对象构造器
@@ -97,17 +101,22 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         entityServiceInterceptorChain.doChain(new BaseInsertMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
-                int res = baseMapper.insert(this.getData());
-                if (res >= 0) {
-                    getResult().ofData(data);
-                } else {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.INSERT.key())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
-                    ;
+                try {
+                    int res = baseMapper.insert(this.getData());
+                    if (res >= 0) {
+                        getResult().ofData(data);
+                    } else {
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
+                                .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.INSERT.key())
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
+                        ;
+                    }
+                } catch (RuntimeException e) {
+                    LOGGER.errorError("error occurs when insert {0}", e, data.toString());
+                    throw e;
                 }
             }
         });
@@ -131,10 +140,16 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             @Override
             public void invoke() {
                 int res;
-                if (this.getData().getDbOperateType() == DbOperateTypeEnum.DELETE_HARD) {
-                    res = baseMapper.delete(this.getData());
-                } else {
-                    res = baseMapper.update(this.getData());
+
+                try {
+                    if (this.getData().getDbOperateType() == DbOperateTypeEnum.DELETE_HARD) {
+                        res = baseMapper.delete(this.getData());
+                    } else {
+                        res = baseMapper.update(this.getData());
+                    }
+                } catch (RuntimeException e) {
+                    LOGGER.errorError("error occurs when delete {0}", e, data.toString());
+                    throw e;
                 }
 
                 if (res >= 0) {
@@ -171,10 +186,16 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             @Override
             public void invoke() {
                 int res;
-                if (this.getData().getDbOperateType() == DbOperateTypeEnum.UPDATE_ALL) {
-                    res = baseMapper.updateAll(this.getData());
-                } else {
-                    res = baseMapper.update(this.getData());
+
+                try {
+                    if (this.getData().getDbOperateType() == DbOperateTypeEnum.UPDATE_ALL) {
+                        res = baseMapper.updateAll(this.getData());
+                    } else {
+                        res = baseMapper.update(this.getData());
+                    }
+                } catch (RuntimeException e) {
+                    LOGGER.errorError("error occurs when update {0}", e, data.toString());
+                    throw e;
                 }
 
                 if (res >= 0) {
@@ -207,17 +228,22 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<VO>(result, data) {
             @Override
             public void invoke() {
-                int res = baseMapper.update(this.getData());
-                if (res >= 0) {
-                    getResult().ofData(data);
-                } else {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.key())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
-                    ;
+                try {
+                    int res = baseMapper.update(this.getData());
+                    if (res >= 0) {
+                        getResult().ofData(data);
+                    } else {
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
+                                .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.key())
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], getData().dataKey())
+                        ;
+                    }
+                } catch (RuntimeException e) {
+                    LOGGER.errorError("error occurs when recovery {0}", e, data.toString());
+                    throw e;
                 }
             }
         });

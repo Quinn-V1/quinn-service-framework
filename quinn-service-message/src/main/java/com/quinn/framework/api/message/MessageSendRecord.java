@@ -9,6 +9,13 @@ package com.quinn.framework.api.message;
 public interface MessageSendRecord {
 
     /**
+     * 数据业务主键
+     *
+     * @return 数据业务主键
+     */
+    String dataKey();
+
+    /**
      * 对应消息实例的编码
      *
      * @return 消息实例的编码

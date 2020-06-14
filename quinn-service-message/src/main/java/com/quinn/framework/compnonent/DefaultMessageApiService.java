@@ -17,8 +17,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -67,6 +69,7 @@ public class DefaultMessageApiService implements MessageApiService {
         Map<String, List<MessageSendRecord>> sendRecordListMap = directMessageInfo.getSendRecordListMap();
         BaseResult result = new BaseResult<>();
 
+        Set<String> sendRecordKeys = new HashSet<>();
         for (Map.Entry<String, List<MessageSendRecord>> entry : sendRecordListMap.entrySet()) {
             List<MessageSendRecord> sendRecordList = entry.getValue();
             String key = entry.getKey();
@@ -79,6 +82,12 @@ public class DefaultMessageApiService implements MessageApiService {
                 // 保存消息发送记录
                 for (MessageSendRecord sendRecord : sendRecordList) {
                     MessageInfoUtil.fillSendRecordWithInstance(sendRecord, instance);
+
+                    String dataKey = sendRecord.dataKey();
+                    if (sendRecordKeys.contains(dataKey)) {
+                        continue;
+                    }
+                    sendRecordKeys.add(dataKey);
                     messageHelpService.saveSendRecord(sendRecord);
                 }
 
