@@ -6,16 +6,16 @@ import com.quinn.framework.api.message.MessageSendRecord;
 import com.quinn.framework.api.message.MessageSender;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.HttpHeadersConstant;
 import com.quinn.util.constant.StringConstant;
 import com.sun.mail.util.MailSSLSocketFactory;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.StringUtils;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @Getter
 public class EmailSender implements MessageSender {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailSender.class);
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(EmailSender.class);
 
     /**
      * 邮件发送
@@ -116,7 +116,8 @@ public class EmailSender implements MessageSender {
         }
 
         try {
-            fromName = MimeUtility.encodeText(fromName, "utf-8", null);
+            fromName = MimeUtility.encodeText(fromName, 
+                    StringConstant.SYSTEM_DEFAULT_CHARSET, null);
             fromAddress = new InternetAddress(fromAccount, fromName);
         } catch (UnsupportedEncodingException e) {
             return BaseResult.fail();
@@ -145,8 +146,7 @@ public class EmailSender implements MessageSender {
             mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(sendRecord.getReceiverAddress()));
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            // FIXME
-            e.printStackTrace();
+            LOGGER.error("Email send fail {0}", e, sendRecord.dataKey());
         }
 
         return BaseResult.SUCCESS;
@@ -171,10 +171,10 @@ public class EmailSender implements MessageSender {
                 }
 
                 mimeMessage.setRecipients(Message.RecipientType.TO, toAdd);
+                LOGGER.error("Email ready to send");
                 javaMailSender.send(mimeMessage);
             } catch (MessagingException e) {
-                // FIXME
-                e.printStackTrace();
+                LOGGER.error("Email send fail {0}", e, sendRecords.get(0).dataKey());
             }
         }
 
@@ -204,6 +204,7 @@ public class EmailSender implements MessageSender {
             javaMailSender.send(mimeMessage);
             return BaseResult.SUCCESS;
         } catch (Exception e) {
+            LOGGER.error("Email test send fail {0}", e);
             return BaseResult.fail(e.getMessage());
         }
     }
@@ -218,7 +219,8 @@ public class EmailSender implements MessageSender {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             mimeMessage.setFrom(fromAddress);
-            mimeMessage.setSubject(MimeUtility.encodeText(messageInstance.getSubject(), "utf-8", null));
+            mimeMessage.setSubject(MimeUtility.encodeText(messageInstance.getSubject(),
+                    StringConstant.SYSTEM_DEFAULT_CHARSET, null));
 
             Multipart mp = new MimeMultipart();
             MimeBodyPart mbp = new MimeBodyPart();
@@ -232,7 +234,8 @@ public class EmailSender implements MessageSender {
                     mbp = new MimeBodyPart();
                     FileDataSource fds = new FileDataSource(files[i]);
                     mbp.setDataHandler(new DataHandler(fds));
-                    mbp.setFileName(MimeUtility.encodeText("附件" + (i + 1), "utf-8", null));
+                    mbp.setFileName(MimeUtility.encodeText("附件" + (i + 1),
+                            StringConstant.SYSTEM_DEFAULT_CHARSET, null));
                     mp.addBodyPart(mbp);
                 }
             }
@@ -242,8 +245,7 @@ public class EmailSender implements MessageSender {
             mimeMessage.saveChanges();
 
         } catch (MessagingException | UnsupportedEncodingException e) {
-            // FIXME
-            e.printStackTrace();
+            LOGGER.error("Email create fail {0}", e, messageInstance.getId());
         }
 
         return mimeMessage;
