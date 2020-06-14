@@ -63,7 +63,7 @@ public class QuinnAuthorizingRealm extends AuthorizingRealm {
     protected Object getAuthenticationCacheKey(PrincipalCollection principals) {
         Object principal = super.getAvailablePrincipal(principals);
         AuthInfo generate = AuthInfoFactory.generate(principal);
-        return generate.authCacheKey();
+        return generate.getPrincipal();
     }
 
     @Override

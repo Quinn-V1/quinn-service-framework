@@ -2,14 +2,9 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.DynamicFilter;
 import com.quinn.framework.model.QuinnFilterItem;
-import com.quinn.util.base.StringUtil;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -24,15 +19,10 @@ import java.util.*;
  */
 @Component
 @ConfigurationProperties(prefix = "com.quinn-service.filter.config")
-public class QuinnFilterConfig implements ApplicationContextAware, InitializingBean {
+public class QuinnFilterConfig {
 
     @Resource
     private SecurityManager securityManager;
-
-    /**
-     * Spring 容器
-     */
-    private ApplicationContext applicationContext;
 
     /**
      * 配置条目
@@ -42,11 +32,11 @@ public class QuinnFilterConfig implements ApplicationContextAware, InitializingB
     /**
      * 动态过滤器
      * 使用Bean 会导致 /** 跳过 anon 替代 afterPropertiesSet 中逻辑
-     *         for (QuinnFilterItem filterItem : filterItems) {
-     *             if (StringUtil.isNotEmpty(filterItem.getFilterName())) {
-     *                 filterItem.setFilter(applicationContext.getBean(filterItem.getFilterName(), Filter.class));
-     *             }
-     *         }
+     * for (QuinnFilterItem filterItem : filterItems) {
+     * if (StringUtil.isNotEmpty(filterItem.getFilterName())) {
+     * filterItem.setFilter(applicationContext.getBean(filterItem.getFilterName(), Filter.class));
+     * }
+     * }
      */
     private static final Map<String, DynamicFilter> DYNAMIC_FILTER_MAP = new HashMap<>();
 
@@ -107,13 +97,4 @@ public class QuinnFilterConfig implements ApplicationContextAware, InitializingB
         this.filterItems = filterItems;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-
-    }
 }

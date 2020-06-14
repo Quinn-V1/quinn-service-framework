@@ -2,8 +2,10 @@ package com.quinn.framework.configuration;
 
 import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.framework.component.*;
+import com.quinn.framework.model.DefaultPermission;
 import com.quinn.framework.model.QuinnSessionFactory;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.mgt.SubjectDAO;
@@ -142,8 +144,12 @@ public class QuinnAutoConfiguration {
     }
 
     @Bean
-    public SubjectDAO subjectDAO() {
+    public SubjectDAO subjectDAO(
+            CacheManager cacheManager
+    ) {
         QuinnSubjectDao subjectDao = new QuinnSubjectDao();
+        Cache<String, DefaultPermission> cache = cacheManager.getCache(authorizationCache);
+        subjectDao.setAuthorizationCache(cache);
         return subjectDao;
     }
 

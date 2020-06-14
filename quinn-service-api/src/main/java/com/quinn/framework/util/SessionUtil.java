@@ -1,16 +1,16 @@
 package com.quinn.framework.util;
 
 import com.quinn.framework.api.strategy.Strategy;
+import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.LanguageEnum;
+import com.quinn.util.constant.enums.RoleTypeEnum;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 会话信息获取类
@@ -21,6 +21,28 @@ import java.util.Map;
 public class SessionUtil {
 
     private static ThreadLocal<Map<String, Object>> content = new ThreadLocal<>();
+
+    private static final String SUPER_ADMIN_ROLE_NAME;
+
+    private static final String ORG_ADMIN_ROLE_NAME;
+
+    static {
+        SUPER_ADMIN_ROLE_NAME = System.getProperty(ConfigConstant.PROP_KEY_OF_SUPER_ADMIN_ROLE_NAME,
+                ConfigConstant.DEFAULT_SUPER_ADMIN_ROLE_NAME);
+
+        ORG_ADMIN_ROLE_NAME = System.getProperty(ConfigConstant.PROP_KEY_OF_ORG_ADMIN_ROLE_NAME,
+                ConfigConstant.DEFAULT_ORG_ADMIN_ROLE_NAME);
+    }
+
+    /**
+     * 会话信息键：用户ID
+     */
+    public static final String SESSION_KEY_ROLE = "SESSION_KEY_ROLE";
+
+    /**
+     * 会话信息键：用户ID
+     */
+    public static final String SESSION_KEY_PERMISSION = "SESSION_KEY_PERMISSION";
 
     /**
      * 会话信息键：用户ID
@@ -318,11 +340,18 @@ public class SessionUtil {
     /**
      * 是否有角色
      *
-     * @param roleKey
+     * @param roleType 角色类型
+     * @param roleKey  角色编码
      * @return 有角色：true
      */
-    public static boolean hasRole(String roleKey) {
-        return true;
+    public static boolean hasRole(String roleType, String roleKey) {
+        Map<String, Set<String>> rolesMap = getValue(SESSION_KEY_ROLE, Collections.emptyMap());
+        Set<String> roles = rolesMap.get(roleType);
+        if (roles.contains(SUPER_ADMIN_ROLE_NAME)) {
+            return true;
+        }
+
+        return roles == null ? false : roles.contains(roleKey);
     }
 
     /**
@@ -331,7 +360,7 @@ public class SessionUtil {
      * @return 是超级管理员：true
      */
     public static boolean isSuperAdmin() {
-        return true;
+        return hasRole(RoleTypeEnum.FUNCTION.name(), SUPER_ADMIN_ROLE_NAME);
     }
 
     /**
@@ -340,7 +369,7 @@ public class SessionUtil {
      * @return 是租户管理员：true
      */
     public static boolean isOrgAdmin() {
-        return true;
+        return hasRole(RoleTypeEnum.FUNCTION.name(), ORG_ADMIN_ROLE_NAME);
     }
 
     /**
@@ -355,10 +384,27 @@ public class SessionUtil {
     /**
      * 设置授权纤细对象
      *
-     * @param object 授权信息对象
+     * @param authInfo 授权信息对象
      */
-    public static void setAuthInfo(Object object) {
-        setValue(SESSION_KEY_AUTH_INFO, object);
+    public static void setAuthInfo(Map<String, Object> authInfo) {
+        setValue(SESSION_KEY_AUTH_INFO, authInfo);
     }
 
+    /**
+     * 设置授权信息
+     *
+     * @param permission 授权信息
+     */
+    public static void setPermissions(Map<String, Set<String>> permission) {
+        setValue(SESSION_KEY_PERMISSION, permission);
+    }
+
+    /**
+     * 设置角色信息
+     *
+     * @param rolesMap 角色信息
+     */
+    public static void setRoles(Map<String, Set<String>> rolesMap) {
+        setValue(SESSION_KEY_ROLE, rolesMap);
+    }
 }

@@ -140,6 +140,9 @@ public enum BpmDealTypeEnum {
      */
     public static boolean dealTypeSupport(Integer dealTypeCodes, String dealType) {
         int code = BpmDealTypeEnum.valueOf(dealType).code;
+        if (code <= 0) {
+            return true;
+        }
         return (dealTypeCodes & code) > 0;
     }
 

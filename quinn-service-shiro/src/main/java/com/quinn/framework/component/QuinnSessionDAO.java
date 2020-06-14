@@ -2,6 +2,7 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.framework.model.QuinnSession;
+import com.quinn.framework.util.SessionUtil;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
@@ -79,13 +80,18 @@ public class QuinnSessionDAO extends AbstractSessionDAO {
         if (sessionId == null) {
             return null;
         }
-        Session s = null;
+
+        Session s = SessionUtil.getValue(DEFAULT_SESSION_KEY_PREFIX, null);
+        if (s != null) {
+            return s;
+        }
 
         try {
             String realKey = getRedisSessionKey(sessionId);
             s = this.cacheAllService.get(realKey);
             if (s != null) {
                 this.cacheAllService.set(realKey, s, expire);
+                SessionUtil.setValue(DEFAULT_SESSION_KEY_PREFIX, s);
             }
         } catch (Exception e) {
         }
