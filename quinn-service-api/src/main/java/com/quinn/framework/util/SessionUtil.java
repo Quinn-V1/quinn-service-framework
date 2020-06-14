@@ -347,11 +347,10 @@ public class SessionUtil {
     public static boolean hasRole(String roleType, String roleKey) {
         Map<String, Set<String>> rolesMap = getValue(SESSION_KEY_ROLE, Collections.emptyMap());
         Set<String> roles = rolesMap.get(roleType);
-        if (roles.contains(SUPER_ADMIN_ROLE_NAME)) {
+        if (roles != null && roles.contains(roleKey)) {
             return true;
         }
-
-        return roles == null ? false : roles.contains(roleKey);
+        return isSuperAdmin();
     }
 
     /**
@@ -360,7 +359,9 @@ public class SessionUtil {
      * @return 是超级管理员：true
      */
     public static boolean isSuperAdmin() {
-        return hasRole(RoleTypeEnum.FUNCTION.name(), SUPER_ADMIN_ROLE_NAME);
+        Map<String, Set<String>> rolesMap = getValue(SESSION_KEY_ROLE, Collections.emptyMap());
+        Set<String> roles = rolesMap.get(RoleTypeEnum.FUNCTION.name());
+        return roles != null && roles.contains(SUPER_ADMIN_ROLE_NAME);
     }
 
     /**
@@ -369,7 +370,9 @@ public class SessionUtil {
      * @return 是租户管理员：true
      */
     public static boolean isOrgAdmin() {
-        return hasRole(RoleTypeEnum.FUNCTION.name(), ORG_ADMIN_ROLE_NAME);
+        Map<String, Set<String>> rolesMap = getValue(SESSION_KEY_ROLE, Collections.emptyMap());
+        Set<String> roles = rolesMap.get(RoleTypeEnum.FUNCTION.name());
+        return roles != null && roles.contains(ORG_ADMIN_ROLE_NAME);
     }
 
     /**
