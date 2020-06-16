@@ -3,6 +3,7 @@ package com.quinn.framework.bpm7.component.event;
 import com.quinn.framework.bpm7.api.EventToBpmTaskDecorator;
 import com.quinn.framework.api.BpmTaskInfo;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 
@@ -12,10 +13,10 @@ import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
  * @author Qunhua.Liao
  * @since 2020-06-15
  */
-public class ExecutionEntityImplDecorator implements EventToBpmTaskDecorator<ExecutionEntityImpl> {
+public class ExecutionEntityImplDecorator implements EventToBpmTaskDecorator<ExecutionEntity> {
 
     @Override
-    public void decorate(BpmTaskInfo bpmTaskInfo, ExecutionEntityImpl entity) {
+    public void decorate(BpmTaskInfo bpmTaskInfo, ExecutionEntity entity) {
         bpmTaskInfo.setBpmInstKey(entity.getProcessInstanceId());
         bpmTaskInfo.setBpmKey(entity.getId());
         bpmTaskInfo.setParams(entity.getVariables());
@@ -24,6 +25,6 @@ public class ExecutionEntityImplDecorator implements EventToBpmTaskDecorator<Exe
 
     @Override
     public Class<?> getDivClass() {
-        return ExecutionEntityImpl.class;
+        return ExecutionEntity.class;
     }
 }

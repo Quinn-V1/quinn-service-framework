@@ -45,7 +45,7 @@ public class ActToBpmInfoFactory {
         } else {
             for (Map.Entry<Class, EventToBpmTaskDecorator> entry : decoratorMap.entrySet()) {
                 if (entry.getKey().isAssignableFrom(t.getClass())) {
-                    decorator.decorate(bpmTaskInfo, t);
+                    entry.getValue().decorate(bpmTaskInfo, t);
                 }
             }
         }

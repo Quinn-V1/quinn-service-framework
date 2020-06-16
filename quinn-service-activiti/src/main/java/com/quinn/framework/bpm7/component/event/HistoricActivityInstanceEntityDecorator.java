@@ -4,6 +4,7 @@ import com.quinn.framework.bpm7.api.EventToBpmTaskDecorator;
 import com.quinn.framework.api.BpmTaskInfo;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.constant.StringConstant;
+import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 
@@ -13,11 +14,11 @@ import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
  * @author Qunhua.Liao
  * @since 2020-06-15
  */
-public class HistoricActivityInstanceEntityImplDecorator implements
-        EventToBpmTaskDecorator<HistoricActivityInstanceEntityImpl> {
+public class HistoricActivityInstanceEntityDecorator implements
+        EventToBpmTaskDecorator<HistoricActivityInstanceEntity> {
 
     @Override
-    public void decorate(BpmTaskInfo bpmTaskInfo, HistoricActivityInstanceEntityImpl entity) {
+    public void decorate(BpmTaskInfo bpmTaskInfo, HistoricActivityInstanceEntity entity) {
         bpmTaskInfo.setBpmInstKey(entity.getProcessInstanceId());
         bpmTaskInfo.setBpmKey(entity.getId());
         bpmTaskInfo.setBpmExecKey(entity.getExecutionId());
@@ -33,6 +34,6 @@ public class HistoricActivityInstanceEntityImplDecorator implements
 
     @Override
     public Class<?> getDivClass() {
-        return HistoricActivityInstanceEntityImpl.class;
+        return HistoricActivityInstanceEntity.class;
     }
 }

@@ -1,5 +1,5 @@
 com.quinn.framework.bpm7.component.event.ActivitiActivityEventImplDecorator
-com.quinn.framework.bpm7.component.event.ActivitiEntityEventDecorator
+com.quinn.framework.bpm7.component.event.TaskEntityDecorator
 com.quinn.framework.bpm7.component.event.ExecutionEntityImplDecorator
-com.quinn.framework.bpm7.component.event.ExecutionEntityImplEventDecorator
-com.quinn.framework.bpm7.component.event.HistoricActivityInstanceEntityImplDecorator
+com.quinn.framework.bpm7.component.event.ExecutionEntityDecorator
+com.quinn.framework.bpm7.component.event.HistoricActivityInstanceEntityDecorator
