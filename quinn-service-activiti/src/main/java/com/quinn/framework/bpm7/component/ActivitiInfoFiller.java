@@ -1,8 +1,8 @@
 package com.quinn.framework.bpm7.component;
 
+import com.quinn.framework.api.*;
 import com.quinn.framework.bpm7.model.CustomProcessDiagramGenerator;
 import com.quinn.framework.bpm7.util.ImageUtil;
-import com.quinn.framework.api.*;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.framework.util.enums.*;
 import com.quinn.util.base.CollectionUtil;
@@ -363,7 +363,6 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
         }
 
     }
-
 
 
     /**

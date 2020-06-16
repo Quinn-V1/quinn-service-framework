@@ -3,6 +3,8 @@ package com.quinn.framework.bpm7.listener;
 import com.quinn.framework.api.BpmTaskInfo;
 import com.quinn.framework.api.CustomBpmEventListener;
 import com.quinn.framework.bpm7.model.ActToBpmInfoFactory;
+import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
@@ -19,6 +21,8 @@ import java.util.Map;
  */
 public class GlobalBpmListener implements ActivitiEventListener {
 
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(GlobalBpmListener.class);
+
     /**
      * <时间类型, 自定义监听器>
      */
@@ -29,11 +33,13 @@ public class GlobalBpmListener implements ActivitiEventListener {
 
     @Override
     public void onEvent(ActivitiEvent event) {
+        LOGGER.error("GlobalBpmListener entry {0}", event.getType());
         CustomBpmEventListener customBpmEventListener = CUSTOM_BPM_EVENT_LISTENER_MAP.get(event.getType().name());
         if (customBpmEventListener == null) {
             return;
         }
 
+        LOGGER.error("GlobalBpmListener continue {0}", event.getType());
         BpmTaskInfo bpmTaskInfo;
         if (event instanceof ActivitiEntityEvent) {
             bpmTaskInfo = ActToBpmInfoFactory.toTaskInfo(((ActivitiEntityEvent) event).getEntity());
@@ -41,6 +47,7 @@ public class GlobalBpmListener implements ActivitiEventListener {
             bpmTaskInfo = ActToBpmInfoFactory.toTaskInfo(event);
         }
 
+        LOGGER.error("BpmTaskInfo got");
         customBpmEventListener.listen(bpmTaskInfo, event.getExecutionId(), event.getProcessInstanceId(),
                 event.getProcessDefinitionId());
     }

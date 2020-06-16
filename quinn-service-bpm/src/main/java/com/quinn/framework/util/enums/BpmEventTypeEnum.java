@@ -47,5 +47,8 @@ public enum BpmEventTypeEnum {
     // 任务完成
     TASK_CREATED,
 
+    // 流程取消
+    PROCESS_CANCELLED,
+
     ;
 }
