@@ -8,7 +8,7 @@
         <artifactId>quinn-service-parent</artifactId>
         <groupId>com.quinn</groupId>
         <version>1.0.0</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <groupId>com.quinn.framework</groupId>
@@ -19,8 +19,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>quinn-service-activiti</module>
         <module>quinn-service-api</module>
         <module>quinn-service-biz</module>
+        <module>quinn-service-bpm</module>
         <module>quinn-service-cache</module>
         <module>quinn-service-datasource</module>
         <module>quinn-service-ehcache</module>
@@ -78,6 +80,12 @@
 
             <dependency>
                 <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-activiti</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-api</artifactId>
                 <version>${framework.version}</version>
             </dependency>
@@ -85,6 +93,12 @@
             <dependency>
                 <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-biz</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-bpm</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 
@@ -145,6 +159,12 @@
             <dependency>
                 <groupId>com.quinn.framework</groupId>
                 <artifactId>quinn-service-mq</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quinn.framework</groupId>
+                <artifactId>quinn-service-mq-ehcache</artifactId>
                 <version>${framework.version}</version>
             </dependency>
 
