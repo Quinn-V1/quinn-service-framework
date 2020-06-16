@@ -44,7 +44,7 @@ public abstract class AbstractBpmDealParam implements Serializable {
      * 节点编码
      */
     @ApiModelProperty("节点编码")
-    private String nodeKey;
+    private String nodeCode;
 
     /**
      * 处理用户
@@ -138,7 +138,7 @@ public abstract class AbstractBpmDealParam implements Serializable {
      * 任务处理参数缓存
      *
      * @param taskKey BPM任务编码
-     * @return  缓存键
+     * @return 缓存键
      */
     public static String cacheKeyOf(String taskKey) {
         return CACHE_KEY_OF_LAST_DEAL_PARAM + taskKey;

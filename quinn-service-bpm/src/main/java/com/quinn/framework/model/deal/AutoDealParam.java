@@ -20,7 +20,7 @@ public class AutoDealParam extends AbstractBpmDealParam {
         setTodoType(BpmTodoTypeEnum.AUTO.name());
         setUrgentLevel(UrgentLevelEnum.LOW.name());
         setTaskId(NumberConstant.TOP_OF_DATA_ID);
-        setNodeKey(StringConstant.TOP_OF_DATA);
+        setNodeCode(StringConstant.TOP_OF_DATA);
         setDealUser(StringConstant.NONE_OF_DATA);
     }
 

@@ -1,6 +1,7 @@
 package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quinn.framework.util.SessionUtil;
 import com.quinn.framework.util.enums.SqlCondWrapperEnum;
 import com.quinn.framework.util.enums.SqlPropWrapperEnum;
 import com.quinn.framework.util.enums.UpdateTypeEnum;
@@ -100,13 +101,13 @@ public abstract class BaseDTO<T> {
     private String orderBy;
 
     /**
-     * 操作者
+     * 操作者(用作权限控制)
      */
     @ApiModelProperty("操作者")
     private String operator;
 
     /**
-     * 操作者组织
+     * 操作者组织（用作权限控制）
      */
     @ApiModelProperty("操作者组织")
     private String operatorOrg;
@@ -413,6 +414,25 @@ public abstract class BaseDTO<T> {
      */
     public FreeUpdate freeInsert(int valueSize) {
         return new FreeUpdate(UpdateTypeEnum.INSERT).valueSize(valueSize);
+    }
+
+    /**
+     * 权限校验条件
+     *
+     * @param force 强制
+     */
+    public void initDataAuth(boolean force) {
+        if (force) {
+            setOperator(SessionUtil.getUserKey());
+            setOperatorOrg(SessionUtil.getOrgKey());
+        } else {
+            if (StringUtil.isEmptyInFrame(operator)) {
+                setOperator(SessionUtil.getUserKey());
+            }
+            if (StringUtil.isEmptyInFrame(operatorOrg)) {
+                setOperatorOrg(SessionUtil.getOrgKey());
+            }
+        }
     }
 
     /**
