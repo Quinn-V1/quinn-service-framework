@@ -148,8 +148,10 @@ public class QuinnAutoConfiguration {
             CacheManager cacheManager
     ) {
         QuinnSubjectDao subjectDao = new QuinnSubjectDao();
-        Cache<String, DefaultPermission> cache = cacheManager.getCache(authorizationCache);
-        subjectDao.setAuthorizationCache(cache);
+        Cache<String, DefaultPermission> authorCache = cacheManager.getCache(authorizationCache);
+        Cache<String, DefaultPermission> authCache = cacheManager.getCache(authenticationCache);
+        subjectDao.setAuthorizationCache(authorCache);
+        subjectDao.setAuthenticationCache(authCache);
         return subjectDao;
     }
 

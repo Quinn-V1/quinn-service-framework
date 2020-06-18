@@ -24,20 +24,27 @@ public class QuinnSubjectDao extends DefaultSubjectDAO {
     /**
      * 权限信息缓存
      */
-    private Cache<String, DefaultPermission> cache;
+    private Cache<String, DefaultPermission> authorizationCache;
+
+    /**
+     * 权限信息缓存
+     */
+    private Cache<String, DefaultPermission> authenticationCache;
 
     @Override
     public Subject save(Subject subject) {
         Object principal = subject.getPrincipal();
         if (principal != null) {
             AuthInfo authInfo = AuthInfoFactory.generate(principal);
-            DefaultPermission permission = cache.get(authInfo.authCacheKey());
+            DefaultPermission permission = authorizationCache.get(authInfo.authCacheKey());
             if (permission == null) {
                 permission = MultiAuthInfoFetcher.fetchPermissions(authInfo);
                 if (permission != null) {
-                    cache.put(authInfo.authCacheKey(), new QuinnAuthorizationInfoAdapter(permission));
+                    authorizationCache.put(authInfo.authCacheKey(), new QuinnAuthorizationInfoAdapter(permission));
                 }
             }
+
+            authenticationCache.get(BaseConverter.staticToString(authInfo.getPrincipal()));
 
             SessionUtil.setValue(SessionUtil.SESSION_KEY_USER_ID, authInfo.attr(AuthInfo.ATTR_NAME_ID));
             SessionUtil.setValue(SessionUtil.SESSION_KEY_USER_KEY, BaseConverter.staticToString(authInfo.getPrincipal()));
@@ -56,6 +63,15 @@ public class QuinnSubjectDao extends DefaultSubjectDAO {
      * @param cache 权限信息缓存
      */
     public void setAuthorizationCache(Cache<String, DefaultPermission> cache) {
-        this.cache = cache;
+        this.authorizationCache = cache;
+    }
+
+    /**
+     * 权限信息缓存
+     *
+     * @param cache 权限信息缓存
+     */
+    public void setAuthenticationCache(Cache<String, DefaultPermission> cache) {
+        this.authenticationCache = cache;
     }
 }
