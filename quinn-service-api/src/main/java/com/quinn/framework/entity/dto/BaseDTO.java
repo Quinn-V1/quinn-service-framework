@@ -208,16 +208,18 @@ public abstract class BaseDTO<T> {
 
         switch (availableStatus) {
             case ALL:
-                dataStatusFrom = dataVersionTo = null;
+                dataStatusFrom = null;
+                dataVersionFrom = dataVersionTo = null;
                 break;
             case UNAVAILABLE:
                 dataStatusFrom = null;
-                dataStatusTo = NumberConstant.INT_ONE_NEGATIVE;
+                dataVersionFrom = null;
+                dataVersionTo = NumberConstant.INT_ONE_NEGATIVE;
                 break;
             case AVAILABLE:
             default:
-                dataStatusFrom = NumberConstant.INT_ONE;
-                dataStatusTo = null;
+                dataVersionFrom = NumberConstant.INT_ONE;
+                dataVersionTo = null;
                 break;
         }
     }
