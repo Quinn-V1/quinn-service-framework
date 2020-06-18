@@ -60,24 +60,7 @@ public class BpmActivitiConfiguration {
         return new ActivityBehaviorFactoryExt();
     }
 
-    @Bean("bpmInstSupplier")
-    @ConditionalOnMissingBean(BpmInstSupplier.class)
-    public BpmInstSupplier bpmInstSupplier() {
-        return new BpmInstSupplier() {
-            @Override
-            public BpmInstInfo newBpmInstInfo() {
-                return null;
-            }
-
-            @Override
-            public BpmTaskInfo newBpmTaskInfo() {
-                return null;
-            }
-        };
-    }
-
     @Bean
-    @ConditionalOnMissingBean(ProcessEngineConfiguration.class)
     public ProcessEngineConfiguration processEngineConfiguration(
             ActivityBehaviorFactory activityBehaviorFactoryExt
     ) {
@@ -97,31 +80,26 @@ public class BpmActivitiConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(ProcessEngine.class)
     public ProcessEngine processEngine(ProcessEngineConfiguration processEngineConfiguration) {
         return processEngineConfiguration.buildProcessEngine();
     }
 
     @Bean
-    @ConditionalOnMissingBean(RepositoryService.class)
     public RepositoryService repositoryService(ProcessEngine processEngine) {
         return processEngine.getRepositoryService();
     }
 
     @Bean
-    @ConditionalOnMissingBean(RuntimeService.class)
     public RuntimeService runtimeService(ProcessEngine processEngine) {
         return processEngine.getRuntimeService();
     }
 
     @Bean
-    @ConditionalOnMissingBean(TaskService.class)
     public TaskService taskService(ProcessEngine processEngine) {
         return processEngine.getTaskService();
     }
 
     @Bean
-    @ConditionalOnMissingBean(HistoryService.class)
     public HistoryService historyService(ProcessEngine processEngine) {
         return processEngine.getHistoryService();
     }
@@ -132,10 +110,20 @@ public class BpmActivitiConfiguration {
         return processEngine.getDynamicBpmnService();
     }
 
-    @Bean("globalBpmListener")
-    @ConditionalOnMissingBean(name = {"globalBpmListener"})
-    public ActivitiEventListener globalBpmListener() {
-        return new GlobalBpmListener();
+    @Bean("bpmInstSupplier")
+    @ConditionalOnMissingBean(BpmInstSupplier.class)
+    public BpmInstSupplier bpmInstSupplier() {
+        return new BpmInstSupplier() {
+            @Override
+            public BpmInstInfo newBpmInstInfo() {
+                return null;
+            }
+
+            @Override
+            public BpmTaskInfo newBpmTaskInfo() {
+                return null;
+            }
+        };
     }
 
     @Bean("activitiInfoFiller")
@@ -165,6 +153,18 @@ public class BpmActivitiConfiguration {
         };
     }
 
+    @Bean("serviceTaskDelegateProxy")
+    @ConditionalOnMissingBean(name = "serviceTaskDelegateProxy")
+    public MethodInvokerOneParam<BpmTaskInfo, BatchResult> serviceTaskDelegateProxy() {
+        return (MethodInvokerOneParam<BpmTaskInfo, BatchResult>) bpmTaskInfo -> null;
+    }
+
+    @Bean("globalBpmListener")
+    @ConditionalOnMissingBean(name = {"globalBpmListener"})
+    public ActivitiEventListener globalBpmListener() {
+        return new GlobalBpmListener();
+    }
+
     @Bean("serviceTaskDelegate")
     @ConditionalOnMissingBean(name = "serviceTaskDelegate")
     public JavaDelegate serviceTaskDelegate() {
@@ -178,10 +178,5 @@ public class BpmActivitiConfiguration {
                 (r, executor) -> {
                     // TODO 超出处理能力保障
                 });
-    }
-
-    @Bean("serviceTaskDelegateProxy")
-    public MethodInvokerOneParam<BpmTaskInfo, BatchResult> serviceTaskDelegateProxy() {
-        return (MethodInvokerOneParam<BpmTaskInfo, BatchResult>) bpmTaskInfo -> null;
     }
 }

@@ -28,15 +28,20 @@
             <artifactId>quinn-service-activiti</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.quinn.framework</groupId>-->
-<!--            <artifactId>quinn-service-shiro</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.quinn.framework</groupId>-->
+        <!--            <artifactId>quinn-service-shiro</artifactId>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.quinn.framework</groupId>-->
-<!--            <artifactId>quinn-service-sso</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.quinn.framework</groupId>-->
+        <!--            <artifactId>quinn-service-sso</artifactId>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.quinn.framework</groupId>-->
+        <!--            <artifactId>quinn-service-redis</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.quinn.framework</groupId>
