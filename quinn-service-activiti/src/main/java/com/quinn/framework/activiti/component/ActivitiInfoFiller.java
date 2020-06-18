@@ -196,7 +196,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
     }
 
     @Override
-    public void start(BpmInstInfo bpmInstInfo, Map<String, Object> param) {
+    public BaseResult start(BpmInstInfo bpmInstInfo, Map<String, Object> param) {
         Authentication.setAuthenticatedUserId(bpmInstInfo.getStartUser());
         ProcessInstance processInstance = runtimeService.createProcessInstanceBuilder()
                 .processDefinitionId(bpmInstInfo.getBpmModelKey())
@@ -211,6 +211,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
         String processInstanceId = processInstance.getProcessInstanceId();
         bpmInstInfo.setInstStatus(BpmInstStatusEnum.RUNNING.name());
         bpmInstInfo.setBpmKey(processInstanceId);
+        return BaseResult.SUCCESS;
     }
 
     @Override
@@ -476,7 +477,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
     public BpmNodeInfo generateNodeInfo(FlowElement flowElement) {
         BpmNodeInfo nodeInfo = modelSupplier.newBpmNodeInfo();
         nodeInfo.setNodeName(flowElement.getName());
-        nodeInfo.setNodeType(StringUtil.firstCharLowercase(flowElement.getClass().getSimpleName()));
+        nodeInfo.setNodeType(StringUtil.firstCharUppercase(flowElement.getClass().getSimpleName()));
         nodeInfo.setNodeCode(flowElement.getId());
         return nodeInfo;
     }

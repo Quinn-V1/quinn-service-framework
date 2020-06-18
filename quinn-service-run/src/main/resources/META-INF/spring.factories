@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.quinn.framework.activiti.configuration.BpmActivitiConfiguration

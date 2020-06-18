@@ -68,8 +68,9 @@ public interface BpmInfoFiller {
      *
      * @param bpmInstInfo 流程信息
      * @param param       参数
+     * @return 发起是否成功
      */
-    void start(BpmInstInfo bpmInstInfo, Map<String, Object> param);
+    BaseResult start(BpmInstInfo bpmInstInfo, Map<String, Object> param);
 
     /**
      * 添加候选人

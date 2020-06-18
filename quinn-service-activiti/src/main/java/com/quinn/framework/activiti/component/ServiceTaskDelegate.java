@@ -39,7 +39,7 @@ public class ServiceTaskDelegate implements JavaDelegate, Serializable {
         bpmTaskInfo.setBpmKey(execution.getCurrentActivityId() + StringConstant.CHAR_AT_SING + execution.getId());
         bpmTaskInfo.setNodeCode(execution.getCurrentActivityId());
         bpmTaskInfo.setNodeName(currentFlowElement.getName());
-        bpmTaskInfo.setNodeType(StringUtil.firstCharLowercase(currentFlowElement.getClass().getSimpleName()));
+        bpmTaskInfo.setNodeType(StringUtil.firstCharUppercase(currentFlowElement.getClass().getSimpleName()));
         bpmTaskInfo.setParams(execution.getVariables());
 
         serviceTaskDelegateProxy.invoke(bpmTaskInfo);
