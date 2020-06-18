@@ -1,4 +1,7 @@
 # 开发环境
+server:
+  address: 127.0.0.1
+
 spring:
   profiles: dev
   datasource:
@@ -14,8 +17,21 @@ com:
   quinn-service:
     licence:
       path: classpath:licence/ming-cloud_licence.lic
-    redis:
-      host: 212.64.54.213
-      port: 6379
-      password: ENC(F1B4781AF70446F7A539E012B451CC9D)
-      database: 0
+    cache:
+      redis:
+        host: 212.64.54.213
+        port: 6379
+        password: ENC(F1B4781AF70446F7A539E012B451CC9D)
+        database: 0
+    mq:
+      rabbitmq:
+        host: 212.64.54.213
+        port: 5672
+        username: bpm.ming
+        password: ENC(F1B4781AF70446F7A539E012B451CC9D)
+        virtual-host: /bpm-ming
+    mock-auth:
+      disabled: false
+    msg:
+      email:
+        ssl-enable: false

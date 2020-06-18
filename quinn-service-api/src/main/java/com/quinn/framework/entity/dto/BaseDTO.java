@@ -11,6 +11,7 @@ import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.AvailableStatusEnum;
 import com.quinn.util.constant.enums.DataStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -195,6 +196,31 @@ public abstract class BaseDTO<T> {
      */
     @ApiModelProperty("排序字段")
     private List<OrderField> orderFields;
+
+    /**
+     * 设置生效状态
+     */
+    @ApiModelProperty("生效状态")
+    public void setAvailableStatus(AvailableStatusEnum availableStatus) {
+        if (availableStatus == null) {
+            return;
+        }
+
+        switch (availableStatus) {
+            case ALL:
+                dataStatusFrom = dataVersionTo = null;
+                break;
+            case UNAVAILABLE:
+                dataStatusFrom = null;
+                dataStatusTo = NumberConstant.INT_ONE_NEGATIVE;
+                break;
+            case AVAILABLE:
+            default:
+                dataStatusFrom = NumberConstant.INT_ONE;
+                dataStatusTo = null;
+                break;
+        }
+    }
 
     /**
      * 获取或者生成排序字符串

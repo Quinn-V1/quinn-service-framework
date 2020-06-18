@@ -25,12 +25,52 @@
 
         <dependency>
             <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-shiro</artifactId>
+            <artifactId>quinn-service-activiti</artifactId>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.quinn.framework</groupId>-->
+<!--            <artifactId>quinn-service-shiro</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.quinn.framework</groupId>-->
+<!--            <artifactId>quinn-service-sso</artifactId>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.quinn.framework</groupId>
+            <artifactId>quinn-service-datasource</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-sso</artifactId>
+            <artifactId>quinn-service-biz</artifactId>
+        </dependency>
+
+        <!-- dependencies blow supports database connect mysql -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.quinn.framework</groupId>
+            <artifactId>quinn-service-test</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

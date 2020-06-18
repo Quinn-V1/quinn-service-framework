@@ -1,0 +1,5 @@
+com.quinn.framework.activiti.component.event.ActivitiActivityEventImplDecorator
+com.quinn.framework.activiti.component.event.TaskEntityDecorator
+com.quinn.framework.activiti.component.event.ExecutionEntityImplDecorator
+com.quinn.framework.activiti.component.event.ExecutionEntityDecorator
+com.quinn.framework.activiti.component.event.HistoricActivityInstanceEntityDecorator

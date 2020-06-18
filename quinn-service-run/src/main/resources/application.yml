@@ -1,6 +1,6 @@
 ## 用本地配置
 server:
-  port: 8010 # 启动端口
+  port: 8030 # 启动端口
   servlet:
     context-path: /
 
@@ -56,17 +56,35 @@ logging:
 
 com:
   quinn-service:
-    redis:
-      maxActive: 8
-      maxIdle: 8
-      maxWait: -1
-      minIdle: 0
-      timeout: 2000
-      cache:
-        name: ming_cloud
-      keys:
-        namespace: "ming_cloud:"
-        normalize: true
+    cache:
+      session-cache-name:
+        redisByteCacheAllService
+      # ehCacheAllService
+      main-cache-name:
+        redisCacheAllService
+      # ehCacheAllService
+      degree-cache:
+        item-map:
+          ehCacheAllService: 500
+          redisCacheAllService: 0
+      redis:
+        maxActive: 1000
+        maxIdle: 1000
+        maxWait: -1
+        minIdle: 0
+        timeout: 2000
+        keys-namespace: "ming_cloud:"
+        keys-normalize: true
+      ehcache:
+        config-url: classpath:config/ehcache.xml
+        cache-name: ming_cloud
+        keys-namespace: "ming_cloud:"
+    mq:
+      rabbitmq:
+        auto-listen: true
+        thread-pool-size: 2
+        serialize-type: 1
+        max-channels: 25
     filter:
       config:
         filter-items:
@@ -88,16 +106,20 @@ com:
               - /anon/**
               - /users/session/**
               - /csrf
+              - /swagger-ui.html
               - /swagger**
               - /swagger-resources/**
+              - /v2/api-docs
               - /v2/api-docs/**
               - /webjars/**
               - /error
               - /configuration/**
               - /druid/**
               - /sso/**
+              - /tenant/**
               - /url/**
               - /restful/**
+              - /**/*-restful
           - key: intranet
             filter-name: intranetFilter
             url-pattens:
@@ -106,6 +128,57 @@ com:
             filter-name: pathMatchPermissionFilter
             url-pattens:
               - /**
+    mock-auth:
+      disabled: false
+      auth-infos:
+        - principal: admin
+          # a1234567
+          credentials: A8831CF98237CE40525B0A3591CB45CD
+          principals:
+            "1001":
+              key: 1001
+              name: "Factory 001"
+              rolesMap:
+                FUNCTION:
+                  - admin_f
+                DATA:
+                  - admin_d
+              permissionsMap:
+                INTERFACE:
+                  - "*"
+                MENU:
+                  - script-info
+            "1002":
+              key: 1002
+              name: "Factory 002"
+              rolesMap:
+                FUNCTION:
+                  - admin
+        - principal: guest
+          # 123456
+          credentials: 76710EED9ED3278801B698077AD60E98
+          principals:
+            "1001":
+              key: 1001
+              name: "Factory 001"
+              rolesMap:
+                FUNCTION:
+                  - admin
+  ming-cloud:
+    core:
+      auth:
+        resolver-for-message: true
+    bpm:
+      diagram:
+        font-name:
+          activity: "宋体"
+          label: "宋体"
+          annotation: "宋体"
+        color:
+          active: -7667712
+          history: -12799119
+        image:
+          type: "png"
 
 fdfs:
   so-timeout: 1501
