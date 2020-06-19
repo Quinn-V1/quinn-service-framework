@@ -214,7 +214,7 @@ public abstract class BaseDTO<T> {
             case UNAVAILABLE:
                 dataStatusFrom = null;
                 dataVersionFrom = null;
-                dataVersionTo = NumberConstant.INT_ONE_NEGATIVE;
+                dataVersionTo = NumberConstant.INT_ZERO;
                 break;
             case AVAILABLE:
             default:
