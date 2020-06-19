@@ -35,7 +35,8 @@ public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
         final Class resultClass = clazz == null ? JSONObject.class : clazz;
 
         RequestEntity requestEntity = httpRequestParam.wrapBuilder(
-                RequestEntity.get(new URI(httpRequestParam.getUrl()))).build();
+                RequestEntity.get(new URI(httpRequestParam.getUrl()))
+        ).build();
 
         return httpRequestParam.wrapResult(restTemplate.exchange(requestEntity, resultClass));
     }

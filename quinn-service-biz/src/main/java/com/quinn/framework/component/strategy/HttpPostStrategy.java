@@ -6,7 +6,9 @@ import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.framework.model.strategy.HttpRequestParam;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.model.BaseResult;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,6 @@ public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
 
     @Override
     public Object execute(HttpRequestParam httpRequestParam) {
-
         Class clazz = httpRequestParam.getResultClass();
         Class resultClass = clazz == null ? JSONObject.class : clazz;
 

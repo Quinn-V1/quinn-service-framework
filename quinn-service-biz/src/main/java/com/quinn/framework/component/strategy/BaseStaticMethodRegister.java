@@ -2,6 +2,7 @@ package com.quinn.framework.component.strategy;
 
 import com.quinn.framework.api.strategy.StaticMethodRegister;
 import com.quinn.framework.component.KeyValueMultiService;
+import com.quinn.framework.util.Base64Util;
 import com.quinn.framework.util.SessionUtil;
 
 /**
@@ -16,7 +17,8 @@ public class BaseStaticMethodRegister implements StaticMethodRegister {
     public Class[] register() {
         return new Class[]{
                 SessionUtil.class,
-                KeyValueMultiService.class
+                KeyValueMultiService.class,
+                Base64Util.class,
         };
     }
 

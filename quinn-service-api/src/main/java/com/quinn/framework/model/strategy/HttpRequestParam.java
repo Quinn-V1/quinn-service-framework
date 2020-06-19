@@ -1,13 +1,17 @@
 package com.quinn.framework.model.strategy;
 
+import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
-import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.enums.HttpMethodEnum;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
@@ -20,6 +24,8 @@ import java.util.Map;
 @Getter
 @Setter
 public class HttpRequestParam<T> extends BaseStrategyParam<T> {
+
+    private static final String HEADER_PARAM_KEY = "Headers";
 
     /**
      * URL模板：可能有占位参数
@@ -52,6 +58,13 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * @return 包装后的构建器
      */
     public RequestEntity.HeadersBuilder wrapBuilder(RequestEntity.HeadersBuilder headersBuilder) {
+        JSONObject headers = getJsonParam().getJSONObject(HEADER_PARAM_KEY);
+        if (headers != null) {
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                headersBuilder.header(entry.getKey(), BaseConverter.staticToString(entry.getValue()));
+            }
+            getJsonParam().remove(HEADER_PARAM_KEY);
+        }
         return headersBuilder;
     }
 
@@ -82,8 +95,15 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * @return 请求体
      */
     public HttpEntity wrapParamToEntity(Object realParam) {
-        HttpHeaders headers = new HttpHeaders();
-        return new HttpEntity(realParam, headers);
+        JSONObject headers = getJsonParam().getJSONObject(HEADER_PARAM_KEY);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        if (headers != null) {
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                httpHeaders.add(entry.getKey(), BaseConverter.staticToString(entry.getValue()));
+            }
+            getJsonParam().remove(HEADER_PARAM_KEY);
+        }
+        return new HttpEntity(realParam, httpHeaders);
     }
 
 }

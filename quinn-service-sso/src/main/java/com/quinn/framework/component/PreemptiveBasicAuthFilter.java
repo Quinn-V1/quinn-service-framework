@@ -8,10 +8,7 @@ import com.quinn.framework.exception.AuthInfoNotFoundException;
 import com.quinn.framework.exception.UnauthorizedException;
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.framework.model.DefaultTokenInfo;
-import com.quinn.framework.util.MultiAuthInfoFetcher;
-import com.quinn.framework.util.MultiCredentialsMatcher;
-import com.quinn.framework.util.MultiErrorHandler;
-import com.quinn.framework.util.SessionUtil;
+import com.quinn.framework.util.*;
 import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
@@ -35,11 +32,6 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-06-19
  */
 public class PreemptiveBasicAuthFilter implements DynamicFilter {
-
-    /**
-     * 基础校验授权
-     */
-    private static final String BASIC_PREFIX = "Basic ";
 
     /**
      * 默认用户类型
@@ -80,7 +72,7 @@ public class PreemptiveBasicAuthFilter implements DynamicFilter {
             return;
         }
 
-        auth = auth.substring(BASIC_PREFIX.length());
+        auth = auth.substring(Base64Util.BASIC_PREFIX.length());
         String authString = StringUtil.forBytes(Base64Utils.decodeFromString(auth));
 
         // TODO 以此为缓存，优先查找缓存
