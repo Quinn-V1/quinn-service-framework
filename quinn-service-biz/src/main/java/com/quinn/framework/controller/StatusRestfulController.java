@@ -1,6 +1,7 @@
 
 package com.quinn.framework.controller;
 
+import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
@@ -38,6 +39,13 @@ public class StatusRestfulController extends AbstractController {
     public BaseResult<String> nowRestful(
     ) {
         return BaseResult.success(BaseConverter.staticToString(LocalDateTime.now()));
+    }
+
+    @GetMapping(value = "test-basic")
+    @ApiOperation(value = "基本权限验证")
+    public BaseResult<String> basicTest(
+    ) {
+        return BaseResult.success(SessionUtil.getUserKey());
     }
 
 }

@@ -105,4 +105,11 @@ public interface BpmInfoFiller {
      */
     void deleteProcessInstance(String bpmKey, String suggestion);
 
+    /**
+     * 校验设计内容是否合法
+     *
+     * @param designContent 设计内容
+     * @return 校验结果
+     */
+    BaseResult validate(String designContent);
 }

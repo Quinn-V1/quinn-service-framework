@@ -16,6 +16,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
+import lombok.SneakyThrows;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
@@ -246,6 +247,23 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
     @Override
     public void deleteProcessInstance(String bpmKey, String suggestion) {
         runtimeService.deleteProcessInstance(bpmKey, suggestion);
+    }
+
+    @Override
+    @SneakyThrows
+    public BaseResult validate(String designContent) {
+        if (StringUtil.isEmptyInFrame(designContent)) {
+            return BaseResult.fail()
+                    .buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.name(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "designContent")
+                    .result();
+        }
+        BpmnXMLConverter converter = new BpmnXMLConverter();
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(StreamUtil.asStream(designContent));
+        BpmnModel bpmnModel = converter.convertToBpmnModel(streamReader);
+        return BaseResult.success(bpmnModel);
     }
 
     @Override

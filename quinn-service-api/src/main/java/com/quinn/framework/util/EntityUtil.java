@@ -45,7 +45,7 @@ public final class EntityUtil {
         }
 
         if (!cacheKey.contains(BaseDTO.PROPERTY_DELIMITER)) {
-            query.append(cacheKey).append(delimiter).append(StringConstant.NONE_OF_DATA);
+            query.append(cacheKey).append(BaseDTO.PROPERTY_DELIMITER).append(StringConstant.NONE_OF_DATA);
         } else {
             query.append(cacheKey);
         }

@@ -81,7 +81,6 @@ public class RedisAllServiceImpl extends AbstractRedisService implements CacheAl
             for (byte[] k : keysSet) {
                 ret1.add((T) redisConnection.get(k));
             }
-
             return ret1;
         });
     }
