@@ -29,7 +29,7 @@ public class MessageController extends AbstractController {
     @Qualifier("messageApiService")
     private MessageApiService messageApiService;
 
-    @PostMapping(value = "send")
+    @PostMapping(value = {"send-basic", "send"})
     @ApiOperation(value = "发送消息")
     public BaseResult send(
             @ApiParam(name = "messageSendParam", value = "消息发送参数", required = true)

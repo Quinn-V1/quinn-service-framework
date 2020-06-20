@@ -81,6 +81,7 @@ public class PreemptiveBasicAuthFilter implements DynamicFilter {
         String[] userAndPass = authString.split(StringConstant.CHAR_COLON);
         if (userAndPass.length < NumberConstant.INT_TWO) {
             MultiErrorHandler.handleError(new AuthInfoNotFoundException(), request, response);
+            return;
         }
 
         DefaultTokenInfo tokenInfo = new DefaultTokenInfo();
