@@ -30,7 +30,7 @@ public enum FormPositionEnum {
      */
     public final int code;
 
-    private FormPositionEnum(String desc, int code) {
+    FormPositionEnum(String desc, int code) {
         this.desc = desc;
         this.code = code;
     }
