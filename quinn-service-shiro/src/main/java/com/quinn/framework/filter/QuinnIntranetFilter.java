@@ -6,12 +6,12 @@ import com.quinn.framework.util.MultiErrorHandler;
 import com.quinn.framework.util.RequestUtil;
 import com.quinn.framework.util.enums.AuthMessageEnum;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * 内部访问过滤器
@@ -30,8 +30,8 @@ public class QuinnIntranetFilter extends AnonymousFilter implements DynamicFilte
             return super.onPreHandle(request, response, mappedValue);
         } else {
             MultiErrorHandler.handleError(
-                    new UnauthorizedException()
-                            .buildParam(AuthMessageEnum.INTRANET_RESOURCE_ACCESS_FROM_OUT.name(), 0, 0)
+                    new UnauthorizedException().ofStatusCode(HttpStatus.METHOD_NOT_ALLOWED.value())
+                            .buildParam(AuthMessageEnum.INTRANET_RESOURCE_ACCESS_FROM_OUT.key(), 0, 0)
                             .exception()
                     , req, res);
             return false;
