@@ -44,6 +44,9 @@ public enum AuthMessageEnum implements MessageEnumFlag {
     // 用户名名或密码不匹配
     AUTH_CREDENTIALS_MISMATCH(DESC_AUTH_CREDENTIALS_MISMATCH),
 
+    // 从外部访问内部资源
+    INTRANET_RESOURCE_ACCESS_FROM_OUT(DESC_INTRANET_RESOURCE_ACCESS_FROM_OUT),
+
     ;
 
     /**

@@ -1,7 +1,10 @@
 package com.quinn.framework.filter;
 
 import com.quinn.framework.api.DynamicFilter;
+import com.quinn.framework.exception.UnauthorizedException;
+import com.quinn.framework.util.MultiErrorHandler;
 import com.quinn.framework.util.RequestUtil;
+import com.quinn.framework.util.enums.AuthMessageEnum;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 
 import javax.servlet.ServletRequest;
@@ -20,15 +23,17 @@ public class QuinnIntranetFilter extends AnonymousFilter implements DynamicFilte
 
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if (RequestUtil.isRequestFromIntranet((HttpServletRequest) request)) {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+
+        if (RequestUtil.isRequestFromIntranet(req)) {
             return super.onPreHandle(request, response, mappedValue);
         } else {
-            HttpServletResponse servletResponse = (HttpServletResponse) response;
-            try {
-                servletResponse.setContentType("text/html;charset=utf8");
-                servletResponse.getWriter().println("<h1>框架资源只能从内网访问, 请使用\"127.0.0.1\"替代\"localhost\"</h1>");
-            } catch (IOException e) {
-            }
+            MultiErrorHandler.handleError(
+                    new UnauthorizedException()
+                            .buildParam(AuthMessageEnum.INTRANET_RESOURCE_ACCESS_FROM_OUT.name(), 0, 0)
+                            .exception()
+                    , req, res);
             return false;
         }
     }

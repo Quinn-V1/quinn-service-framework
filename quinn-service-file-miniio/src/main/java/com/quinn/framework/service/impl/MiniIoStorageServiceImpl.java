@@ -39,9 +39,7 @@ public class MiniIoStorageServiceImpl implements StorageService {
             return null;
         }
 
-        BaseResult<FileInfoAdapter> result = new BaseResult<>();
-        result.setData(appFileDto);
-
+        BaseResult<FileInfoAdapter> result = BaseResult.success(appFileDto);
         String fullPath = appFileDto.getFullPath();
         String bucketName = StringUtil.isEmpty(fullPath) ? defaultBucketName : fullPath;
 
@@ -72,8 +70,7 @@ public class MiniIoStorageServiceImpl implements StorageService {
 
     @Override
     public BaseResult<FileInfoAdapter> delete(FileInfoAdapter appFileDto) {
-        BaseResult<FileInfoAdapter> result = new BaseResult<>();
-        result.setData(appFileDto);
+        BaseResult<FileInfoAdapter> result = BaseResult.success(appFileDto);
 
         String fullPath = appFileDto.getFullPath();
         String bucketName = StringUtil.isEmpty(fullPath) ? defaultBucketName : fullPath;
