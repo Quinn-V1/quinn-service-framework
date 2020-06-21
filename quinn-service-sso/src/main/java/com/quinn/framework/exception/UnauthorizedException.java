@@ -10,11 +10,6 @@ import com.quinn.util.base.exception.BaseBusinessException;
  */
 public class UnauthorizedException extends BaseBusinessException {
 
-    /**
-     * 状态码
-     */
-    private int statusCode;
-
     public UnauthorizedException() {
         super();
     }
@@ -25,14 +20,5 @@ public class UnauthorizedException extends BaseBusinessException {
 
     public UnauthorizedException(String message, Throwable throwable) {
         super(message, throwable);
-    }
-
-    public UnauthorizedException ofStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-        return this;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
     }
 }

@@ -3,12 +3,15 @@ package com.quinn.framework.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quinn.framework.api.ErrorHandler;
 import com.quinn.framework.util.SessionUtil;
+import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.StringConstant;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +45,14 @@ public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T>
 
     @Override
     public BaseResult handleError(T e, HttpServletRequest request, HttpServletResponse response) {
+        if (e instanceof BaseBusinessException) {
+            if (NumberUtil.isEmptyInFrame(((BaseBusinessException) e).getStatusCode())) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            } else {
+                response.setStatus(((BaseBusinessException) e).getStatusCode());
+            }
+        }
+
         BaseResult result = BaseResult.build(false);
         response.setHeader("Content-Type", "application/json;charset=utf-8");
         response.setContentType("application/json;charset=utf-8");
