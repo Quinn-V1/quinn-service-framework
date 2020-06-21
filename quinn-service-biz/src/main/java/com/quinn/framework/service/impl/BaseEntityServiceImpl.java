@@ -24,6 +24,7 @@ import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.base.enums.DataOperateTypeEnum;
+import com.quinn.util.constant.enums.AvailableStatusEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
@@ -32,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -256,14 +258,13 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     public BaseResult<VO> getById(Long id) {
         TO condition = TOClass.getConstructor().newInstance();
         condition.setId(id);
-        condition.setDataVersionFrom(null);
-        condition.setDataStatusFrom(null);
+        condition.setAvailableStatus(AvailableStatusEnum.ALL);
         return get(condition);
     }
 
     @Override
     public BaseResult<VO> get(TO condition) {
-        BaseResult<VO> result = new BaseResult();
+        BaseResult<VO> result = BaseResult.build(true);
         condition.setResultNumExpected(1);
         entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
 
@@ -310,7 +311,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
     @Override
     public BaseResult<List<VO>> select(TO condition) {
-        BaseResult<List<VO>> result = new BaseResult();
+        BaseResult<List<VO>> result = BaseResult.build(true);
         condition.ofEntityClass(DOClass);
         entityServiceInterceptorChain.doChain(new BaseSelectMethodInvoker<TO>(result, condition) {
 
@@ -318,7 +319,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             public void invoke() {
                 Page<VO> select = baseMapper.select(getData());
                 if (CollectionUtils.isEmpty(select)) {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
+                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(Collections.emptyList())
                             .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
                             .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
                                     CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
@@ -333,7 +334,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
     @Override
     public BaseResult<PageInfo<VO>> page(TO condition) {
-        BaseResult<PageInfo<VO>> result = new BaseResult();
+        BaseResult<PageInfo<VO>> result = BaseResult.build(true);
         condition.ofEntityClass(DOClass);
         entityServiceInterceptorChain.doChain(new BaseReadMethodInvoker<TO>(result, condition) {
 
@@ -347,7 +348,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
                 Page<VO> select = baseMapper.select(getData());
                 if (CollectionUtils.isEmpty(select)) {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
+                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(PageInfo.EMPTY)
                             .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
                             .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
                                     CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))

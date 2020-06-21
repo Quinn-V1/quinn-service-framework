@@ -75,7 +75,7 @@ public class DefaultMessageApiService implements MessageApiService {
         // 循环保存消息实例和消息发送记录
         DirectMessageInfo directMessageInfo = directMessageInfoRes.getData();
         Map<String, List<MessageSendRecord>> sendRecordListMap = directMessageInfo.getSendRecordListMap();
-        BaseResult result = new BaseResult<>();
+        BaseResult result = BaseResult.build(true);
         LOGGER.error("Message start save {0}", sendRecordListMap.size());
 
         Set<String> sendRecordKeys = new HashSet<>();

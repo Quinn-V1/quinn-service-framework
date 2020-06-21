@@ -1,9 +1,11 @@
 package com.quinn.framework.model;
 
+import com.quinn.util.constant.NumberConstant;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,6 +17,15 @@ import java.util.List;
 @Setter
 @Getter
 public class PageInfo<T> {
+
+    public static final PageInfo EMPTY = new PageInfo();
+
+    static {
+        EMPTY.setDataList(Collections.emptyList());
+        EMPTY.setPageNum(NumberConstant.INT_ONE);
+        EMPTY.setPageSize(NumberConstant.INT_ZERO);
+        EMPTY.setTotal(NumberConstant.INT_ZERO);
+    }
 
     /**
      * 当前页

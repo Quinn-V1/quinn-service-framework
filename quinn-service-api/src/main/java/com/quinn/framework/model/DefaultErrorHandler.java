@@ -42,7 +42,7 @@ public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T>
 
     @Override
     public BaseResult handleError(T e, HttpServletRequest request, HttpServletResponse response) {
-        BaseResult result = new BaseResult();
+        BaseResult result = BaseResult.build(false);
         response.setHeader("Content-Type", "application/json;charset=utf-8");
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out;

@@ -43,7 +43,7 @@ public class LoggerController extends AbstractController {
         logbackLoggingSystem.setLogLevel(loggerName, level);
         LOGGER.info("logger name is {}, log level changed to {}", loggerName, level);
 
-        BaseResult result = new BaseResult();
+        BaseResult result = BaseResult.build(true);
         result.setMessage("logger name is [" + loggerName + "], log level changed to [" + level + "]");
         return result;
     }

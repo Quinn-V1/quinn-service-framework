@@ -11,7 +11,9 @@ import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 全局BPM监听器
@@ -31,15 +33,23 @@ public class GlobalBpmListener implements ActivitiEventListener {
     @Value("${com.ming-cloud.bpm.global.fail-on-exception:false}")
     private boolean failOnException;
 
+    @Value("${com.ming-cloud.bpm.global.ignore-event:ENTITY_CREATED,ENTITY_INITIALIZED}")
+    private Set<String> ignoredEvent;
+
     @Override
     public void onEvent(ActivitiEvent event) {
-        LOGGER.error("GlobalBpmListener entry {0}", event.getType());
-        CustomBpmEventListener customBpmEventListener = CUSTOM_BPM_EVENT_LISTENER_MAP.get(event.getType().name());
+        String eventType = event.getType().name();
+        if (ignoredEvent.contains(eventType)) {
+            return;
+        }
+
+        LOGGER.error("GlobalBpmListener entry {0}", eventType);
+        CustomBpmEventListener customBpmEventListener = CUSTOM_BPM_EVENT_LISTENER_MAP.get(eventType);
         if (customBpmEventListener == null) {
             return;
         }
 
-        LOGGER.error("GlobalBpmListener continue {0}", event.getType());
+        LOGGER.error("GlobalBpmListener continue {0}", eventType);
         BpmTaskInfo bpmTaskInfo;
         if (event instanceof ActivitiEntityEvent) {
             bpmTaskInfo = ActToBpmInfoFactory.toTaskInfo(((ActivitiEntityEvent) event).getEntity());
