@@ -3,6 +3,7 @@ package com.quinn.framework.filter;
 import com.quinn.framework.util.SessionUtil;
 import lombok.SneakyThrows;
 
+import javax.security.auth.Subject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
@@ -22,6 +23,7 @@ public class SessionInfoFilter implements Filter {
         SessionUtil.clear();
         SessionUtil.setValue(SessionUtil.SESSION_KEY_REQUEST, servletRequest);
         SessionUtil.setValue(SessionUtil.SESSION_KEY_RESPONSE, servletResponse);
+
         filterChain.doFilter(servletRequest, servletResponse);
         SessionUtil.clear();
     }

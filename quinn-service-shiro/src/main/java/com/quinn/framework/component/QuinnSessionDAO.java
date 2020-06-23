@@ -46,18 +46,6 @@ public class QuinnSessionDAO extends AbstractSessionDAO {
     @Override
     public void update(Session session) throws UnknownSessionException {
         try {
-            if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
-                return;
-            }
-
-            if (session instanceof QuinnSession) {
-                QuinnSession ss = (QuinnSession) session;
-                if (!ss.isChanged()) {
-                    return;
-                }
-                ss.setChanged(false);
-            }
-
             this.saveSession(session);
         } catch (Exception e) {
         }
