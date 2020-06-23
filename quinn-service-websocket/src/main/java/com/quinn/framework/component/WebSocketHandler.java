@@ -1,9 +1,7 @@
-package com.quinn.framework.comoponent;
+package com.quinn.framework.component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.model.WebSocketMessage;
-import com.quinn.framework.util.enums.WebSocketCommandOuter;
-import com.quinn.util.constant.enums.MessageLevelEnum;
 import org.springframework.util.CollectionUtils;
 
 import javax.websocket.Session;

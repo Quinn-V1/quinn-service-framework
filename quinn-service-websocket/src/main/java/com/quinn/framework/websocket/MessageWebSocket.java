@@ -1,7 +1,7 @@
 package com.quinn.framework.websocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.quinn.framework.comoponent.WebSocketHandler;
+import com.quinn.framework.component.WebSocketHandler;
 import com.quinn.framework.model.WebSocketMessage;
 import com.quinn.framework.util.enums.WebSocketCommandOuter;
 import com.quinn.util.base.BaseUtil;
