@@ -15,12 +15,12 @@
 <input id="text" type="text"/>
 <button onclick="send()">发送测试</button>
 <hr/>
-<button onclick="clos()">关闭连接</button>
+<button onclick="close()">关闭连接</button>
 <hr/>
 <div id="message"></div>
 
 <script>
-    var websocket = null;
+    let websocket = null;
     if ('WebSocket' in window) {
         websocket = new WebSocket("ws://127.0.0.1:8030/websocket/admin");
     } else {
@@ -44,14 +44,14 @@
     }
 
     websocket.onmessage = function (event) {
-        var json = JSON.parse(event.data);
+        let json = JSON.parse(event.data);
         switch (json["command"]) {
             case -10:
                 alert(json["message"]);
                 break;
             case -20:
-                var countEle = document.getElementById('messageCount');
-                var count = parseInt(countEle.textContent) + 1;
+                let countEle = document.getElementById('messageCount');
+                let count = parseInt(countEle.textContent) + 1;
                 countEle.textContent = count;
                 break;
             default:
@@ -68,7 +68,7 @@
     }
 
     function send() {
-        var msg = document.getElementById('text').value;
+        let msg = document.getElementById('text').value;
         websocket.send(msg);
     }
 </script>

@@ -98,6 +98,8 @@ com:
               - /favicon.ico
               - /css/**
               - /js/**
+              - /**/*.js
+              - /**/*.css
               - /image/**
               - /images/**
               - /resources/**

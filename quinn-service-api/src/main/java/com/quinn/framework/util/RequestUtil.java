@@ -23,7 +23,8 @@ import java.util.regex.Matcher;
  */
 public final class RequestUtil {
 
-    private RequestUtil(){}
+    private RequestUtil() {
+    }
 
     private static final Map<String, String> DEVICES = new TreeMap<>();
 
@@ -111,10 +112,20 @@ public final class RequestUtil {
     }
 
     public static boolean isAjax(HttpServletRequest request) {
-        if (request != null && "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
+        if (request != null && HttpHeadersConstant.XML_HTTP_REQUEST.equalsIgnoreCase(
+                request.getHeader(HttpHeadersConstant.X_REQUESTED_WITH))) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 是否为Restful接口
+     *
+     * @return restful接口 true
+     */
+    public static boolean isRestful(HttpServletRequest request) {
+        return "empty".equals(request.getHeader(HttpHeadersConstant.SEC_FETCH_DEST));
     }
 
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
