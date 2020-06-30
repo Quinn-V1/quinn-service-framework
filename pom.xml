@@ -24,7 +24,6 @@
         <module>quinn-service-biz</module>
         <module>quinn-service-bpm</module>
         <module>quinn-service-cache</module>
-        <module>quinn-service-config</module>
         <module>quinn-service-datasource</module>
         <module>quinn-service-ehcache</module>
         <module>quinn-service-email</module>
@@ -35,10 +34,12 @@
         <module>quinn-service-mongodb</module>
         <module>quinn-service-mq</module>
         <module>quinn-service-mq-ehcache</module>
+        <module>quinn-service-nacos-config</module>
+        <module>quinn-service-nacos-customer</module>
+        <module>quinn-service-nacos-provider</module>
         <module>quinn-service-quartz</module>
         <module>quinn-service-rabbitmq</module>
         <module>quinn-service-redis</module>
-        <module>quinn-service-run</module>
         <module>quinn-service-scheduler</module>
         <module>quinn-service-server</module>
         <module>quinn-service-security</module>
