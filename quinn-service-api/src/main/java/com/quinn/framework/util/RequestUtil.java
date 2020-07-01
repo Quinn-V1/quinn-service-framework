@@ -112,10 +112,22 @@ public final class RequestUtil {
     }
 
     public static boolean isAjax(HttpServletRequest request) {
-        if (request != null && HttpHeadersConstant.XML_HTTP_REQUEST.equalsIgnoreCase(
+        if (request != null) {
+            return false;
+        }
+
+        if (HttpHeadersConstant.XML_HTTP_REQUEST.equalsIgnoreCase(
                 request.getHeader(HttpHeadersConstant.X_REQUESTED_WITH))) {
             return true;
         }
+
+        String allowHeaders = request.getHeader(HttpHeadersConstant.ACCESS_CONTROL_ALLOW_HEADERS);
+        if (allowHeaders != null &&
+                allowHeaders.toUpperCase().contains(HttpHeadersConstant.X_REQUESTED_WITH.toUpperCase())
+        ) {
+            return true;
+        }
+
         return false;
     }
 
