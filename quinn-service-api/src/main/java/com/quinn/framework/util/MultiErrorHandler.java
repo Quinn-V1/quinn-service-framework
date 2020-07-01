@@ -35,12 +35,14 @@ public class MultiErrorHandler {
      * @return 处理结果
      */
     public static BaseResult handleError(Exception e, HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.errorError("MultiErrorHandler.handleError", e);
+
         Class exceptionClass = e.getClass();
         while (exceptionClass != Object.class) {
             ErrorHandler errorHandler = errorHandlers.get(exceptionClass);
             if (errorHandler != null) {
                 if (errorHandler != null) {
-                    LOGGER.errorError("Error {0}[{1}] handle by {2}", e, e.getClass().getName(), e.getMessage(),
+                    LOGGER.debug("Error {0}[{1}] handle by {2}", e.getClass().getName(), e.getMessage(),
                             errorHandler.getClass().getName());
                     return errorHandler.handleError(e, request, response);
                 }
@@ -53,8 +55,7 @@ public class MultiErrorHandler {
             return handleError((Exception) cause, request, response);
         }
 
-        LOGGER.errorError("Error {0}[{1}] handle by default", e, e.getClass().getName(),
-                e.getMessage());
+        LOGGER.debug("defaultHandler.handleError");
         return defaultHandler.handleError(e, request, response);
     }
 
