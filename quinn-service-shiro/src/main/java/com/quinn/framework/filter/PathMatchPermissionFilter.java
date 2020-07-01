@@ -45,7 +45,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
 
         // 是否登录
         if (!authenticated) {
-            if (RequestUtil.isRestful(request)) {
+            if (RequestUtil.isAjax(request)) {
                 MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
                         .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.key(), 0, 0)
                         .exception(), request, response);
@@ -60,7 +60,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
         try {
             subject.checkPermission(path);
         } catch (AuthorizationException e) {
-            if (RequestUtil.isRestful(request)) {
+            if (RequestUtil.isAjax(request)) {
                 MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.FORBIDDEN.value())
                         .buildParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.key(), 1, 0)
                         .addParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path)
@@ -70,7 +70,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
             }
             return;
         } catch (Exception e) {
-            if (RequestUtil.isRestful(request)) {
+            if (RequestUtil.isAjax(request)) {
                 MultiErrorHandler.handleError(e, request, response);
             } else {
                 response.sendRedirect(loginUrl);
