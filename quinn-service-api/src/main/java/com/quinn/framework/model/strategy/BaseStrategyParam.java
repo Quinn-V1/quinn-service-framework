@@ -33,7 +33,7 @@ public class BaseStrategyParam<T> {
     /**
      * 初始化参数
      */
-    protected void initParam(StrategyScript strategyScript, Map<String, Object> param) {
+    public void initParam(StrategyScript strategyScript, Map<String, Object> param) {
         JSONObject jsonObject = new JSONObject();
         LinkedList<String> paramTempChain = strategyScript.getParamTempChain();
         if (paramTempChain == null) {

@@ -1,10 +1,8 @@
 package com.quinn.framework.component.strategy;
 
-import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
-import com.quinn.framework.model.strategy.ParamValueParam;
-import com.quinn.util.base.BaseUtil;
+import com.quinn.framework.model.strategy.BaseStrategyParam;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -16,18 +14,18 @@ import java.util.Map;
  * @since 2020-05-18
  */
 @Component("PARAM_RESOLVE_StrategyExecutor")
-public class ParamResolveStrategy implements StrategyExecutor<ParamValueParam> {
+public class ParamResolveStrategy implements StrategyExecutor<BaseStrategyParam> {
 
     @Override
-    public Object execute(ParamValueParam paramValueParam) {
-        String[] paths = paramValueParam.getParamPaths();
-        JSONObject jsonParam = paramValueParam.getJsonParam();
-        return BaseUtil.valueOfJson(jsonParam, paths);
+    public Object execute(BaseStrategyParam paramValueParam) {
+        return paramValueParam.getJsonParam();
     }
 
     @Override
-    public ParamValueParam parseParam(StrategyScript strategyScript, Map<String, Object> param) {
-        return ParamValueParam.fromScript(strategyScript, param);
+    public BaseStrategyParam parseParam(StrategyScript strategyScript, Map<String, Object> param) {
+        BaseStrategyParam baseStrategyParam = new BaseStrategyParam();
+        baseStrategyParam.initParam(strategyScript, param);
+        return baseStrategyParam;
     }
 
 }

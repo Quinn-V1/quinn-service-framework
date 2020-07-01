@@ -26,4 +26,7 @@ public enum StrategyTypeEnum {
     // 常量直接取值
     CONSTANT_VALUE,
 
+    // 参数解析
+    PARAM_RESOLVE,
+
 }
