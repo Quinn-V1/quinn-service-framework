@@ -40,8 +40,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -51,6 +53,14 @@ import java.util.*;
  * @since 2020/5/29
  */
 public final class ActivitiInfoFiller implements BpmInfoFiller {
+
+    private static final String ACTIVITY_NAMESPACE = "http://activiti.org/bpmn";
+
+    private static final String ACTIVITY_NAMESPACE_PREFIX = "activiti";
+
+    private static final String SERVICE_TASK_EXPRESSION_ATTR_NAME = "delegateExpression";
+
+    private static final String SERVICE_TASK_EXPRESSION_ATTR_VALUE = "${serviceTaskDelegate}";
 
     @Value("${com.ming-cloud.bpm.diagram.font-name.activity:宋体}")
     private String activityFontName;
@@ -84,9 +94,6 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
     @Resource
     private BpmModelSupplier modelSupplier;
-
-    @Resource
-    private BpmInstSupplier instSupplier;
 
     @Override
     public void generateModelInfo(FileAdapter adapter, BpmModelInfo modelInfo) {
@@ -165,10 +172,20 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
     }
 
     @Override
+    @SneakyThrows
     public void resolveNodeInfo(BpmModelInfo data, BpmNodeRelateBO relateInfo) {
-        String processDefinitionId = data.getBpmKey();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
+        // 获取bpmn2.0规范的xml
+        InputStream bpmnStream = new ByteArrayInputStream(data.getDesignContent().getBytes());
+        XMLInputFactory xif = XMLInputFactory.newInstance();
+        InputStreamReader in = new InputStreamReader(bpmnStream, StringConstant.SYSTEM_DEFAULT_CHARSET);
+        XMLStreamReader xtr = xif.createXMLStreamReader(in);
+
+        // 然后转为bpmnModel
+        BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(xtr);
+        bpmnModel.addNamespace(ACTIVITY_NAMESPACE_PREFIX, ACTIVITY_NAMESPACE);
+        bpmnModel.getMainProcess().setExecutable(true);
         Collection<FlowElement> elements = bpmnModel.getMainProcess().getFlowElements();
+
         Long modelId = data.getId();
         String modelKey = data.getModelKey();
         Integer modelVersion = data.getModelVersion();
@@ -192,8 +209,22 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
                 if (element instanceof StartEvent) {
                     relateInfo.setStartNode(nodeInfo);
                 }
+
+                if (element instanceof Task) {
+                    Task task = (Task) element;
+                    System.out.println(task);
+                    if (element instanceof ServiceTask) {
+                        ServiceTask serviceTask = (ServiceTask) element;
+                        serviceTask.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION);
+                        serviceTask.setImplementation(SERVICE_TASK_EXPRESSION_ATTR_VALUE);
+                    }
+                }
             }
         }
+
+        BpmnXMLConverter xmlConverter = new BpmnXMLConverter();
+        data.setDesignContent(StringUtil.forBytes(
+                xmlConverter.convertToXML(bpmnModel, StringConstant.SYSTEM_DEFAULT_CHARSET)));
     }
 
     @Override
@@ -494,9 +525,10 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
      */
     public BpmNodeInfo generateNodeInfo(FlowElement flowElement) {
         BpmNodeInfo nodeInfo = modelSupplier.newBpmNodeInfo();
-        nodeInfo.setNodeName(flowElement.getName());
         nodeInfo.setNodeType(StringUtil.firstCharUppercase(flowElement.getClass().getSimpleName()));
         nodeInfo.setNodeCode(flowElement.getId());
+        String name = flowElement.getName();
+        nodeInfo.setNodeName(StringUtil.isEmpty(name) ? flowElement.getId() : name);
         return nodeInfo;
     }
 
