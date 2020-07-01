@@ -111,8 +111,14 @@ public final class RequestUtil {
         return null;
     }
 
+    /**
+     * 判断是狗为Ajax请求
+     *
+     * @param request 请求
+     * @return Ajax true
+     */
     public static boolean isAjax(HttpServletRequest request) {
-        if (request != null) {
+        if (request == null) {
             return false;
         }
 
@@ -140,6 +146,13 @@ public final class RequestUtil {
         return "empty".equals(request.getHeader(HttpHeadersConstant.SEC_FETCH_DEST));
     }
 
+    /**
+     * 获取Cookie值
+     *
+     * @param request    请求
+     * @param cookieName Cookie名
+     * @return Cookie值
+     */
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
         if (request == null && cookieName == null) {
             return null;
@@ -155,6 +168,14 @@ public final class RequestUtil {
         return null;
     }
 
+    /**
+     * 设置Cookies
+     *
+     * @param response 响应
+     * @param name     Cookie 名
+     * @param value    Cookie值
+     * @param time     时间
+     */
     public static void setCookie(HttpServletResponse response, String name, String value, int time) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
