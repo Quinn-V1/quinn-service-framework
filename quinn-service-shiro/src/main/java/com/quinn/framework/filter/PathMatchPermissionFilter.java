@@ -30,7 +30,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
     private String loginUrl;
 
     {
-        loginUrl = System.getProperty("server.servlet.context-path", "/");
+        loginUrl = System.getProperty("com.quinn-service.auth.login-url", "/#/login");
     }
 
     @Override
