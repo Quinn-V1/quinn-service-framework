@@ -298,6 +298,21 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
     }
 
     @Override
+    public String downloadModelXml(String bpmKey) {
+        if (StringUtil.isEmptyInFrame(bpmKey)) {
+            return StringConstant.STRING_EMPTY;
+        }
+
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(bpmKey);
+        if (bpmnModel == null) {
+            return StringConstant.STRING_EMPTY;
+        }
+
+        BpmnXMLConverter converter = new BpmnXMLConverter();
+        return StringUtil.forBytes(converter.convertToXML(bpmnModel, StringConstant.SYSTEM_DEFAULT_CHARSET));
+    }
+
+    @Override
     public BaseResult actBack(BpmTaskInfo taskInfo, String backNodeCode) {
 
         // 取得所有历史任务按时间降序排序

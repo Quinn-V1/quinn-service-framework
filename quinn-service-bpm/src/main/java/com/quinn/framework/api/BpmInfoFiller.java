@@ -112,4 +112,13 @@ public interface BpmInfoFiller {
      * @return 校验结果
      */
     BaseResult validate(String designContent);
+
+    /**
+     * 获取文件
+     *
+     * @param bpmKey BPM 主键
+     * @return 模板Xml内容
+     */
+    String downloadModelXml(String bpmKey);
+
 }
