@@ -40,7 +40,7 @@ import java.util.Collection;
 @Configuration
 public class QuinnAutoConfiguration {
 
-    @Value("${server.session.timeout:1800}")
+    @Value("${server.servlet.session.timeout:1800}")
     private int sessionTimeOut;
 
     @Value("${com.quinn-service.session.cookie-name:SESSIONID}")

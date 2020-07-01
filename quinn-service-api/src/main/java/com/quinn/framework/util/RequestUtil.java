@@ -123,7 +123,7 @@ public final class RequestUtil {
 
         String allowHeaders = request.getHeader(HttpHeadersConstant.ACCESS_CONTROL_ALLOW_HEADERS);
         if (allowHeaders != null &&
-                allowHeaders.toUpperCase().contains(HttpHeadersConstant.X_REQUESTED_WITH.toUpperCase())
+                allowHeaders.toUpperCase().contains(HttpHeadersConstant.X_REQUESTED_WIDTH.toUpperCase())
         ) {
             return true;
         }
