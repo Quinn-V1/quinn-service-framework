@@ -14,11 +14,11 @@ public enum BpmTodoTypeEnum {
     // 系统自动
     AUTO(BpmDealTypeEnum.AUTO.name()),
 
-    // 等待反馈
-    AUDIT_WFB(BpmDealTypeEnum.AGREE.name()),
-
     // 待审批
     AUDIT(BpmDealTypeEnum.AGREE.name()),
+
+    // 等待反馈
+    AUDIT_WFB(BpmDealTypeEnum.AGREE.name()),
 
     // 待阅
     READ(BpmDealTypeEnum.READ.name()),
@@ -47,4 +47,19 @@ public enum BpmTodoTypeEnum {
         return todoType.startsWith(AUDIT.name());
     }
 
+    /**
+     * 默认处理方式
+     *
+     * @param todoType 待办类型
+     * @param manual   是否手动干预
+     */
+    public static String defaultDealTypeOf(String todoType, boolean manual) {
+        BpmTodoTypeEnum bpmTodoTypeEnum = BpmTodoTypeEnum.valueOf(todoType);
+        if (bpmTodoTypeEnum.ordinal() >= AUDIT.ordinal()) {
+            return bpmTodoTypeEnum.defaultDealType;
+        } else if (manual) {
+            return null;
+        }
+        return bpmTodoTypeEnum.defaultDealType;
+    }
 }

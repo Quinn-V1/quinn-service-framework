@@ -134,7 +134,7 @@ public final class RequestUtil {
             return true;
         }
 
-        return false;
+        return isRestful(request);
     }
 
     /**

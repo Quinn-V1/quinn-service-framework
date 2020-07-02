@@ -42,6 +42,7 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
 
         Subject subject = SecurityUtils.getSubject();
         boolean authenticated = subject.isAuthenticated();
+        String path = request.getServletPath();
 
         // 是否登录
         if (!authenticated) {
@@ -56,7 +57,6 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
         }
 
         // 是否有权限访问
-        String path = request.getServletPath();
         try {
             subject.checkPermission(path);
         } catch (AuthorizationException e) {
