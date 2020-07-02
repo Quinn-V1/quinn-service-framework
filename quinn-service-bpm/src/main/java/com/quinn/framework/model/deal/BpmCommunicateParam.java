@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
@@ -33,6 +34,12 @@ public class BpmCommunicateParam extends AbstractBpmDealParam {
     private String[] toUserKeys;
 
     @Override
+    public void initWithParam(ComplexDealParam param) {
+        super.initWithParam(param);
+        setToUserKeys(param.getToUserKeys());
+    }
+
+    @Override
     protected BaseResult subValidate() {
         if (CollectionUtil.isEmpty(toUserKeys)) {
             return BaseResult.fail()
@@ -49,6 +56,25 @@ public class BpmCommunicateParam extends AbstractBpmDealParam {
         }
 
         return BaseResult.SUCCESS;
+    }
+
+    /**
+     * BPM 任务沟通、抄送参数提供器
+     *
+     * @author Qunhua.Liao
+     * @since 2020-07-02
+     */
+    public static class BpmCommunicateParamSupplier implements BpmDealParamSupplier<BpmCommunicateParam> {
+
+        @Override
+        public BpmCommunicateParam supply() {
+            return new BpmCommunicateParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.COMMUNICATE.name();
+        }
     }
 
 }

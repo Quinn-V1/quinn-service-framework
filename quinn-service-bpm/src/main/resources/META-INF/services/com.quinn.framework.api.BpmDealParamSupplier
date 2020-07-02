@@ -1,0 +1,9 @@
+com.quinn.framework.model.deal.AutoDealParam$AutoDealParamSupplier
+com.quinn.framework.model.deal.BpmCommunicateParam$BpmCommunicateParamSupplier
+com.quinn.framework.model.deal.BpmFeedbackParam$BpmFeedbackParamSupplier
+com.quinn.framework.model.deal.BpmReadParam$BpmReadParamSupplier
+com.quinn.framework.model.deal.BpmRejectParam$BpmRejectParamSupplier
+com.quinn.framework.model.deal.BpmRevokeParam$BpmRevokeParamSupplier
+com.quinn.framework.model.deal.BpmTerminateParam$BpmTerminateParamSupplier
+com.quinn.framework.model.deal.BpmAgreeParam$BpmAgreeParamSupplier
+com.quinn.framework.model.deal.BpmAssignParam$BpmAssignParamSupplier

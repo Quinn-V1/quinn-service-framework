@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
@@ -11,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * BPM 任务同意参数
+ * BPM 任务终止参数
  *
  * @author Qunhua.Liao
  * @since 2020-05-01
@@ -46,5 +47,24 @@ public class BpmTerminateParam extends AbstractBpmDealParam {
     @Override
     protected BaseResult subValidate() {
         return BaseResult.SUCCESS;
+    }
+
+    /**
+     * BPM 任务终止参数
+     *
+     * @author Qunhua.Liao
+     * @since 2020-05-01
+     */
+    public static class BpmTerminateParamSupplier implements BpmDealParamSupplier<BpmTerminateParam> {
+
+        @Override
+        public BpmTerminateParam supply() {
+            return new BpmTerminateParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.TERMINATE.name();
+        }
     }
 }

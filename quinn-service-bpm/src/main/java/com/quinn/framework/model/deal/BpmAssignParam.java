@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
@@ -41,6 +42,31 @@ public class BpmAssignParam extends AbstractBpmDealParam {
         }
 
         return BaseResult.SUCCESS;
+    }
+
+    @Override
+    public void initWithParam(ComplexDealParam param) {
+        super.initWithParam(param);
+        setToUserKey(param.getToUserKey());
+    }
+
+    /**
+     * BPM 任务转办参数
+     *
+     * @author Qunhua.Liao
+     * @since 2020-07-02
+     */
+    public static class BpmAssignParamSupplier implements BpmDealParamSupplier<BpmAssignParam> {
+
+        @Override
+        public BpmAssignParam supply() {
+            return new BpmAssignParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.ASSIGN.name();
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
@@ -46,5 +47,24 @@ public class BpmRevokeParam extends AbstractBpmDealParam {
     @Override
     protected BaseResult subValidate() {
         return BaseResult.SUCCESS;
+    }
+
+    /**
+     * BPM 任务同意参数提供器
+     *
+     * @author Qunhua.Liao
+     * @since 2020-05-01
+     */
+    public static class BpmRevokeParamSupplier implements BpmDealParamSupplier<BpmRevokeParam> {
+
+        @Override
+        public BpmRevokeParam supply() {
+            return new BpmRevokeParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.REVOKE.name();
+        }
     }
 }

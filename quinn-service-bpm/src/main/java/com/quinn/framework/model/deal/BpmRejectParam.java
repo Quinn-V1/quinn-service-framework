@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
@@ -32,6 +33,12 @@ public class BpmRejectParam extends AbstractBpmDealParam {
     private String toNodeKey;
 
     @Override
+    public void initWithParam(ComplexDealParam param) {
+        super.initWithParam(param);
+        setToNodeKey(param.getToNodeKey());
+    }
+
+    @Override
     protected BaseResult subValidate() {
         if (StringUtil.isEmpty(getSuggestion())) {
             return BaseResult.fail()
@@ -41,6 +48,25 @@ public class BpmRejectParam extends AbstractBpmDealParam {
         }
 
         return BaseResult.SUCCESS;
+    }
+
+    /**
+     * BPM 任务同意参数
+     *
+     * @author Qunhua.Liao
+     * @since 2020-05-01
+     */
+    public static class BpmRejectParamSupplier implements BpmDealParamSupplier<BpmRejectParam> {
+
+        @Override
+        public BpmRejectParam supply() {
+            return new BpmRejectParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.REJECT.name();
+        }
     }
 
 }

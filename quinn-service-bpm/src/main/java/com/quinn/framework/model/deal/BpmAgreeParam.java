@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.base.model.BaseResult;
@@ -26,4 +27,22 @@ public class BpmAgreeParam extends AbstractBpmDealParam {
         return BaseResult.SUCCESS;
     }
 
+    /**
+     * BPM 任务同意参数提供者
+     *
+     * @author Qunhua.Liao
+     * @since 2020-07-02
+     */
+    public static class BpmAgreeParamSupplier implements BpmDealParamSupplier<BpmAgreeParam> {
+
+        @Override
+        public BpmAgreeParam supply() {
+            return new BpmAgreeParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.AGREE.name();
+        }
+    }
 }

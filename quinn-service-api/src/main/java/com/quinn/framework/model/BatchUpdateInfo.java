@@ -81,9 +81,7 @@ public class BatchUpdateInfo<T extends BaseDO> {
             for (T t : newList) {
                 String dataKey = t.dataKey();
                 if (oldKeys.containsKey(dataKey)) {
-                    if (NumberUtil.isEmptyInFrame(t.getId())) {
-                        t.setId(oldKeys.get(dataKey).getId());
-                    }
+                    t.setId(oldKeys.get(dataKey).getId());
                     t.prepareForUpdate(userKey, allFlag);
                     oldKeys.remove(dataKey);
                 } else {

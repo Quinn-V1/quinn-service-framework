@@ -41,18 +41,6 @@ public abstract class AbstractBpmDealParam implements Serializable {
     private Long taskId;
 
     /**
-     * 节点编码
-     */
-    @ApiModelProperty("节点编码")
-    private String nodeCode;
-
-    /**
-     * 处理用户
-     */
-    @ApiModelProperty("处理用户")
-    private String dealUser;
-
-    /**
      * 待办类型
      */
     @ApiModelProperty("待办类型")
@@ -63,6 +51,18 @@ public abstract class AbstractBpmDealParam implements Serializable {
      */
     @ApiModelProperty("处理类型")
     private String dealType;
+
+    /**
+     * 节点编码
+     */
+    @ApiModelProperty("节点编码")
+    private String nodeCode;
+
+    /**
+     * 处理用户
+     */
+    @ApiModelProperty("处理用户")
+    private String dealUser;
 
     /**
      * 处理意见
@@ -107,6 +107,23 @@ public abstract class AbstractBpmDealParam implements Serializable {
                     .result();
         }
         return subValidate();
+    }
+
+    /**
+     * 初始化具体参数
+     *
+     * @param param 具体参数
+     */
+    public void initWithParam(ComplexDealParam param) {
+        setDealUser(param.getDealUser());
+        setInstanceId(param.getInstanceId());
+        setInstanceParams(param.getInstanceParams());
+        setNodeCode(param.getNodeCode());
+        setTaskId(param.getTaskId());
+        setSuggestion(param.getSuggestion());
+        setRootOrg(param.getRootOrg());
+        setUrgentLevel(param.getUrgentLevel());
+        setFileGroup(param.getFileGroup());
     }
 
     /**

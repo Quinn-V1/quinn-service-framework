@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.api.BpmDealParamSupplier;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.base.model.BaseResult;
@@ -27,6 +28,25 @@ public class AutoDealParam extends AbstractBpmDealParam {
     @Override
     protected BaseResult subValidate() {
         return BaseResult.SUCCESS;
+    }
+
+    /**
+     * 自动处理参数提供者
+     *
+     * @author Qunhua.Liao
+     * @since 2020-07-02
+     */
+    public static class AutoDealParamSupplier implements BpmDealParamSupplier<AutoDealParam> {
+
+        @Override
+        public AutoDealParam supply() {
+            return new AutoDealParam();
+        }
+
+        @Override
+        public String getDealType() {
+            return BpmDealTypeEnum.AUTO.name();
+        }
     }
 
 }
