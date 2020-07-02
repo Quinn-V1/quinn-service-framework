@@ -65,6 +65,8 @@ public enum BpmDealTypeEnum {
             COPY, COMMUNICATE,
     };
 
+    public static final String AGREE_NAME = "AGREE";
+
     /**
      * 编码
      */

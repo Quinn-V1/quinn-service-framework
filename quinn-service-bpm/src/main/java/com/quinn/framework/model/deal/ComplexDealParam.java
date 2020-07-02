@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
