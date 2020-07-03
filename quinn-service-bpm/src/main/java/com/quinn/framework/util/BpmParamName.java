@@ -11,7 +11,7 @@ public interface BpmParamName {
     /**
      * BPM附加属性
      */
-    String PARAM_TYPE_BPM_EXTRA_PROP = "BpmExtraProp";
+    String PARAM_TYPE_BPM_EXTRA_PROP = "MODEL_EXTRA_PROPERTY";
 
     /**
      * BPM任务创建通知
