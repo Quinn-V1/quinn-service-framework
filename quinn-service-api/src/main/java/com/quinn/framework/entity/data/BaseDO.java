@@ -145,14 +145,14 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
                 dataVersion = dataVersion - 1;
             }
         }
-        this.dbOperateType = allFlag ?  DbOperateTypeEnum.UPDATE_ALL : DbOperateTypeEnum.UPDATE_NON_EMPTY;
+        this.dbOperateType = allFlag ? DbOperateTypeEnum.UPDATE_ALL : DbOperateTypeEnum.UPDATE_NON_EMPTY;
         return (T) this;
     }
 
     /**
      * 删除前准备
      *
-     * @param userKey 用户编码
+     * @param userKey  用户编码
      * @param hardFlag 用户编码
      * @return 本身
      */
@@ -174,7 +174,7 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     /**
      * 恢复前准备
      *
-     * @param userKey 用户编码
+     * @param userKey  用户编码
      * @param hardFlag 用户编码
      * @return 本身
      */
@@ -190,7 +190,7 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
         }
 
         this.dataVersion = -dataVersion + 1;
-        this.dbOperateType = hardFlag ?  DbOperateTypeEnum.RECOVERY_HARD : DbOperateTypeEnum.RECOVERY_SOFT;
+        this.dbOperateType = hardFlag ? DbOperateTypeEnum.RECOVERY_HARD : DbOperateTypeEnum.RECOVERY_SOFT;
         return (T) this;
     }
 
@@ -202,4 +202,5 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
     public String cacheKey() {
         return this.getClass().getSimpleName() + CACHE_KEY_DELIMITER + dataKey();
     }
+
 }
