@@ -77,6 +77,12 @@ public abstract class AbstractBpmDealParam implements Serializable {
     private String fileGroup;
 
     /**
+     * 附件编码数组
+     */
+    @ApiModelProperty("附件编码数组")
+    private String[] fileKeys;
+
+    /**
      * 处理参数
      */
     @ApiModelProperty("实例参数")

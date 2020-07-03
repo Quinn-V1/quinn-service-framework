@@ -93,4 +93,9 @@ public interface BpmParamName {
      */
     String ACT_KEY_EXEC = "bpmExecKey";
 
+    /**
+     * 流程实例ID
+     */
+    String FILE_RELATE_TYPE = "BpmAudit";
+
 }
