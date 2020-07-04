@@ -2,6 +2,7 @@ package com.quinn.framework.component.strategy;
 
 import com.quinn.framework.api.strategy.*;
 import com.quinn.framework.model.strategy.StaticMethodParam;
+import com.quinn.util.base.api.Strategy;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import org.springframework.stereotype.Component;

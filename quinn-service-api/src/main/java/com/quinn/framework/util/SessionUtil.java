@@ -1,6 +1,6 @@
 package com.quinn.framework.util;
 
-import com.quinn.framework.api.strategy.Strategy;
+import com.quinn.util.base.api.Strategy;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;

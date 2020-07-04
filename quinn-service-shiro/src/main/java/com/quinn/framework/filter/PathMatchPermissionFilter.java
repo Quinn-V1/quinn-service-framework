@@ -5,6 +5,8 @@ import com.quinn.framework.exception.UnauthorizedException;
 import com.quinn.framework.util.MultiErrorHandler;
 import com.quinn.framework.util.RequestUtil;
 import com.quinn.framework.util.enums.AuthMessageEnum;
+import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.NumberConstant;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -27,10 +29,20 @@ import java.io.IOException;
  */
 public class PathMatchPermissionFilter extends OncePerRequestFilter implements DynamicFilter {
 
+    /**
+     * 登录URL
+     */
     private String loginUrl;
 
+    /**
+     * 重定向阻断Key
+     */
+    private String redirectBreakKey;
+
     {
-        loginUrl = System.getProperty("com.quinn-service.auth.login-url", "/#/login");
+        loginUrl = System.getProperty(ConfigConstant.PROP_KEY_OF_AUTH_LOGIN_URL, "/#/login");
+        redirectBreakKey = System.getProperty(ConfigConstant.PROP_KEY_OF_AUTH_REDIRECT_BREAK_KEY,
+                ConfigConstant.DEFAULT_AUTH_REDIRECT_BREAK_KEY);
     }
 
     @Override
@@ -43,15 +55,24 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
         Subject subject = SecurityUtils.getSubject();
         boolean authenticated = subject.isAuthenticated();
         String path = request.getServletPath();
+        String cookieValue = RequestUtil.getCookieValue(request, ConfigConstant.REDIRECT_BREAK_KEY_HEADER_NAME);
 
         // 是否登录
         if (!authenticated) {
-            if (RequestUtil.isAjax(request)) {
-                MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
-                        .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.key(), 0, 0)
-                        .exception(), request, response);
+            if (cookieValue == null || !cookieValue.contains(redirectBreakKey)) {
+                if (RequestUtil.isAjax(request)) {
+                    MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.UNAUTHORIZED.value())
+                            .buildParam(AuthMessageEnum.UNAUTHORIZED_ACCESS.key(), 0, 0)
+                            .exception(), request, response);
+                } else {
+                    RequestUtil.setCookie(response, ConfigConstant.REDIRECT_BREAK_KEY_HEADER_NAME, redirectBreakKey,
+                            NumberConstant.INT_HUNDRED);
+                    response.sendRedirect(loginUrl);
+                }
             } else {
-                response.sendRedirect(loginUrl);
+                RequestUtil.setCookie(response, ConfigConstant.REDIRECT_BREAK_KEY_HEADER_NAME, redirectBreakKey,
+                        NumberConstant.INT_ZERO);
+                filterChain.doFilter(request, response);
             }
             return;
         }

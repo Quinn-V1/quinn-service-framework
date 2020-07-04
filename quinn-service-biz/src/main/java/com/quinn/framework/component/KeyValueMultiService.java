@@ -1,7 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.KeyValueService;
-import com.quinn.framework.api.strategy.Strategy;
+import com.quinn.util.base.api.Strategy;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.model.PageInfo;
 import com.quinn.framework.service.BaseEntityService;

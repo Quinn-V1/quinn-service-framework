@@ -1,6 +1,6 @@
 package com.quinn.framework.service.impl;
 
-import com.quinn.framework.api.strategy.Strategy;
+import com.quinn.util.base.api.Strategy;
 import com.quinn.framework.api.strategy.StrategyBean;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.exception.DataOperationTransactionException;
