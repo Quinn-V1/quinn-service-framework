@@ -167,6 +167,6 @@ public class DefaultSsoService implements SsoService {
     @Override
     public BaseResult<List> selectMyPermissions(String group, FunctionTypeEnum type, Long parentId) {
         return MultiAuthInfoFetcher.fetchPermissions(
-                AuthInfoFactory.generate(SessionUtil.getAuthInfo()), group, type, parentId);
+                AuthInfoFactory.generate(SessionUtil.getAuthInfoObj()), group, type, parentId);
     }
 }

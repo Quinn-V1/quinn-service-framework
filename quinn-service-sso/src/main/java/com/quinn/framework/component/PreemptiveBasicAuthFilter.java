@@ -130,7 +130,7 @@ public class PreemptiveBasicAuthFilter implements DynamicFilter {
         SessionUtil.setValue(SessionUtil.SESSION_KEY_ORG_KEY, authInfo.getCurrentTenantCode());
 
         DefaultPermission permission = MultiAuthInfoFetcher.fetchPermissions(authInfo);
-        SessionUtil.setAuthInfo((JSONObject) JSON.toJSON(authInfo));
+        SessionUtil.setAuthInfoObj(authInfo);
         SessionUtil.setPermissions(permission.getPermissionsMap());
         SessionUtil.setRoles(permission.getRolesMap());
 

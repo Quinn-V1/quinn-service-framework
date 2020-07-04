@@ -1,5 +1,7 @@
 package com.quinn.framework.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.quinn.util.base.api.Strategy;
 import com.quinn.util.base.constant.ConfigConstant;
 import com.quinn.util.constant.NumberConstant;
@@ -35,22 +37,27 @@ public class SessionUtil {
     }
 
     /**
-     * 会话信息键：用户ID
+     * 会话信息键：角色
      */
     public static final String SESSION_KEY_ROLE = "SESSION_KEY_ROLE";
 
     /**
-     * 会话信息键：用户ID
+     * 会话信息键：权限
      */
     public static final String SESSION_KEY_PERMISSION = "SESSION_KEY_PERMISSION";
 
     /**
-     * 会话信息键：用户ID
+     * 会话信息键：用户信息-Map
      */
     public static final String SESSION_KEY_AUTH_INFO = "SESSION_KEY_AUTH_INFO";
 
     /**
-     * 会话信息键：用户ID
+     * 会话信息键：用户信息-对象
+     */
+    public static final String SESSION_KEY_AUTH_INFO_OBJ = "SESSION_KEY_AUTH_INFO_OBJ";
+
+    /**
+     * 会话信息键：用户会话
      */
     public static final String SESSION_KEY_SESSION_INFO = "SESSION_KEY_SESSION_INFO";
 
@@ -391,6 +398,25 @@ public class SessionUtil {
      */
     public static void setAuthInfo(Map<String, Object> authInfo) {
         setValue(SESSION_KEY_AUTH_INFO, authInfo);
+    }
+
+    /**
+     * 设置授权纤细对象
+     *
+     * @param authInfo 授权信息对象
+     */
+    public static void setAuthInfoObj(Object authInfo) {
+        setValue(SESSION_KEY_AUTH_INFO_OBJ, authInfo);
+        setAuthInfo((JSONObject) JSON.toJSON(authInfo));
+    }
+
+    /**
+     * 设置授权纤细对象
+     *
+     * @return authInfo 授权信息对象
+     */
+    public static <T> T getAuthInfoObj() {
+        return getValue(SESSION_KEY_AUTH_INFO_OBJ, null);
     }
 
     /**

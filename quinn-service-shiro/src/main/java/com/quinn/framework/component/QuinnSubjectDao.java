@@ -50,7 +50,7 @@ public class QuinnSubjectDao extends DefaultSubjectDAO {
             SessionUtil.setValue(SessionUtil.SESSION_KEY_USER_KEY, BaseConverter.staticToString(authInfo.getPrincipal()));
             SessionUtil.setValue(SessionUtil.SESSION_KEY_ORG_KEY, authInfo.getCurrentTenantCode());
 
-            SessionUtil.setAuthInfo((JSONObject) JSON.toJSON(principal));
+            SessionUtil.setAuthInfoObj(principal);
             SessionUtil.setPermissions(permission.getPermissionsMap());
             SessionUtil.setRoles(permission.getRolesMap());
         }
