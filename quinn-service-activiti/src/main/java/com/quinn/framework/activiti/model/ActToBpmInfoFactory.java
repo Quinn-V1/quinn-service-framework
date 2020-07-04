@@ -2,6 +2,8 @@ package com.quinn.framework.activiti.model;
 
 import com.quinn.framework.activiti.api.EventToBpmTaskDecorator;
 import com.quinn.framework.api.BpmInstSupplier;
+import com.quinn.framework.api.BpmModelSupplier;
+import com.quinn.framework.api.BpmNodeRelateInfo;
 import com.quinn.framework.api.BpmTaskInfo;
 import com.quinn.util.base.model.ClassComparator;
 
@@ -18,6 +20,8 @@ public class ActToBpmInfoFactory {
     private static Map<Class, EventToBpmTaskDecorator> decoratorMap = new LinkedHashMap<>();
 
     private static BpmInstSupplier bpmInstSupplier;
+
+    private static BpmModelSupplier bpmModelSupplier;
 
     static {
         ServiceLoader<EventToBpmTaskDecorator> decorators = ServiceLoader.load(EventToBpmTaskDecorator.class);
@@ -69,4 +73,23 @@ public class ActToBpmInfoFactory {
     public static void setBpmInstSupplier(BpmInstSupplier bpmInstSupplier) {
         ActToBpmInfoFactory.bpmInstSupplier = bpmInstSupplier;
     }
+
+    /**
+     * 设置实例对象提供者
+     *
+     * @param bpmModelSupplier 实例对象提供者
+     */
+    public static void setBpmModelSupplier(BpmModelSupplier bpmModelSupplier) {
+        ActToBpmInfoFactory.bpmModelSupplier = bpmModelSupplier;
+    }
+
+    /**
+     * 生成节点关系对象
+     *
+     * @return 关系对象
+     */
+    public static BpmNodeRelateInfo createBpmNodeRelateInfo() {
+        return bpmModelSupplier.newBpmNodeRelateInfo();
+    }
+
 }

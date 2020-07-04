@@ -7,15 +7,16 @@ import com.quinn.framework.activiti.component.ServiceTaskDelegate;
 import com.quinn.framework.activiti.listener.GlobalBpmListener;
 import com.quinn.framework.api.*;
 import com.quinn.util.base.api.MethodInvokerOneParam;
+import com.quinn.util.base.api.MethodInvokerTwoParam;
 import com.quinn.util.base.factory.PrefixThreadFactory;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.OrderedConstant;
 import org.activiti.engine.*;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.engine.impl.bpmn.behavior.ExclusiveGatewayActivityBehavior;
 import org.activiti.engine.impl.bpmn.parser.factory.ActivityBehaviorFactory;
 import org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration;
-import org.activiti.engine.impl.delegate.ActivityBehavior;
 import org.activiti.engine.impl.history.HistoryLevel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -29,6 +30,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -50,14 +52,28 @@ public class BpmActivitiConfiguration {
     @Resource
     private DataSource dataSource;
 
-    @Bean
-    public ActivityBehavior exclusiveGatewayActivityBehaviorExt() {
-        return new ExclusiveGatewayActivityBehaviorExt();
+    @Bean("exclusiveGatewayDelegateProxy")
+    @ConditionalOnMissingBean(name = "exclusiveGatewayDelegateProxy")
+    public MethodInvokerTwoParam<BpmNodeRelateInfo, String, Boolean> exclusiveGatewayDelegateProxy() {
+        return (relateInfo, cond) -> false;
     }
 
     @Bean
-    public ActivityBehaviorFactory activityBehaviorFactoryExt() {
-        return new ActivityBehaviorFactoryExt();
+    public ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt(
+            MethodInvokerTwoParam<BpmNodeRelateInfo, String, Boolean> exclusiveGatewayDelegateProxy
+    ) {
+        ExclusiveGatewayActivityBehaviorExt activityBehavior = new ExclusiveGatewayActivityBehaviorExt();
+        activityBehavior.setExclusiveGatewayDelegateProxy(exclusiveGatewayDelegateProxy);
+        return activityBehavior;
+    }
+
+    @Bean
+    public ActivityBehaviorFactory activityBehaviorFactoryExt(
+            ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt
+    ) {
+        ActivityBehaviorFactoryExt activityBehaviorFactoryExt = new ActivityBehaviorFactoryExt();
+        activityBehaviorFactoryExt.setExclusiveGatewayActivityBehavior(exclusiveGatewayActivityBehaviorExt);
+        return activityBehaviorFactoryExt;
     }
 
     @Bean

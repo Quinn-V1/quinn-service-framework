@@ -15,15 +15,15 @@ public class ActivityBehaviorFactoryExt extends DefaultActivityBehaviorFactory {
     /**
      * 分支网关行为扩展类
      */
-    private ExclusiveGatewayActivityBehaviorExt exclusiveGatewayActivityBehaviorExt;
+    private ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt;
 
     /**
      * 通过Spring容器注入新的分支条件行为执行类
      *
      * @param exclusiveGatewayActivityBehaviorExt 分支网关行为扩展类
      */
-    public void setExclusiveGatewayActivityBehaviorExt(
-            ExclusiveGatewayActivityBehaviorExt exclusiveGatewayActivityBehaviorExt) {
+    public void setExclusiveGatewayActivityBehavior(
+            ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt) {
         this.exclusiveGatewayActivityBehaviorExt = exclusiveGatewayActivityBehaviorExt;
     }
 
