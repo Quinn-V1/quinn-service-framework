@@ -2,6 +2,7 @@ package com.quinn.framework.activiti.listener;
 
 import com.quinn.framework.activiti.model.ActToBpmInfoFactory;
 import com.quinn.framework.api.BpmInstSupplier;
+import com.quinn.framework.api.BpmModelSupplier;
 import com.quinn.framework.api.CustomBpmEventListener;
 import com.quinn.util.base.CollectionUtil;
 import org.springframework.context.ApplicationListener;
@@ -23,6 +24,9 @@ public class BpmEventListenerLoadListener implements ApplicationListener<Context
     @Resource
     private BpmInstSupplier bpmInstSupplier;
 
+    @Resource
+    private BpmModelSupplier bpmModelSupplier;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Map<String, CustomBpmEventListener> beansOfType = event.getApplicationContext()
@@ -35,5 +39,6 @@ public class BpmEventListenerLoadListener implements ApplicationListener<Context
         }
 
         ActToBpmInfoFactory.setBpmInstSupplier(bpmInstSupplier);
+        ActToBpmInfoFactory.setBpmModelSupplier(bpmModelSupplier);
     }
 }
