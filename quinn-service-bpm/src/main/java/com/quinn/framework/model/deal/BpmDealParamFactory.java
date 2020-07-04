@@ -43,7 +43,7 @@ public class BpmDealParamFactory {
 
         AbstractBpmDealParam param = supplier.supply();
         param.initWithParam(complexDealParam);
-        return (T) supplier;
+        return (T) param;
     }
 
 }
