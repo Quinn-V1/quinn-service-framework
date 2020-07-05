@@ -1,5 +1,6 @@
 package com.quinn.framework.model.strategy;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
@@ -19,6 +20,10 @@ import java.util.Map;
 @Getter
 @Setter
 public class BaseStrategyParam<T> {
+
+    private static final String DIRECT_PARAM_PREFIX = "_DIRECT:";
+
+    private static final String OUT_PARAM_NAME = "_outParam";
 
     /**
      * 结果类型
@@ -46,6 +51,41 @@ public class BaseStrategyParam<T> {
             paramTemplate = FreeMarkTemplateLoader.invoke(paramTemplate, param);
             CollectionUtil.mergeMap(jsonObject, JSONObject.parseObject(paramTemplate));
         }
+
+        initDirectParam(jsonObject, param);
         setJsonParam(jsonObject);
     }
+
+    /**
+     * 初始化直接参数
+     *
+     * @param jsonObject 参数
+     * @param param      直接参数
+     */
+    private void initDirectParam(Object jsonObject, Map<String, Object> param) {
+        if (jsonObject instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) jsonObject;
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    String str = (String) value;
+                    if (str.startsWith(DIRECT_PARAM_PREFIX)) {
+                        String key = str.substring(DIRECT_PARAM_PREFIX.length());
+                        map.put(entry.getKey(), param.get(key));
+                    } else if (OUT_PARAM_NAME.equals(str)) {
+                        map.put(entry.getKey(), param);
+                    }
+                } else if (value instanceof Map || value instanceof JSONArray) {
+                    initDirectParam(value, param);
+                }
+            }
+        } else if (jsonObject instanceof JSONArray) {
+            JSONArray array = (JSONArray) jsonObject;
+            int size = array.size();
+            for (int i = 0; i < size; i++) {
+                initDirectParam(array.get(i), param);
+            }
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.quinn.framework.model.deal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.NumberUtil;
@@ -51,6 +52,12 @@ public abstract class AbstractBpmDealParam implements Serializable {
      */
     @ApiModelProperty("处理类型")
     private String dealType;
+
+    /**
+     * 流程模型ID
+     */
+    @JsonIgnore
+    private Long modelId;
 
     /**
      * 节点编码

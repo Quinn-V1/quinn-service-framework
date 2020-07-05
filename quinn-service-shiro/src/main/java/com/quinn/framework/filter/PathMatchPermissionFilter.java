@@ -81,14 +81,23 @@ public class PathMatchPermissionFilter extends OncePerRequestFilter implements D
         try {
             subject.checkPermission(path);
         } catch (AuthorizationException e) {
-            if (RequestUtil.isAjax(request)) {
-                MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.FORBIDDEN.value())
-                        .buildParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.key(), 1, 0)
-                        .addParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path)
-                        .exception(), request, response);
+            if (cookieValue == null || !cookieValue.contains(redirectBreakKey)) {
+                if (RequestUtil.isAjax(request)) {
+                    MultiErrorHandler.handleError(new UnauthorizedException().ofStatusCode(HttpStatus.FORBIDDEN.value())
+                            .buildParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.key(), 1, 0)
+                            .addParam(AuthMessageEnum.OVER_AUTHORIZED_ACCESS.paramNames()[0], path)
+                            .exception(), request, response);
+                } else {
+                    RequestUtil.setCookie(response, ConfigConstant.REDIRECT_BREAK_KEY_HEADER_NAME, redirectBreakKey,
+                            NumberConstant.INT_HUNDRED);
+                    response.sendRedirect(loginUrl);
+                }
             } else {
-                response.sendRedirect(loginUrl);
+                RequestUtil.setCookie(response, ConfigConstant.REDIRECT_BREAK_KEY_HEADER_NAME, redirectBreakKey,
+                        NumberConstant.INT_ZERO);
+                filterChain.doFilter(request, response);
             }
+
             return;
         } catch (Exception e) {
             if (RequestUtil.isAjax(request)) {

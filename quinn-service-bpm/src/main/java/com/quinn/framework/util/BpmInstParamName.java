@@ -98,4 +98,9 @@ public interface BpmInstParamName {
      */
     String ACT_KEY_EXEC = "bpmExecKey";
 
+    /**
+     * 流程实例ID
+     */
+    String BPM_CANDIDATE = "bpmCandidate";
+
 }

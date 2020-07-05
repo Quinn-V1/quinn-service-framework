@@ -36,4 +36,7 @@ public class Md5CredentialsSubMatcher implements CredentialsSubMatcher {
         return credentialsOfAuth.equals(Md5EncryptUtil.encryptHMAC(credentialsOfToken, principal));
     }
 
+    public static void main(String[] args) {
+        System.out.println(Md5EncryptUtil.encryptHMAC("123456", "zcx"));
+    }
 }
