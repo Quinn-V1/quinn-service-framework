@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class ExclusiveGatewayActivityBehaviorExt extends ExclusiveGatewayActivityBehavior {
 
-    private MethodInvokerTwoParam<BpmNodeRelateInfo, String, Boolean> exclusiveGatewayDelegateProxy;
+    private MethodInvokerTwoParam<BpmNodeRelateInfo, String, String> exclusiveGatewayDelegateProxy;
 
     @Override
     public void leave(DelegateExecution execution) {
@@ -36,18 +36,17 @@ public class ExclusiveGatewayActivityBehaviorExt extends ExclusiveGatewayActivit
         }
 
         ExclusiveGateway exclusiveGateway = (ExclusiveGateway) execution.getCurrentFlowElement();
-        List<SequenceFlow> outgoingFlows = exclusiveGateway.getOutgoingFlows();
+        BpmNodeRelateInfo bpmNodeRelateInfo = ActToBpmInfoFactory.createBpmNodeRelateInfo();
+        bpmNodeRelateInfo.setRelateType(NodeRelateTypeEnum.CONDITION.name());
+        bpmNodeRelateInfo.setLeadNodeCode(exclusiveGateway.getId());
+        bpmNodeRelateInfo.setModelKey(execution.getProcessDefinitionId());
+        String matchNodeCode = exclusiveGatewayDelegateProxy.invoke(bpmNodeRelateInfo, execution.getProcessInstanceId());
 
+        List<SequenceFlow> outgoingFlows = exclusiveGateway.getOutgoingFlows();
         SequenceFlow sequenceFlowMath = null;
         for (SequenceFlow sequenceFlow : outgoingFlows) {
-            BpmNodeRelateInfo bpmNodeRelateInfo = ActToBpmInfoFactory.createBpmNodeRelateInfo();
-            bpmNodeRelateInfo.setRelateType(NodeRelateTypeEnum.CONDITION.name());
-            bpmNodeRelateInfo.setLeadNodeCode(sequenceFlow.getSourceRef());
-            bpmNodeRelateInfo.setFollowNodeCode(sequenceFlow.getTargetRef());
-            bpmNodeRelateInfo.setModelKey(execution.getProcessDefinitionId());
-
             sequenceFlowMath = sequenceFlow;
-            if (exclusiveGatewayDelegateProxy.invoke(bpmNodeRelateInfo, execution.getProcessInstanceId())) {
+            if (sequenceFlow.getTargetRef().equals(matchNodeCode)) {
                 break;
             }
         }
@@ -66,7 +65,7 @@ public class ExclusiveGatewayActivityBehaviorExt extends ExclusiveGatewayActivit
      * @param exclusiveGatewayDelegateProxy 生效策略
      */
     public void setExclusiveGatewayDelegateProxy(MethodInvokerTwoParam<BpmNodeRelateInfo,
-            String, Boolean> exclusiveGatewayDelegateProxy) {
+            String, String> exclusiveGatewayDelegateProxy) {
         this.exclusiveGatewayDelegateProxy = exclusiveGatewayDelegateProxy;
     }
 }

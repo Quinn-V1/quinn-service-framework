@@ -11,6 +11,7 @@ import com.quinn.util.base.api.MethodInvokerTwoParam;
 import com.quinn.util.base.factory.PrefixThreadFactory;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.OrderedConstant;
+import com.quinn.util.constant.StringConstant;
 import org.activiti.engine.*;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
@@ -54,13 +55,13 @@ public class BpmActivitiConfiguration {
 
     @Bean("exclusiveGatewayDelegateProxy")
     @ConditionalOnMissingBean(name = "exclusiveGatewayDelegateProxy")
-    public MethodInvokerTwoParam<BpmNodeRelateInfo, String, Boolean> exclusiveGatewayDelegateProxy() {
-        return (relateInfo, cond) -> false;
+    public MethodInvokerTwoParam<BpmNodeRelateInfo, String, String> exclusiveGatewayDelegateProxy() {
+        return (relateInfo, cond) -> StringConstant.STRING_EMPTY;
     }
 
     @Bean
     public ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt(
-            MethodInvokerTwoParam<BpmNodeRelateInfo, String, Boolean> exclusiveGatewayDelegateProxy
+            MethodInvokerTwoParam<BpmNodeRelateInfo, String, String> exclusiveGatewayDelegateProxy
     ) {
         ExclusiveGatewayActivityBehaviorExt activityBehavior = new ExclusiveGatewayActivityBehaviorExt();
         activityBehavior.setExclusiveGatewayDelegateProxy(exclusiveGatewayDelegateProxy);
