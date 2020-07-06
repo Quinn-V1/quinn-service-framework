@@ -37,6 +37,17 @@ public class Md5CredentialsSubMatcher implements CredentialsSubMatcher {
     }
 
     public static void main(String[] args) {
-        System.out.println(Md5EncryptUtil.encryptHMAC("123456", "zcx"));
+        String[] users = new String[]{
+                "zbh",
+                "cwzy",
+                "cwzj",
+                "cwzjl",
+                "cbgjzy"
+        };
+        for (String user : users) {
+            System.out.println("UPDATE CO_AU_USER_INFO SET VALIDATE_PARAM = '"
+                    + Md5EncryptUtil.encryptHMAC("123456", user) + "' WHERE USER_KEY = '" + user + "';");
+        }
     }
+
 }
