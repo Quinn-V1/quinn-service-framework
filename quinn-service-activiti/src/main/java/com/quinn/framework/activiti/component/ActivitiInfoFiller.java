@@ -183,8 +183,11 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
         // 然后转为bpmnModel
         BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(xtr);
         bpmnModel.addNamespace(ACTIVITY_NAMESPACE_PREFIX, ACTIVITY_NAMESPACE);
-        bpmnModel.getMainProcess().setExecutable(true);
-        Collection<FlowElement> elements = bpmnModel.getMainProcess().getFlowElements();
+        Process mainProcess = bpmnModel.getMainProcess();
+        mainProcess.setExecutable(true);
+        mainProcess.setId(data.getModelKey());
+
+        Collection<FlowElement> elements = mainProcess.getFlowElements();
 
         Long modelId = data.getId();
         String modelKey = data.getModelKey();
