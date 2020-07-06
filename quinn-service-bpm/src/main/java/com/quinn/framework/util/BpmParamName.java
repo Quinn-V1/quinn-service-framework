@@ -98,4 +98,8 @@ public interface BpmParamName {
      */
     String FILE_RELATE_TYPE = "BpmAudit";
 
+    /**
+     * 流程图URL
+     */
+    String PROCESS_PIC_URL = "/bpm7/model/model-info/download-png?bpmKey=";
 }

@@ -103,4 +103,9 @@ public interface BpmInstParamName {
      */
     String BPM_CANDIDATE = "bpmCandidate";
 
+    /**
+     * 实例流程图显示路径
+     */
+    String PROCESS_PIC_URL = "/bpm7/instance/instance-info/download-png-basic?bpmKey=";
+
 }
