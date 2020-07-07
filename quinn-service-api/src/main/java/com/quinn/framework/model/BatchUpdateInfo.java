@@ -2,11 +2,10 @@ package com.quinn.framework.model;
 
 import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.util.SessionUtil;
-import com.quinn.util.base.NumberUtil;
-import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.CollectionUtil;
-import com.quinn.util.constant.enums.MessageLevelEnum;
 import com.quinn.util.base.enums.NotifyEnum;
+import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.enums.MessageLevelEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -83,10 +82,11 @@ public class BatchUpdateInfo<T extends BaseDO> {
                 if (oldKeys.containsKey(dataKey)) {
                     T t1 = oldKeys.get(dataKey);
                     t.setId(t1.getId());
+                    t.setDataVersion(t1.getDataVersion());
                     if (t.getDataVersion() < 0) {
-                        t.prepareForUpdate(userKey, allFlag);
-                    } else {
                         t.prepareForRecover(userKey, false);
+                    } else {
+                        t.prepareForUpdate(userKey, allFlag);
                     }
                     oldKeys.remove(dataKey);
                 } else {

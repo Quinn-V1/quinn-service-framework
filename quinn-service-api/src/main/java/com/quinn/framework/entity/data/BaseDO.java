@@ -162,6 +162,7 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
             this.dataVersion = -1;
             return (T) this;
         }
+
         if (dataVersion.intValue() < 0) {
             return (T) this;
         }
@@ -190,6 +191,9 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
         }
 
         this.dataVersion = -dataVersion + 1;
+        if (dataStatus == null || dataStatus < DataStatusEnum.NORMAL.code) {
+            dataStatus = DataStatusEnum.NORMAL.code;
+        }
         this.dbOperateType = hardFlag ? DbOperateTypeEnum.RECOVERY_HARD : DbOperateTypeEnum.RECOVERY_SOFT;
         return (T) this;
     }

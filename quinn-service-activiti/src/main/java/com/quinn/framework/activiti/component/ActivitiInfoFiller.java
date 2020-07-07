@@ -521,8 +521,6 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
         String followNodeCode = sequence.getTargetRef();
         FlowElement sourceElement = sequence.getSourceFlowElement();
 
-        relateInfo.setPriority(NumberConstant.INT_ONE);
-        relateInfo.setEffectStrategy(StringConstant.NONE_OF_DATA);
         relateInfo.setLeadNodeCode(leadNodeCode);
         relateInfo.setFollowNodeCode(followNodeCode);
 
