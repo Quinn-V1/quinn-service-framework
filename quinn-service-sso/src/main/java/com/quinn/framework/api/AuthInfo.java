@@ -1,8 +1,11 @@
 package com.quinn.framework.api;
 
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 权限信息：校验通过后的权限信息（内）
@@ -89,6 +92,24 @@ public interface AuthInfo<T> extends Serializable {
      */
     default Object attr(String name) {
         return null;
+    }
+
+    /**
+     * 附加属性
+     *
+     * @param name  属性名称
+     * @param value 属性值
+     * @return 属性
+     */
+    void attr(String name, Object value);
+
+    /**
+     * 获取附加属性
+     *
+     * @return 附加属性
+     */
+    default Map<String, Object> getExtraProps() {
+        return new HashMap<>(NumberConstant.INT_ZERO);
     }
 
     /**

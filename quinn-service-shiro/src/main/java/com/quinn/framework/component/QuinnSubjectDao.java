@@ -1,7 +1,5 @@
 package com.quinn.framework.component;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.model.AuthInfoFactory;
 import com.quinn.framework.model.DefaultPermission;

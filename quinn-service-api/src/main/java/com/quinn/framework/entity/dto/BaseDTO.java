@@ -737,7 +737,9 @@ public abstract class BaseDTO<T> {
                     query.append(" WHERE ");
                     for (int i = 0; i < condFields.size(); i++) {
                         FieldValue fieldValue = condFields.get(i);
-                        query.append(columnOfProp(fieldValue.prop)).append(" = ? AND ");
+                        query.append(fieldValue.fullValue())
+                                .append(" AND ")
+                        /*.append(columnOfProp(fieldValue.prop)).append(" = ? AND ")*/;
                         params[k + i] = fieldValue.value;
                     }
                     query.delete(query.length() - 5, query.length());
@@ -766,9 +768,11 @@ public abstract class BaseDTO<T> {
                     params = new Object[condFields.size()];
 
                     for (int i = 0; i < condFields.size(); i++) {
-                        FieldValue FieldValue = condFields.get(i);
-                        query.append(columnOfProp(FieldValue.prop)).append(" = ? AND ");
-                        params[i] = FieldValue.value;
+                        FieldValue fieldValue = condFields.get(i);
+                        query.append(fieldValue.fullValue())
+                                .append(" AND ")
+                        /*.append(columnOfProp(FieldValue.prop)).append(" = ? AND ")*/;
+                        params[i] = fieldValue.value;
                     }
                     query.delete(query.length() - 5, query.length());
                     break;
@@ -807,6 +811,17 @@ public abstract class BaseDTO<T> {
          */
         public FreeUpdate addParamField(String prop, Object value) {
             condFields.add(new FieldValue(prop, value));
+            return this;
+        }
+
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         */
+        public FreeUpdate addParamField(String prop, Object value, SqlCondWrapperEnum wrapper) {
+            condFields.add(new FieldValue(prop, value, wrapper));
             return this;
         }
     }

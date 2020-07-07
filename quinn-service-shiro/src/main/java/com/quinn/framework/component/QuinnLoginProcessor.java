@@ -39,11 +39,13 @@ public class QuinnLoginProcessor implements LoginProcessor {
         subject.login(new QuinnTokenAdapter(token));
         Object principal = subject.getPrincipal();
 
-        if (principal instanceof AuthInfo) {
-            return (AuthInfo) principal;
-        }
+        AuthInfo authInfo = AuthInfoFactory.generate(principal);
+        boolean superAdmin = subject.hasRole(SessionUtil.SUPER_ADMIN_ROLE_NAME);
+        boolean orgAdmin = subject.hasRole(SessionUtil.ORG_ADMIN_ROLE_NAME);
+        authInfo.attr("superAdmin", superAdmin);
+        authInfo.attr("orgAdmin", orgAdmin);
 
-        return new DefaultAuthInfoAdapter(principal);
+        return authInfo;
     }
 
     @Override

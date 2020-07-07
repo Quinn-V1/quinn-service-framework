@@ -42,4 +42,8 @@ public class DefaultAuthInfo implements AuthInfo<DefaultAuthInfo> {
     public DefaultAuthInfo realInfo() {
         return this;
     }
+
+    @Override
+    public void attr(String name, Object value) {
+    }
 }

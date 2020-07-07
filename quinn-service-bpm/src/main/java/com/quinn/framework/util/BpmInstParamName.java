@@ -108,4 +108,13 @@ public interface BpmInstParamName {
      */
     String PROCESS_PIC_URL = "/bpm7/instance/instance-info/download-png-basic?bpmKey=";
 
+    /**
+     * 来源节点
+     */
+    String SOURCE_NODE_CODE = "sourceNodeCode";
+
+    /**
+     * 来源审批用户
+     */
+    String SOURCE_DEAL_USER = "sourceUserKey";
 }

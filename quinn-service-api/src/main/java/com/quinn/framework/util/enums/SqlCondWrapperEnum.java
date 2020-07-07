@@ -10,10 +10,13 @@ import com.quinn.util.constant.StringConstant;
  */
 public enum SqlCondWrapperEnum {
 
-    // 最大值
+    // 等于
     EQUAL(StringConstant.CHAR_EQUAL_MARK),
 
-    // 最小值
+    // 不等于
+    NOT_EQUAL(StringConstant.NOT_EQUAL_MARK),
+
+    // 小于
     LESS_THAN(StringConstant.CHAR_LESS_THAN),
 
     // 求和

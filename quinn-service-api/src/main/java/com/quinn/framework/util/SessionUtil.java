@@ -24,9 +24,9 @@ public class SessionUtil {
 
     private static ThreadLocal<Map<String, Object>> content = new ThreadLocal<>();
 
-    private static final String SUPER_ADMIN_ROLE_NAME;
+    public static final String SUPER_ADMIN_ROLE_NAME;
 
-    private static final String ORG_ADMIN_ROLE_NAME;
+    public static final String ORG_ADMIN_ROLE_NAME;
 
     static {
         SUPER_ADMIN_ROLE_NAME = System.getProperty(ConfigConstant.PROP_KEY_OF_SUPER_ADMIN_ROLE_NAME,

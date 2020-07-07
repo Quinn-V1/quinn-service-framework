@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.util.base.constant.ConfigConstant;
 
+import java.util.Map;
+
 /**
  * Shiro 权限对象适配器
  *
@@ -16,50 +18,62 @@ public class DefaultAuthInfoAdapter implements AuthInfo<JSONObject> {
     /**
      * 权限信息
      */
-    private JSONObject realInfo;
+    private JSONObject extraProps;
 
     public DefaultAuthInfoAdapter(Object principal) {
-        this.realInfo = (JSONObject) JSON.toJSON(principal);
+        this.extraProps = (JSONObject) JSON.toJSON(principal);
     }
 
     @Override
     public JSONObject realInfo() {
-        return realInfo;
+        return extraProps;
     }
 
     @Override
     public void ofRealInfo(JSONObject jsonObject) {
-        this.realInfo = jsonObject;
+        this.extraProps = jsonObject;
     }
 
     @Override
     public Object getPrincipal() {
-        return realInfo.get(ConfigConstant.DEFAULT_PRINCIPAL_ID_FIELD_NAME);
+        return extraProps.get(ConfigConstant.DEFAULT_PRINCIPAL_ID_FIELD_NAME);
     }
 
     @Override
     public Object getPrincipals() {
-        return realInfo.get("principals");
+        return extraProps.get("principals");
     }
 
     @Override
     public Object getCredentials() {
-        return realInfo.get("credentials");
+        return extraProps.get("credentials");
     }
 
     @Override
     public String getCurrentTenantCode() {
-        return realInfo.getString("currentTenantCode");
+        return extraProps.getString("currentTenantCode");
     }
 
     @Override
     public void setCurrentTenantCode(String tenantCode) {
-        realInfo.put("currentTenantCode", tenantCode);
+        extraProps.put("currentTenantCode", tenantCode);
     }
 
     @Override
     public Object attr(String name) {
-        return realInfo.get(name);
+        return extraProps.get(name);
     }
 
+    @Override
+    public void attr(String name, Object value) {
+        if (extraProps == null) {
+            extraProps = new JSONObject();
+        }
+        extraProps.put(name, value);
+    }
+
+    @Override
+    public Map<String, Object> getExtraProps() {
+        return extraProps;
+    }
 }

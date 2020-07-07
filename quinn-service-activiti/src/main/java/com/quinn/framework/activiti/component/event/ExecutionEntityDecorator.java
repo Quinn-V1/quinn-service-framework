@@ -19,7 +19,9 @@ public class ExecutionEntityDecorator implements EventToBpmTaskDecorator<Executi
         bpmTaskInfo.setBpmInstKey(executionEntityImpl.getProcessInstanceId());
         bpmTaskInfo.setBpmKey(executionEntityImpl.getId());
         bpmTaskInfo.setParams(executionEntityImpl.getVariables());
-        bpmTaskInfo.setInstanceId(BaseConverter.staticConvert(executionEntityImpl.getParent().getBusinessKey(), Long.class));
+        if (executionEntityImpl.getParent() != null && executionEntityImpl.getParent().getBusinessKey() != null) {
+            bpmTaskInfo.setInstanceId(BaseConverter.staticConvert(executionEntityImpl.getParent().getBusinessKey(), Long.class));
+        }
         bpmTaskInfo.setTodoType(BpmTodoTypeEnum.AUTO.name());
     }
 
