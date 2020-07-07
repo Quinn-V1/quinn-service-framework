@@ -22,18 +22,17 @@ public enum BpmDealTypeEnum implements MessageEnumFlag {
 
     // 人工转办
     ASSIGN(2, "转办"),
-
-    // 人工撤回
-    REVOKE(4, "撤回"),
-
-    // 人工终止
-    TERMINATE(8, "终止"),
+    // 沟通
+    COMMUNICATE(4, "沟通"),
 
     // 抄送
-    COPY(16, "抄送"),
+    COPY(8, "抄送"),
 
-    // 沟通
-    COMMUNICATE(32, "沟通"),
+    // 人工撤回
+    REVOKE(16, "撤回"),
+
+    // 人工终止
+    TERMINATE(32, "终止"),
 
     // 启动
     START(-16, "启动"),
@@ -64,8 +63,8 @@ public enum BpmDealTypeEnum implements MessageEnumFlag {
     /**
      * 可选操作
      */
-    public final static BpmDealTypeEnum[] OPTION_DEAL_TYPES = new BpmDealTypeEnum[]{REJECT, ASSIGN, REVOKE, TERMINATE,
-            COPY, COMMUNICATE,
+    public final static BpmDealTypeEnum[] OPTION_DEAL_TYPES = new BpmDealTypeEnum[]{REJECT, ASSIGN, COPY, COMMUNICATE,
+            REVOKE, TERMINATE,
     };
 
     /**
