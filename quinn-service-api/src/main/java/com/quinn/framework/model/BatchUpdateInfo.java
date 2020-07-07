@@ -48,9 +48,9 @@ public class BatchUpdateInfo<T extends BaseDO> {
     /**
      * 标记增、删、改、查
      *
-     * @param allFlag   全量标识
-     * @param hardFlag  硬删除标识
-     * @return          是否成功标记
+     * @param allFlag  全量标识
+     * @param hardFlag 硬删除标识
+     * @return 是否成功标记
      */
     public BaseResult<List<T>> flag(boolean allFlag, boolean hardFlag) {
         if (CollectionUtil.isEmpty(oldValues) && CollectionUtil.isEmpty(newList)) {
@@ -81,8 +81,13 @@ public class BatchUpdateInfo<T extends BaseDO> {
             for (T t : newList) {
                 String dataKey = t.dataKey();
                 if (oldKeys.containsKey(dataKey)) {
-                    t.setId(oldKeys.get(dataKey).getId());
-                    t.prepareForUpdate(userKey, allFlag);
+                    T t1 = oldKeys.get(dataKey);
+                    t.setId(t1.getId());
+                    if (t.getDataVersion() < 0) {
+                        t.prepareForUpdate(userKey, allFlag);
+                    } else {
+                        t.prepareForRecover(userKey, false);
+                    }
                     oldKeys.remove(dataKey);
                 } else {
                     t.setId(null);
