@@ -24,6 +24,12 @@ import java.util.Map;
 public class PageHelperPageAdapter implements PageAdapter<Page> {
 
     @Override
+    public BaseResult handlePageParam(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return BaseResult.SUCCESS;
+    }
+
+    @Override
     public BaseResult handlePageParam(PageDTO condition) {
         return staticHandlePageParam(condition);
     }
