@@ -117,4 +117,20 @@ public interface BpmInstParamName {
      * 来源审批用户
      */
     String SOURCE_DEAL_USER = "sourceUserKey";
+
+    /**
+     * 待办类型
+     */
+    String TODO_TYPE = "todoType";
+
+    /**
+     * 处理用户
+     */
+    String DEAL_USER = "dealUser";
+
+    /**
+     * 紧急程度
+     */
+    String URGENT_LEVEL = "urgentLevel";
+
 }

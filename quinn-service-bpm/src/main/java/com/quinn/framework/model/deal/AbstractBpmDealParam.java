@@ -5,6 +5,7 @@ import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.ApiModelProperty;
@@ -128,15 +129,30 @@ public abstract class AbstractBpmDealParam implements Serializable {
      * @param param 具体参数
      */
     public void initWithParam(ComplexDealParam param) {
-        setDealUser(param.getDealUser());
-        setInstanceId(param.getInstanceId());
-        setInstanceParams(param.getInstanceParams());
-        setNodeCode(param.getNodeCode());
-        setTaskId(param.getTaskId());
-        setSuggestion(param.getSuggestion());
-        setRootOrg(param.getRootOrg());
-        setUrgentLevel(param.getUrgentLevel());
-        setFileGroup(param.getFileGroup());
+        this.setDealUser(param.getDealUser());
+        this.setInstanceId(param.getInstanceId());
+        this.setTaskId(param.getTaskId());
+        this.setSuggestion(param.getSuggestion());
+        this.setUrgentLevel(param.getUrgentLevel());
+
+        this.setFileGroup(param.getFileGroup());
+        this.setInstanceParams(param.getInstanceParams());
+        this.setNodeCode(param.getNodeCode());
+        this.setRootOrg(param.getRootOrg());
+    }
+
+    /**
+     * 使用Map初始化审批参数
+     */
+    public void initWithMap(Map<String, Object> cond) {
+        this.setDealUser(BaseConverter.staticToString(cond.get(BpmInstParamName.DEAL_USER)));
+        this.setInstanceId(BaseConverter.staticConvert(cond.get(BpmInstParamName.INSTANCE_ID), Long.class));
+        this.setTaskId(BaseConverter.staticConvert(cond.get(BpmInstParamName.TASK_ID), Long.class));
+        this.setSuggestion(BaseConverter.staticToString(cond.get(BpmInstParamName.SUGGESTION)));
+        this.setUrgentLevel(BaseConverter.staticToString(cond.get(BpmInstParamName.URGENT_LEVEL)));
+
+        this.setDealType(BaseConverter.staticToString(cond.get(BpmInstParamName.DEAL_TYPE)));
+        this.setTodoType(BaseConverter.staticToString(cond.get(BpmInstParamName.TODO_TYPE)));
     }
 
     /**

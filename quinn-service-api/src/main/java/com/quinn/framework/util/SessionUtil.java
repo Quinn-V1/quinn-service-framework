@@ -102,6 +102,11 @@ public class SessionUtil {
     public static final String SESSION_KEY_CURR_TENANT = "SESSION_KEY_CURR_TENANT";
 
     /**
+     * 会话信息键：管理者标识
+     */
+    public static final String SESSION_KEY_ADMIN_FLAG = "SESSION_KEY_ADMIN_FLAG";
+
+    /**
      * 会话信息默认值：用户ID
      */
     public static final Long DEFAULT_SYSTEM_USER_ID = NumberConstant.NONE_OF_DATA_ID;
@@ -383,6 +388,22 @@ public class SessionUtil {
     }
 
     /**
+     * 是否为管理员
+     *
+     * @return 是否为管理员
+     */
+    public static boolean isAdmin() {
+        Boolean value = getValue(SESSION_KEY_ADMIN_FLAG, false);
+        if (value) {
+            return true;
+        }
+
+        Map<String, Set<String>> rolesMap = getValue(SESSION_KEY_ROLE, Collections.emptyMap());
+        Set<String> roles = rolesMap.get(RoleTypeEnum.FUNCTION.name());
+        return roles != null && (roles.contains(SUPER_ADMIN_ROLE_NAME) || roles.contains(ORG_ADMIN_ROLE_NAME));
+    }
+
+    /**
      * 获取授权纤细对象
      *
      * @return 授权信息对象
@@ -436,4 +457,19 @@ public class SessionUtil {
     public static void setRoles(Map<String, Set<String>> rolesMap) {
         setValue(SESSION_KEY_ROLE, rolesMap);
     }
+
+    /**
+     * 设置管理员标识：表示管理员接管当前线程
+     */
+    public static void setAdminFlag() {
+        setValue(SESSION_KEY_ADMIN_FLAG, true);
+    }
+
+    /**
+     * 设置管理员标识：表示管理员接管当前线程
+     */
+    public static void clearAdminFlag() {
+        setValue(SESSION_KEY_ADMIN_FLAG, false);
+    }
+
 }
