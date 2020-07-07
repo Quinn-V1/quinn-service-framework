@@ -501,13 +501,24 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     }
 
     /**
+     * 处理分页参数
+     *
+     * @param pageNum  分页条件
+     * @param pageSize 分页条件
+     * @return 处理是否成功
+     */
+    BaseResult handlePageParam(int pageNum, int pageSize) {
+        return this.pageAdapter.handlePageParam(pageNum, pageSize);
+    }
+
+    /**
      * 处理分页
      *
      * @param pageDTO 分页参数
      * @return 处理结果
      */
     protected BaseResult handlePageParam(PageDTO pageDTO) {
-        return pageAdapter.handlePageParam(pageDTO);
+        return this.pageAdapter.handlePageParam(pageDTO);
     }
 
     /**
@@ -517,7 +528,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
      * @return 处理结果
      */
     protected BaseResult handlePageParam(Map<String, Object> cond) {
-        return pageAdapter.handlePageParam(cond);
+        return this.pageAdapter.handlePageParam(cond);
     }
 
     /**
@@ -528,7 +539,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
      * @return 分页信息
      */
     protected <V> PageInfo<V> toPageInf(Object t) {
-        return pageAdapter.toPageInf(t);
+        return this.pageAdapter.toPageInf(t);
     }
 
 }
