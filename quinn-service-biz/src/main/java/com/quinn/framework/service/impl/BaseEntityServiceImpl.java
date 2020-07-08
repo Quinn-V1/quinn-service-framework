@@ -20,6 +20,7 @@ import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
@@ -140,7 +141,11 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         }
 
         if (vo.getDataStatus() != null && vo.getDataStatus() >= DataStatusEnum.SYS_INIT.code) {
-            return BaseResult.fail("系统初始化数据不可删除");
+            return BaseResult.fail().buildMessage(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.key(), 0, 3)
+                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[0], vo.getDataStatus())
+                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], getVOClass().getSimpleName())
+                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], DataOperateTypeEnum.DELETE.name())
+                    .result();
         }
 
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
@@ -190,7 +195,11 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         }
 
         if (vo.getDataStatus() != null && vo.getDataStatus() >= DataStatusEnum.SYS_INIT.code) {
-            return BaseResult.fail("系统初始化数据不可修改");
+            return BaseResult.fail().buildMessage(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.key(), 0, 3)
+                    .addParam(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[0], vo.getDataStatus())
+                    .addParam(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], getVOClass().getSimpleName())
+                    .addParam(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], DataOperateTypeEnum.UPDATE.name())
+                    .result();
         }
 
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
