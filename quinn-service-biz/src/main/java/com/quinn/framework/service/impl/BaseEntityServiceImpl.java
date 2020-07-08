@@ -144,7 +144,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[0],
                             DataStatusEnum.generateStatus(vo.getDataStatus()).key())
                     .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], getVOClass().getSimpleName())
-                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], DataOperateTypeEnum.DELETE.name())
+                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[2], DataOperateTypeEnum.DELETE.key())
                     .result();
         }
 
@@ -199,7 +199,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[0],
                             DataStatusEnum.generateStatus(vo.getDataStatus()).key())
                     .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], getVOClass().getSimpleName())
-                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[1], DataOperateTypeEnum.UPDATE.name())
+                    .addParamI8n(DATA_OPERATION_NOT_SUPPORT_OF_STATUS.paramNames[2], DataOperateTypeEnum.UPDATE.key())
                     .result();
         }
 

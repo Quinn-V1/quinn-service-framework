@@ -47,7 +47,7 @@ public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T>
     public BaseResult handleError(T e, HttpServletRequest request, HttpServletResponse response) {
         if (e instanceof BaseBusinessException) {
             if (NumberUtil.isEmptyInFrame(((BaseBusinessException) e).getStatusCode())) {
-                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                response.setStatus(HttpStatus.OK.value());
             } else {
                 response.setStatus(((BaseBusinessException) e).getStatusCode());
             }
