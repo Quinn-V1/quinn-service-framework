@@ -44,8 +44,8 @@ public class AutoDealParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.AUTO.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.AUTO.name()};
         }
     }
 

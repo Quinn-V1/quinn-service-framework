@@ -63,8 +63,8 @@ public class BpmRevokeParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.REVOKE.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.REVOKE.name()};
         }
     }
 }

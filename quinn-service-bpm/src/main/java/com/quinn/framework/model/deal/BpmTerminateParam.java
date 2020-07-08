@@ -63,8 +63,8 @@ public class BpmTerminateParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.TERMINATE.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.TERMINATE.name()};
         }
     }
 }

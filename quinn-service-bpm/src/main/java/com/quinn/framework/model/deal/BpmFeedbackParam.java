@@ -51,8 +51,8 @@ public class BpmFeedbackParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.FEEDBACK.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.FEEDBACK.name()};
         }
     }
 

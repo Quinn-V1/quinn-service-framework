@@ -72,8 +72,8 @@ public class BpmCommunicateParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.COMMUNICATE.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.COMMUNICATE.name(), BpmDealTypeEnum.COPY.name()};
         }
     }
 

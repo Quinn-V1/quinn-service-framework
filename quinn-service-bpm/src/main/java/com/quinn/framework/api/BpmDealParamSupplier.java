@@ -22,6 +22,6 @@ public interface BpmDealParamSupplier<T extends AbstractBpmDealParam> {
      *
      * @return 处理类型
      */
-    String getDealType();
+    String[] getDealTypes();
 
 }

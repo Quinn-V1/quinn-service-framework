@@ -23,7 +23,9 @@ public class BpmDealParamFactory {
         Iterator<BpmDealParamSupplier> dealParamSupplierIterator = dealParamSuppliers.iterator();
         while (dealParamSupplierIterator.hasNext()) {
             BpmDealParamSupplier supplier = dealParamSupplierIterator.next();
-            supplierMap.put(supplier.getDealType(), supplier);
+            for (String dealType : supplier.getDealTypes()) {
+                supplierMap.put(dealType, supplier);
+            }
         }
     }
 

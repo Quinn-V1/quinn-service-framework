@@ -41,8 +41,8 @@ public class BpmReadParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.READ.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.READ.name()};
         }
     }
 }

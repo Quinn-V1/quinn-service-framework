@@ -64,8 +64,8 @@ public class BpmRejectParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.REJECT.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.REJECT.name()};
         }
     }
 

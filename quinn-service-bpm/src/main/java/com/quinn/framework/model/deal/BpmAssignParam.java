@@ -64,8 +64,8 @@ public class BpmAssignParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.ASSIGN.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.ASSIGN.name()};
         }
     }
 

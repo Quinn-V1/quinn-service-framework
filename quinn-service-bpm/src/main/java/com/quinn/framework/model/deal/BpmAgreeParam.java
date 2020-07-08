@@ -41,8 +41,8 @@ public class BpmAgreeParam extends AbstractBpmDealParam {
         }
 
         @Override
-        public String getDealType() {
-            return BpmDealTypeEnum.AGREE.name();
+        public String[] getDealTypes() {
+            return new String[] {BpmDealTypeEnum.AGREE.name()};
         }
     }
 }
