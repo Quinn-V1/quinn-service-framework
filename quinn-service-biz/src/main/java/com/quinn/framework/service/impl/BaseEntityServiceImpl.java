@@ -25,6 +25,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.base.enums.DataOperateTypeEnum;
 import com.quinn.util.constant.enums.AvailableStatusEnum;
+import com.quinn.util.constant.enums.DataStatusEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
 import com.quinn.util.constant.enums.MessageLevelEnum;
 import lombok.SneakyThrows;
@@ -138,6 +139,10 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             return res;
         }
 
+        if (vo.getDataStatus() != null && vo.getDataStatus() >= DataStatusEnum.SYS_INIT.code) {
+            return BaseResult.fail("系统初始化数据不可删除");
+        }
+
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
@@ -182,6 +187,10 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         BaseResult res = beforeUpdate(vo, data);
         if (!res.isSuccess()) {
             return res;
+        }
+
+        if (vo.getDataStatus() != null && vo.getDataStatus() >= DataStatusEnum.SYS_INIT.code) {
+            return BaseResult.fail("系统初始化数据不可修改");
         }
 
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
@@ -507,7 +516,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
      * @param pageSize 分页条件
      * @return 处理是否成功
      */
-    BaseResult handlePageParam(int pageNum, int pageSize) {
+    protected BaseResult handlePageParam(int pageNum, int pageSize) {
         return this.pageAdapter.handlePageParam(pageNum, pageSize);
     }
 
