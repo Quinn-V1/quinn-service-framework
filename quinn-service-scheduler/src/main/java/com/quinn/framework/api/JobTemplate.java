@@ -2,6 +2,7 @@ package com.quinn.framework.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 任务模板接口
@@ -94,6 +95,13 @@ public interface JobTemplate extends Serializable {
      * @return 同步类型
      */
     String getSyncType();
+
+    /**
+     * 运行时参数
+     *
+     * @return 运行时参数
+     */
+    Map<String, Object> getRuntimeParams();
 
     /**
      * 执行次数加 1

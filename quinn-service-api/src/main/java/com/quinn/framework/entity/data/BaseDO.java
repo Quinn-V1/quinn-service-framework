@@ -24,6 +24,11 @@ import java.time.LocalDateTime;
 public abstract class BaseDO implements Serializable, IdGenerateAble {
 
     /**
+     * ID对应数据缓存键的键前缀
+     */
+    public static final String CACHE_KEY_ID_TO_DATA_KEY = "CACHE_ID_DATA:";
+
+    /**
      * 缓存主键分割符
      */
     public static final String CACHE_KEY_DELIMITER = BaseDTO.CACHE_KEY_DELIMITER;

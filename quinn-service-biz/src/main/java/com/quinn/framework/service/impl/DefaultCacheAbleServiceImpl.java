@@ -1,8 +1,11 @@
 package com.quinn.framework.service.impl;
 
+import com.quinn.framework.api.cache.CacheAllService;
 import com.quinn.framework.api.entityflag.CacheAble;
 import com.quinn.framework.service.CacheAbleService;
 import com.quinn.util.base.model.BaseResult;
+
+import javax.annotation.Resource;
 
 /**
  * 可缓存服务默认实现类
@@ -12,28 +15,34 @@ import com.quinn.util.base.model.BaseResult;
  */
 public class DefaultCacheAbleServiceImpl implements CacheAbleService {
 
+    @Resource
+    private CacheAllService cacheAllService;
+
     @Override
     public <T extends CacheAble> BaseResult<T> set(String key, T data) {
-        // TODO 设置缓存
-        return BaseResult.fail();
+        cacheAllService.set(key, data);
+        return BaseResult.SUCCESS;
     }
 
     @Override
     public <T extends CacheAble> BaseResult<T> set(String key, T data, long expire) {
-        // TODO 设置缓存
-        return BaseResult.fail();
+        cacheAllService.set(key, data, expire);
+        return BaseResult.SUCCESS;
     }
 
     @Override
-    public <T extends CacheAble> BaseResult<T> get(String key) {
-        // TODO 获取缓存
-        return BaseResult.fail();
+    public BaseResult get(String key, Class clazz) {
+        Object t = cacheAllService.get(key, clazz);
+        if (t == null) {
+            return BaseResult.fail();
+        }
+        return BaseResult.success(t);
     }
 
     @Override
     public <T extends CacheAble> BaseResult<T> delete(String key) {
-        // TODO 删除缓存
-        return BaseResult.fail();
+        cacheAllService.delete(key);
+        return BaseResult.SUCCESS;
     }
 
 }

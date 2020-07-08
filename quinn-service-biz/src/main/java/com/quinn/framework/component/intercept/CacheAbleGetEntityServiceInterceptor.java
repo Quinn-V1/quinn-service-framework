@@ -5,11 +5,14 @@ import com.quinn.framework.api.entityflag.CacheAble;
 import com.quinn.framework.api.methodflag.GetFlag;
 import com.quinn.framework.api.methodflag.MethodFlag;
 import com.quinn.framework.component.EntityServiceInterceptorChain;
+import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.service.CacheAbleService;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.MessageLevelEnum;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,6 +25,9 @@ import javax.annotation.Resource;
  */
 @Component
 public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterceptor {
+
+    @Value("com.quinn-service.cache:entity-cache-expire-time:1800")
+    private long defaultExpireTime;
 
     @Resource
     private CacheAbleService cacheAbleService;
@@ -45,8 +51,18 @@ public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterc
 
             CacheAble cacheAble = (CacheAble) t;
             String cacheKey = cacheAble.cacheKey();
+            if (cacheKey.contains(StringConstant.NULL_OF_STRING)) {
+                cacheKey = cacheKeyOfId(cacheAble);
+                if (cacheKey == null) {
+                    return;
+                }
+                cacheKey = (String) cacheAbleService.get(cacheKey, String.class).getData();
+                if (cacheKey == null) {
+                    return;
+                }
+            }
 
-            BaseResult cacheRes = cacheAbleService.get(cacheKey);
+            BaseResult cacheRes = cacheAbleService.get(cacheKey, cacheAble.getEntityClass());
             if (cacheRes.isSuccess()) {
                 result.setData(cacheRes.getData());
                 result.ofLevel(MessageLevelEnum.WARN);
@@ -62,8 +78,25 @@ public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterc
             String cacheKey = cacheAble.cacheKey();
 
             if (StringUtil.isNotEmpty(cacheKey)) {
-                cacheAbleService.set(cacheKey, cacheAble);
+                cacheAbleService.set(cacheKey, cacheAble, defaultExpireTime);
+                cacheAbleService.set(cacheKeyOfId(cacheAble), cacheAble);
             }
         }
     }
+
+    /**
+     * ID主键缓存
+     *
+     * @param cacheAble 可缓存对象
+     * @return 键
+     */
+    static String cacheKeyOfId(CacheAble cacheAble) {
+        if (cacheAble.getId() == null) {
+            return null;
+        } else {
+            return BaseDO.CACHE_KEY_ID_TO_DATA_KEY + cacheAble.getClass().getSimpleName()
+                    + StringConstant.CHAR_COLON + cacheAble.getId();
+        }
+    }
+
 }

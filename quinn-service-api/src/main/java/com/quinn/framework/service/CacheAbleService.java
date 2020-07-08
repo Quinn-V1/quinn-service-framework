@@ -36,10 +36,10 @@ public interface CacheAbleService {
      * 取缓存
      *
      * @param key   键
-     * @param <T>   值泛型
+     * @param clazz   返回值类型
      * @return      旧值
      */
-    <T extends CacheAble> BaseResult<T> get(String key);
+    BaseResult get(String key, Class clazz);
 
     /**
      * 删除存
