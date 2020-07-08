@@ -77,7 +77,7 @@ public class DefaultErrorHandler<T extends Exception> implements ErrorHandler<T>
 
                 out.flush();
             } catch (Exception e1) {
-                LOGGER.error("Error occurs When write error info {0}[{1}]", e1, true,
+                LOGGER.errorError("Error occurs When write error info {0}[{1}]", e1, true,
                         e.getClass().getName(), e.getMessage());
             }
         }
