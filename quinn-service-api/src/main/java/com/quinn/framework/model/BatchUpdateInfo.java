@@ -97,7 +97,9 @@ public class BatchUpdateInfo<T extends BaseDO> {
             }
 
             for (Map.Entry<String, T> entry : oldKeys.entrySet()) {
-                newList.add(entry.getValue().prepareForDelete(userKey, hardFlag));
+                if (entry.getValue().getDataVersion() > 0) {
+                    newList.add(entry.getValue().prepareForDelete(userKey, hardFlag));
+                }
             }
             return BaseResult.success(newList);
         }
