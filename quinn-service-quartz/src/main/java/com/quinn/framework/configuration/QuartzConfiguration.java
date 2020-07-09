@@ -1,5 +1,7 @@
 package com.quinn.framework.configuration;
 
+import com.quinn.framework.api.JobExecuteService;
+import com.quinn.framework.component.QuartzExecuteServiceAdapter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,11 @@ public class QuartzConfiguration {
         SchedulerFactoryBean factoryBean = new SchedulerFactoryBean();
         factoryBean.setAutoStartup(true);
         return factoryBean;
+    }
+
+    @Bean("jobExecuteService")
+    public JobExecuteService jobExecuteService() {
+        return new QuartzExecuteServiceAdapter();
     }
 
 }
