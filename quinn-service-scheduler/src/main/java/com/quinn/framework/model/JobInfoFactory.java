@@ -20,7 +20,15 @@ import java.util.ServiceLoader;
  */
 public class JobInfoFactory {
 
+    /**
+     * 任务实例生成器
+     */
     private static final Map<Class, JobInfoSupplier> JOB_INFO_SUPPLIER_MAP = new HashMap<>();
+
+    /**
+     * 模板过渡器
+     */
+    private static ThreadLocal<JobInstance> instanceThreadLocal = new ThreadLocal<>();
 
     static {
         ServiceLoader<JobInfoSupplier> authInfoSuppliers = ServiceLoader.load(JobInfoSupplier.class);
@@ -38,22 +46,36 @@ public class JobInfoFactory {
      * @return 任务实例
      */
     public static JobInstance createJobInstance(Object object) {
-        JobInfoSupplier jobInfoSupplier = JOB_INFO_SUPPLIER_MAP.get(object.getClass());
-        if (jobInfoSupplier == null) {
-            if (object instanceof JobTemplate) {
-                JobTemplate jobTemplate = (JobTemplate) object;
-                DefaultJobInstance jobInstance = new DefaultJobInstance();
-                JobInfoUtil.fillEmptyInstWithTemp(jobInstance, jobTemplate);
-                return jobInstance;
+        JobInstance jobInstance = instanceThreadLocal.get();
+
+        if (jobInstance == null) {
+            JobInfoSupplier jobInfoSupplier = JOB_INFO_SUPPLIER_MAP.get(object.getClass());
+            if (jobInfoSupplier == null) {
+                if (object instanceof JobTemplate) {
+                    JobTemplate jobTemplate = (JobTemplate) object;
+                    jobInstance = new DefaultJobInstance();
+                    JobInfoUtil.fillEmptyInstWithTemp(jobInstance, jobTemplate);
+                } else {
+                    // FIXME
+                    throw new BaseBusinessException();
+                }
             } else {
-                // FIXME
-                throw new BaseBusinessException();
+                jobInstance = jobInfoSupplier.createJobInstance(object);
             }
+        } else {
+            instanceThreadLocal.remove();
         }
 
-        JobInstance jobInstance = jobInfoSupplier.createJobInstance(object);
         jobInstance.setApplicationKey(ApplicationInfo.getAppKey());
         return jobInstance;
     }
 
+    /**
+     * 暂存任务实例
+     *
+     * @param jobInstance 任务实例
+     */
+    public static void setInstanceLocalThread(JobInstance jobInstance) {
+        instanceThreadLocal.set(jobInstance);
+    }
 }
