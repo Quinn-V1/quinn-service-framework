@@ -11,7 +11,6 @@ import lombok.SneakyThrows;
 import org.quartz.*;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -25,7 +24,6 @@ import java.util.TimeZone;
  * @author Qunhua.Liao
  * @since 2020-5-30
  */
-@Component
 public class QuartzExecuteServiceAdapter implements JobExecuteService {
 
     @Resource
