@@ -81,7 +81,10 @@ public class BatchUpdateInfo<T extends BaseDO> {
                 String dataKey = t.dataKey();
                 if (oldKeys.containsKey(dataKey)) {
                     T t1 = oldKeys.get(dataKey);
-                    t.setId(t1.getId());
+                    if (t.getId() == null) {
+                        t.setId(t1.getId());
+                    }
+
                     t.setDataVersion(t1.getDataVersion());
                     if (t.getDataVersion() < 0) {
                         t.prepareForRecover(userKey, false);
