@@ -97,13 +97,6 @@ public interface JobTemplate extends Serializable {
     String getSyncType();
 
     /**
-     * 运行时参数
-     *
-     * @return 运行时参数
-     */
-    Map<String, Object> getRuntimeParams();
-
-    /**
      * 执行次数加 1
      */
     default void execIncrease() {

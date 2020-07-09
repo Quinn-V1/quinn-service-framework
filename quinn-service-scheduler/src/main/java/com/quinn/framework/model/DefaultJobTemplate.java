@@ -82,8 +82,4 @@ public class DefaultJobTemplate implements JobTemplate {
     @ApiModelProperty("任务参数")
     private String paramStrategy;
 
-    @Override
-    public Map<String, Object> getRuntimeParams() {
-        return new HashMap<>(NumberConstant.INT_ZERO);
-    }
 }
