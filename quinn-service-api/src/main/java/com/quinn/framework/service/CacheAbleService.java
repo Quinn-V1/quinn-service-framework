@@ -16,10 +16,9 @@ public interface CacheAbleService {
      *
      * @param key   键
      * @param data  值
-     * @param <T>   值泛型
      * @return      旧值
      */
-    <T extends CacheAble> BaseResult<T> set(String key, T data);
+    BaseResult set(String key, Object data);
 
     /**
      * 设置缓存
@@ -27,10 +26,9 @@ public interface CacheAbleService {
      * @param key       键
      * @param data      值
      * @param expire    过期时间
-     * @param <T>       值泛型
      * @return          旧值
      */
-    <T extends CacheAble> BaseResult<T> set(String key, T data, long expire);
+    BaseResult set(String key, Object data, long expire);
 
     /**
      * 取缓存
@@ -45,9 +43,8 @@ public interface CacheAbleService {
      * 删除存
      *
      * @param key   键
-     * @param <T>   值泛型
      * @return      旧值
      */
-    <T extends CacheAble> BaseResult<T> delete(String key);
+    BaseResult delete(String key);
 
 }

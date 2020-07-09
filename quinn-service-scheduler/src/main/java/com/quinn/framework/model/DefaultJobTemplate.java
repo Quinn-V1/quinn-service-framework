@@ -1,12 +1,15 @@
 package com.quinn.framework.model;
 
 import com.quinn.framework.api.JobTemplate;
+import com.quinn.util.constant.NumberConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 任务模板
@@ -79,4 +82,8 @@ public class DefaultJobTemplate implements JobTemplate {
     @ApiModelProperty("任务参数")
     private String paramStrategy;
 
+    @Override
+    public Map<String, Object> getRuntimeParams() {
+        return new HashMap<>(NumberConstant.INT_ZERO);
+    }
 }

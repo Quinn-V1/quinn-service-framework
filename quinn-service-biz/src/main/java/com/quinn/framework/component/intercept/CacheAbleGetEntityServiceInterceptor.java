@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 @Component
 public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterceptor {
 
-    @Value("com.quinn-service.cache:entity-cache-expire-time:1800")
+    @Value("${com.quinn-service.cache.entity-cache-expire-time:1800}")
     private long defaultExpireTime;
 
     @Resource
@@ -79,7 +79,7 @@ public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterc
 
             if (StringUtil.isNotEmpty(cacheKey)) {
                 cacheAbleService.set(cacheKey, cacheAble, defaultExpireTime);
-                cacheAbleService.set(cacheKeyOfId(cacheAble), cacheAble);
+                cacheAbleService.set(cacheKeyOfId(cacheAble), cacheKey);
             }
         }
     }
@@ -94,7 +94,7 @@ public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterc
         if (cacheAble.getId() == null) {
             return null;
         } else {
-            return BaseDO.CACHE_KEY_ID_TO_DATA_KEY + cacheAble.getClass().getSimpleName()
+            return BaseDO.CACHE_KEY_ID_TO_DATA_KEY + cacheAble.getEntityClass().getSimpleName()
                     + StringConstant.CHAR_COLON + cacheAble.getId();
         }
     }

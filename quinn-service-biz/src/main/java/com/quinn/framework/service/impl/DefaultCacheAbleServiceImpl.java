@@ -19,13 +19,13 @@ public class DefaultCacheAbleServiceImpl implements CacheAbleService {
     private CacheAllService cacheAllService;
 
     @Override
-    public <T extends CacheAble> BaseResult<T> set(String key, T data) {
+    public BaseResult set(String key, Object data) {
         cacheAllService.set(key, data);
         return BaseResult.SUCCESS;
     }
 
     @Override
-    public <T extends CacheAble> BaseResult<T> set(String key, T data, long expire) {
+    public BaseResult set(String key, Object data, long expire) {
         cacheAllService.set(key, data, expire);
         return BaseResult.SUCCESS;
     }
@@ -40,7 +40,7 @@ public class DefaultCacheAbleServiceImpl implements CacheAbleService {
     }
 
     @Override
-    public <T extends CacheAble> BaseResult<T> delete(String key) {
+    public BaseResult delete(String key) {
         cacheAllService.delete(key);
         return BaseResult.SUCCESS;
     }
