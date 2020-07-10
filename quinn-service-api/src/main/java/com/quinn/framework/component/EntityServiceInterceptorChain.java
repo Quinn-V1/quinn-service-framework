@@ -36,7 +36,8 @@ public class EntityServiceInterceptorChain {
      * @param <T>
      */
     public <T> void doChain(AbstractMethodInvoker<T> methodInvoker) {
-        while (methodInvoker.getInterceptorIndex() < entityServiceInterceptors.size()) {
+        while (methodInvoker.getInterceptorIndex() < entityServiceInterceptors.size()
+                && (!methodInvoker.isDone() && methodInvoker.getResult().wantContinue())) {
             EntityServiceInterceptor entityServiceInterceptor = entityServiceInterceptors
                     .get(methodInvoker.getInterceptorIndex());
             methodInvoker.addInterceptorIndex();

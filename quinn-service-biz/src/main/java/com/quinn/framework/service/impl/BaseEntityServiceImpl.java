@@ -101,6 +101,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     @Override
     public BaseResult<VO> insert(VO data) {
         BaseResult result = beforeInsert(data);
+
+        result.setLevel(MessageLevelEnum.TRACE.status);
         entityServiceInterceptorChain.doChain(new BaseInsertMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
@@ -148,6 +150,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     .result();
         }
 
+        result.setLevel(MessageLevelEnum.TRACE.status);
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
@@ -203,6 +206,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     .result();
         }
 
+        result.setLevel(MessageLevelEnum.TRACE.status);
         entityServiceInterceptorChain.doChain(new BaseWriteMethodInvoker<DO>(result, data) {
             @Override
             public void invoke() {
