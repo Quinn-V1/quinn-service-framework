@@ -231,6 +231,15 @@ public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO ext
     BatchResult<VO> updateBatch(BatchUpdateInfo<VO> dataList, boolean transaction, boolean allFlag, boolean hardFlag);
 
     /**
+     * 批量更新操作
+     *
+     * @param dataList    数据列表
+     * @param transaction 事务标识
+     * @return 更新结果
+     */
+    BatchResult<VO> saveOrUpdate(List<VO> dataList, boolean transaction);
+
+    /**
      * 获取服务实体的数据类对象
      *
      * @return 服务实体类数据对象

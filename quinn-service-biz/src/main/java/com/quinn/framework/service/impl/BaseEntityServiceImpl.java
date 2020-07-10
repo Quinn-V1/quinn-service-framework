@@ -452,6 +452,55 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     }
 
     /**
+     * 批量更新操作
+     *
+     * @param dataList    数据列表
+     * @param transaction 事务标识
+     * @return 更新结果
+     */
+    @Override
+    @SneakyThrows
+    public BatchResult<VO> saveOrUpdate(List<VO> dataList, boolean transaction) {
+        BatchResult batchResult = new BatchResult(dataList.size());
+
+        TO dto = getTOClass().newInstance();
+        dto.setAvailableStatus(AvailableStatusEnum.ALL);
+        String userKey = SessionUtil.getUserKey();
+        String orgKey = SessionUtil.getOrgKey();
+
+        for (VO vo : dataList) {
+            dto.dataKey(vo.dataKey());
+            BaseResult<VO> oldRes = get(dto);
+
+            if (!oldRes.isSuccess()) {
+                if (vo.isAvailable()) {
+                    vo.prepareForInsert(userKey, orgKey);
+                }
+            } else {
+                VO old = oldRes.getData();
+                vo.setId(old.getId());
+
+                if (vo.isAvailable()) {
+                    if (old.isAvailable()) {
+                        vo.setDataVersion(old.getDataVersion());
+                        vo.prepareForUpdate(userKey, false);
+                    } else {
+                        vo.setDataVersion(old.getDataVersion());
+                        vo.prepareForRecover(userKey, false);
+                    }
+                } else {
+                    if (oldRes.getData().isAvailable()) {
+                        vo.setDataVersion(old.getDataVersion());
+                        vo.prepareForDelete(userKey, false);
+                    }
+                }
+            }
+        }
+
+        return updateBatchExec(dataList, transaction);
+    }
+
+    /**
      * 根据标记更新列表
      *
      * @param list 列表

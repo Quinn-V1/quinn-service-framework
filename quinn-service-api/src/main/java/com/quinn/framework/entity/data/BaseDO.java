@@ -203,6 +203,16 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
         return (T) this;
     }
 
+    /**
+     * 是否有效
+     *
+     * @return 有效 御前
+     */
+    public boolean isAvailable() {
+        return (dataVersion == null || dataVersion > 0)
+                && (dataStatus == null || dataStatus >= DataStatusEnum.NORMAL.code);
+    }
+
     @Override
     public String toString() {
         return cacheKey();
