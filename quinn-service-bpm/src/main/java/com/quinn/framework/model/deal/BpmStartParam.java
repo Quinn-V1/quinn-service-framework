@@ -72,6 +72,12 @@ public class BpmStartParam {
     private String businessKey;
 
     /**
+     * 业务编码
+     */
+    @ApiModelProperty("业务编码")
+    private String businessCode;
+
+    /**
      * 流程标题
      */
     @ApiModelProperty("流程标题")
