@@ -27,7 +27,7 @@ public class BpmStartParam {
      * 流程实例ID（草稿箱实例ID，如果不为空：草稿箱ID优先级最高）
      */
     @ApiModelProperty("草稿箱ID")
-    private Long boxId;
+    private Long id;
 
     /**
      * 模型ID（没有草稿箱ID：次高优先级）
@@ -133,6 +133,16 @@ public class BpmStartParam {
      */
     @JsonIgnore
     private boolean validated;
+
+    /**
+     * 草稿箱ID（发起参数中：草稿想不D就是ID）
+     *
+     * @return 草稿箱ID
+     */
+    @ApiModelProperty("草稿箱ID")
+    public Long getBoxId() {
+        return id;
+    }
 
     /**
      * 正式校验
