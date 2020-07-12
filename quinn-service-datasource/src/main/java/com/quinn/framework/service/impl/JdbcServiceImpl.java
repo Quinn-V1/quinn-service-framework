@@ -120,7 +120,12 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
     public <T> BaseResult<T> queryForObject(String sql, Class<T> clazz, Object... params) {
         T t;
         if (BaseConverter.isPrimitive(clazz)) {
-            t = (T) jdbcTemplate.queryForObject(sql, params, clazz);
+            try {
+                t = (T) jdbcTemplate.queryForObject(sql, params, clazz);
+            } catch (Exception e) {
+                LOGGER.errorError("Error occurs when executor {0}", e, sql);
+                return BaseResult.fromException(e);
+            }
         } else {
             t = (T) jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(clazz));
         }
@@ -139,7 +144,12 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
     public <T> BaseResult<List<T>> queryForList(String sql, Class<T> clazz, Object... params) {
         List<T> list;
         if (BaseConverter.isPrimitive(clazz)) {
-            list = jdbcTemplate.queryForList(sql, params, clazz);
+            try {
+                list = jdbcTemplate.queryForList(sql, params, clazz);
+            } catch (Exception e) {
+                LOGGER.errorError("Error occurs when executor {0}", e, sql);
+                return BaseResult.fromException(e);
+            }
         } else {
             list = jdbcTemplate.query(sql, params, new BeanPropertyRowMapper(clazz));
         }

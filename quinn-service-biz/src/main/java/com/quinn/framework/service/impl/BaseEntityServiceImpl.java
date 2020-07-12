@@ -24,6 +24,7 @@ import com.quinn.util.base.enums.DataOperateTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.enums.AvailableStatusEnum;
 import com.quinn.util.constant.enums.DataStatusEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
@@ -288,7 +289,8 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     @Override
     public BaseResult<VO> get(TO condition) {
         BaseResult<VO> result = BaseResult.build(true);
-        condition.setResultNumExpected(1);
+        condition.setResultNumExpected(NumberConstant.INT_ONE);
+        pageAdapter.handlePageParam(NumberConstant.INT_ONE, NumberConstant.INT_TWO);
         entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
 
             @Override
@@ -516,6 +518,9 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         for (int i = 0; i < list.size(); i++) {
             VO data = list.get(i);
             DbOperateTypeEnum dbOperateType = data.getDbOperateType();
+            if (dbOperateType == null) {
+                continue;
+            }
             BaseResult res = BaseResult.SUCCESS;
             switch (dbOperateType) {
                 case INSERT:

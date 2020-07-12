@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.BaseBusinessException;
+import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.constant.StringConstant;
 
 import java.io.UnsupportedEncodingException;
@@ -19,6 +21,8 @@ import java.util.Map;
  * @since 2020-04-06
  */
 public class JsonApplicationSerializer implements ApplicationSerializer {
+
+    private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(JsonApplicationSerializer.class);
 
     /**
      * 序列化对象类名参数名
@@ -42,7 +46,8 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             return jsonObject.toJSONString().getBytes(StringConstant.SYSTEM_DEFAULT_CHARSET);
         } catch (Exception e) {
             // FIXME
-            throw new BaseBusinessException().buildParam("", 1, 1)
+            LOGGER.errorError("JsonApplicationSerializer.serialize", e);
+            throw new BaseBusinessException(e).buildParam("", 1, 1)
                     .exception();
         }
     }
@@ -61,6 +66,7 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             }
         } catch (Exception e) {
             // FIXME
+            LOGGER.errorError("JsonApplicationSerializer.serialize", e);
             throw new BaseBusinessException()
                     .buildParam("deserialize exception", 1, 1)
                     .exception();
@@ -98,7 +104,8 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             return JSONObject.parseObject(s, tpl);
         } catch (Exception e) {
             // FIXME
-            throw new BaseBusinessException()
+            LOGGER.errorError("JsonApplicationSerializer.serialize", e);
+            throw new BaseBusinessException(e)
                     .buildParam("deserialize exception", 1, 1)
                     .exception();
         }
@@ -118,7 +125,8 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             return deserialize(json.getBytes(StringConstant.SYSTEM_DEFAULT_CHARSET), tpl);
         } catch (UnsupportedEncodingException e) {
             // FIXME
-            throw new BaseBusinessException().buildParam("deserialize exception", 1, 1).exception();
+            LOGGER.errorError("JsonApplicationSerializer.serialize", e);
+            throw new BaseBusinessException(e).buildParam("deserialize exception", 1, 1).exception();
         }
     }
 
@@ -128,7 +136,8 @@ public class JsonApplicationSerializer implements ApplicationSerializer {
             return new String(this.serialize(o), StringConstant.SYSTEM_DEFAULT_CHARSET);
         } catch (UnsupportedEncodingException e) {
             // FIXME
-            throw new BaseBusinessException().buildParam("deserialize exception", 1, 1).exception();
+            LOGGER.errorError("JsonApplicationSerializer.serialize", e);
+            throw new BaseBusinessException(e).buildParam("deserialize exception", 1, 1).exception();
         }
     }
 
