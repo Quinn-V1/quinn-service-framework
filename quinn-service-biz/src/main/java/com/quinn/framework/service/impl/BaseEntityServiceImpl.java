@@ -105,9 +105,35 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
         result.setLevel(MessageLevelEnum.TRACE.status);
         entityServiceInterceptorChain.doChain(new BaseInsertMethodInvoker<DO>(result, data) {
+            @SneakyThrows
             @Override
             public void invoke() {
                 try {
+                    TO to = getTOClass().newInstance();
+                    boolean b = to.dataKey(data.dataKey());
+                    if (b) {
+                        to.setAvailableStatus(AvailableStatusEnum.ALL);
+                        BaseResult<VO> oldDataRes = get(to);
+                        if (oldDataRes.isSuccess()) {
+                            VO data = oldDataRes.getData();
+                            if (data.isAvailable()) {
+                                getResult().ofSuccess(false)
+                                        .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2);
+                                return;
+                            }
+
+                            DO newData = this.getData();
+                            newData.setId(data.getId());
+                            newData.setDataVersion(data.getDataVersion());
+                            newData.setDataStatus(data.getDataStatus());
+                            newData.prepareForRecover(newData.getInsertUser(), false);
+                            baseMapper.update(newData);
+                            getResult().ofSuccess(true).ofLevel(MessageLevelEnum.WARN)
+                                    .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2);
+                            return;
+                        }
+                    }
+
                     int res = baseMapper.insert(this.getData());
                     if (res >= 0) {
                         getResult().ofData(data);
@@ -290,37 +316,41 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     public BaseResult<VO> get(TO condition) {
         BaseResult<VO> result = BaseResult.build(true);
         condition.setResultNumExpected(NumberConstant.INT_ONE);
-        pageAdapter.handlePageParam(NumberConstant.INT_ONE, NumberConstant.INT_TWO);
-        entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
+        try {
+            pageAdapter.handlePageParam(NumberConstant.INT_ONE, NumberConstant.INT_TWO);
+            entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
 
-            @Override
-            public void invoke() {
-                Page<VO> select = baseMapper.select(getData());
-                if (CollectionUtils.isEmpty(select)) {
-                    String dataKey = getData().dataKey();
-                    dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
-                            .buildMessage(DATA_OPERATION_MISS_HINT.key(), 2, 1)
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.key())
-                            .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                            .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], dataKey)
-                    ;
-                } else if (select.size() > 1) {
-                    String dataKey = getData().dataKey();
-                    dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                            .buildMessage(RESULT_NOT_UNIQUE.key(), 2, 1)
-                            .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                            .addParam(RESULT_NOT_UNIQUE.paramNames[1], dataKey)
-                            .addParam(RESULT_NOT_UNIQUE.paramNames[2], select.size())
-                    ;
-                } else {
-                    getResult().ofData(select.get(0));
+                @Override
+                public void invoke() {
+                    Page<VO> select = baseMapper.select(getData());
+                    if (CollectionUtils.isEmpty(select)) {
+                        String dataKey = getData().dataKey();
+                        dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
+                                .buildMessage(DATA_OPERATION_MISS_HINT.key(), 2, 1)
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.key())
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], dataKey)
+                        ;
+                    } else if (select.size() > 1) {
+                        String dataKey = getData().dataKey();
+                        dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
+                                .buildMessage(RESULT_NOT_UNIQUE.key(), 2, 1)
+                                .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                .addParam(RESULT_NOT_UNIQUE.paramNames[1], dataKey)
+                                .addParam(RESULT_NOT_UNIQUE.paramNames[2], select.size())
+                        ;
+                    } else {
+                        getResult().ofData(select.get(0));
+                    }
                 }
-            }
-        });
+            });
+        } finally {
+            pageAdapter.clearPage();
+        }
         return result;
     }
 

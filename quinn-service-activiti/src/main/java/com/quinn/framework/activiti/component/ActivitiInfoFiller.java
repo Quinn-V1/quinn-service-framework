@@ -60,6 +60,10 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
     private static final String SERVICE_TASK_EXPRESSION_ATTR_NAME = "delegateExpression";
 
+    private static final String TASK_EXPRESSION_COUNTERSIGN_USER = "${countersignUser}";
+
+    private static final String TASK_EXPRESSION_COUNTERSIGN_ELEMENT = "countersignAssignee";
+
     private static final String SERVICE_TASK_EXPRESSION_ATTR_VALUE = "${serviceTaskDelegate}";
 
     @Value("${com.ming-cloud.bpm.diagram.font-name.activity:宋体}")
@@ -215,11 +219,22 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
                 if (element instanceof Task) {
                     Task task = (Task) element;
-                    System.out.println(task);
                     if (element instanceof ServiceTask) {
                         ServiceTask serviceTask = (ServiceTask) element;
                         serviceTask.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION);
                         serviceTask.setImplementation(SERVICE_TASK_EXPRESSION_ATTR_VALUE);
+                    }
+
+                    MultiInstanceLoopCharacteristics loopCharacteristics = task.getLoopCharacteristics();
+                    if (loopCharacteristics != null) {
+                        String loopCardinality = loopCharacteristics.getLoopCardinality();
+                        if (StringUtil.isEmpty(loopCardinality)) {
+                            loopCharacteristics.setLoopCardinality(TASK_EXPRESSION_COUNTERSIGN_USER);
+                        }
+                        String elementVariable = loopCharacteristics.getElementVariable();
+                        if (StringUtil.isEmpty(elementVariable)) {
+                            loopCharacteristics.setElementVariable(TASK_EXPRESSION_COUNTERSIGN_ELEMENT);
+                        }
                     }
                 }
             }

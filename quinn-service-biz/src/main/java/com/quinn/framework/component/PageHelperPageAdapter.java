@@ -40,6 +40,11 @@ public class PageHelperPageAdapter implements PageAdapter<Page> {
     }
 
     @Override
+    public void clearPage() {
+        PageHelper.clearPage();
+    }
+
+    @Override
     public <V> PageInfo<V> toPageInf(Page page) {
         return staticToPageInf(page);
     }

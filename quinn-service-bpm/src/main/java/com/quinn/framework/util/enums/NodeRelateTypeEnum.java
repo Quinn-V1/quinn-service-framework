@@ -8,11 +8,11 @@ package com.quinn.framework.util.enums;
  */
 public enum NodeRelateTypeEnum {
 
-    // 条件
-    CONDITION("条件", 1),
-
     // 同意
-    AGREE("同意", 9),
+    AGREE("同意", 1),
+
+    // 条件
+    CONDITION("条件", 9),
 
     // 驳回
     REJECT("驳回", 10);
@@ -25,7 +25,7 @@ public enum NodeRelateTypeEnum {
     /**
      * 自定义类型
      */
-    public static final String[] CUSTOM_TYPES = new String[]{REJECT.name()};
+    public static final String[] CUSTOM_TYPES = new String[]{REJECT.name(), CONDITION.name()};
 
     /**
      * 描述

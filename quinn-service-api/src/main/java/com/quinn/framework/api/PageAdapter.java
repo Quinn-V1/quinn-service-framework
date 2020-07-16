@@ -40,6 +40,11 @@ public interface PageAdapter<T> {
     BaseResult handlePageParam(Map<String, Object> condition);
 
     /**
+     * 清除分业参数
+     */
+    void clearPage();
+
+    /**
      * 将外部分页对象转为内部分页对象
      *
      * @param t   源数据

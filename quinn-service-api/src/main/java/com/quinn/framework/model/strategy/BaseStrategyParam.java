@@ -25,6 +25,8 @@ public class BaseStrategyParam<T> {
 
     private static final String OUT_PARAM_NAME = "_outParam";
 
+    private static final String OUT_PARAM_NAME_MAPPING = "_paramNameMapping";
+
     /**
      * 结果类型
      */
@@ -53,6 +55,14 @@ public class BaseStrategyParam<T> {
         }
 
         initDirectParam(jsonObject, param);
+        Object o = param.remove(OUT_PARAM_NAME_MAPPING);
+        if (o instanceof Map) {
+            Map<String, String> mapping = (Map<String, String>) o;
+            for (Map.Entry<String, String> entry : mapping.entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue());
+            }
+        }
+
         setJsonParam(jsonObject);
     }
 

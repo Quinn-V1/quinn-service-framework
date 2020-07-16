@@ -165,7 +165,7 @@ public class MessageSendParam {
     public BaseResult<Integer> validate() {
         // 是否指定收件人信息
         boolean hasReceivers = !CollectionUtil.isEmpty(receivers) || (StringUtil.isNotEmpty(receiverType)
-                && StringUtil.isEmpty(receiverValue));
+                && StringUtil.isNotEmpty(receiverValue) && StringUtil.isNotEmpty(messageType));
 
         // 没有指定消息模板的情况下
         if (StringUtil.isEmptyInFrame(templateKey)) {
@@ -191,6 +191,7 @@ public class MessageSendParam {
             for (String rv : rvs) {
                 MessageReceiverAdapter receiver = new MessageReceiverAdapter();
                 receiver.setReceiverType(receiverType);
+                receiver.setMessageType(messageType);
                 receiver.setUrgentLevel(urgentLevel);
                 receiver.setLangCode(langCode);
                 receiver.setReceiverValue(rv);
