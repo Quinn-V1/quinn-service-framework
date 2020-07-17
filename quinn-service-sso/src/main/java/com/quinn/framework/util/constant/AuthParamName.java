@@ -33,4 +33,14 @@ public interface AuthParamName {
      */
     String PARAM_NAME_ORG_NAME = "orgName";
 
+    /**
+     * 权限参数类型
+     */
+    String PARAM_TYPE_OF_AUTH = "AUTH_PARAM";
+
+    /**
+     * 权限参数类型
+     */
+    String PARAM_NAME_OF_INIT_PASSWORD = "initPassword";
+
 }

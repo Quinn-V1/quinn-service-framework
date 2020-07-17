@@ -24,4 +24,12 @@ public interface CredentialsSubMatcher {
      */
     boolean doCredentialsMatch(TokenInfo tokenInfo, AuthInfo authInfo);
 
+    /**
+     * 加密密码
+     *
+     * @param tokenInfo 明码令牌
+     * @return 密码
+     */
+    String encrypt(TokenInfo tokenInfo);
+
 }

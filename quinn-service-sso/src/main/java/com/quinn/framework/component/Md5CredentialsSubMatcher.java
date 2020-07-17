@@ -36,6 +36,16 @@ public class Md5CredentialsSubMatcher implements CredentialsSubMatcher {
         return credentialsOfAuth.equals(Md5EncryptUtil.encryptHMAC(credentialsOfToken, principal));
     }
 
+    @Override
+    public String encrypt(TokenInfo tokenInfo) {
+        String credentials = BaseConverter.staticToString(tokenInfo.getCredentials());
+        String principal = BaseConverter.staticToString(tokenInfo.getPrincipal());
+        if (StringUtil.isEmpty(credentials) || StringUtil.isEmpty(principal)) {
+            return null;
+        }
+        return Md5EncryptUtil.encryptHMAC(credentials, principal);
+    }
+
     public static void main(String[] args) {
         String[] users = new String[]{
                 "zbh",

@@ -27,7 +27,7 @@ public class MultiCredentialsMatcher {
     private static final Map<String, CredentialsSubMatcher> STRING_AUTH_SUB_SERVICE_MAP = new LinkedHashMap<>();
 
     /**
-     * 整数比较
+     * 密码比较
      *
      * @param tokenInfo 令牌信息
      * @param principal 权限信息
@@ -40,6 +40,21 @@ public class MultiCredentialsMatcher {
         }
         return credentialsMatcher.doCredentialsMatch(AuthInfoFactory.generateTokenInfo(tokenInfo),
                 AuthInfoFactory.generate(principal));
+    }
+
+    /**
+     * 令牌加密
+     *
+     * @param tokenInfo 令牌信息
+     * @param authClazz 授权信息类
+     * @return 密码
+     */
+    public static String encrypt(TokenInfo tokenInfo, Class authClazz) {
+        CredentialsSubMatcher credentialsMatcher = credentialsMatcher(authClazz);
+        if (credentialsMatcher == null) {
+            return null;
+        }
+        return credentialsMatcher.encrypt(tokenInfo);
     }
 
     /**
