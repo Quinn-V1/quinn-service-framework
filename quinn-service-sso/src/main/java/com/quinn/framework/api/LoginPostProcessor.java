@@ -31,11 +31,10 @@ public interface LoginPostProcessor<A extends AuthInfo, T extends TokenInfo> {
     /**
      * 是否接受这类令牌的增强
      *
-     * @param tokenInfo 令牌
-     * @param <T>       令牌泛型
+     * @param authInfo 授权信息
      * @return 是否接受
      */
-    default boolean accept(T tokenInfo) {
+    default boolean accept(AuthInfo authInfo) {
         return true;
     }
 
