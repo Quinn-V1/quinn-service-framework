@@ -60,7 +60,9 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
     private static final String SERVICE_TASK_EXPRESSION_ATTR_NAME = "delegateExpression";
 
-    private static final String TASK_EXPRESSION_COUNTERSIGN_USER = "${countersignUser}";
+    private static final String TASK_ATTR_NAME_COUNTERSIGN_COLLECTION = "collection";
+
+    private static final String TASK_EXPRESSION_COUNTERSIGN_USER = "countersignUser";
 
     private static final String TASK_EXPRESSION_COUNTERSIGN_ELEMENT = "countersignAssignee";
 
@@ -227,10 +229,16 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
                     MultiInstanceLoopCharacteristics loopCharacteristics = task.getLoopCharacteristics();
                     if (loopCharacteristics != null) {
-                        String loopCardinality = loopCharacteristics.getLoopCardinality();
+                        String loopCardinality = loopCharacteristics.getAttributeValue(ACTIVITY_NAMESPACE,
+                                TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
                         if (StringUtil.isEmpty(loopCardinality)) {
-                            loopCharacteristics.setLoopCardinality(TASK_EXPRESSION_COUNTERSIGN_USER);
+                            ExtensionAttribute attribute = new ExtensionAttribute();
+                            attribute.setNamespace(ACTIVITY_NAMESPACE);
+                            attribute.setName(TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
+                            attribute.setValue(TASK_EXPRESSION_COUNTERSIGN_USER);
+                            loopCharacteristics.addAttribute(attribute);
                         }
+
                         String elementVariable = loopCharacteristics.getElementVariable();
                         if (StringUtil.isEmpty(elementVariable)) {
                             loopCharacteristics.setElementVariable(TASK_EXPRESSION_COUNTERSIGN_ELEMENT);
