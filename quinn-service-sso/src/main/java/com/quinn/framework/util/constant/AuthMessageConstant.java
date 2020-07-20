@@ -53,6 +53,11 @@ public interface AuthMessageConstant {
     String DESC_AUTH_INFO_BEYOND_EFFECT = "当前时间超出用户有效期";
 
     /**
+     * 用户状态不能登录系统
+     */
+    String DESC_AUTH_INFO_STATUS_NOT_FIT = "状态为【${" + PARAM_NAME_OF_AUTH_STATUS  + "}】的用户不可登录系统";
+
+    /**
      * 用户名或密码不匹配
      */
     String DESC_AUTH_CREDENTIALS_MISMATCH = "用户名、密码或者租户不匹配";
