@@ -8,6 +8,7 @@ import com.quinn.util.base.CollectionUtil;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ public class BaseStrategyParam<T> {
     public void initParam(StrategyScript strategyScript, Map<String, Object> param) {
         JSONObject jsonObject = new JSONObject();
         LinkedList<String> paramTempChain = strategyScript.getParamTempChain();
+        param = param == null ? new HashMap<>() : param;
         if (paramTempChain == null) {
             jsonObject.putAll(param);
             setJsonParam(jsonObject);

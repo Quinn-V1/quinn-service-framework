@@ -577,6 +577,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                                 CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[2], list.size())
                         .addParam(DATA_OPERATION_TRANSACTION_TERMINATED.paramNames[3], i + 1)
+                        .ofPrevProp(res.getMessageProp())
                         .exception()
                         ;
             }
