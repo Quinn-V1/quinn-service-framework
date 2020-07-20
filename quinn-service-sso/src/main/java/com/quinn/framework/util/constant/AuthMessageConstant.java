@@ -48,6 +48,11 @@ public interface AuthMessageConstant {
     String DESC_AUTH_INFO_NOT_FOUND = "用户名、密码或者租户不匹配";
 
     /**
+     * 当前时间超出用户有效期
+     */
+    String DESC_AUTH_INFO_BEYOND_EFFECT = "当前时间超出用户有效期";
+
+    /**
      * 用户名或密码不匹配
      */
     String DESC_AUTH_CREDENTIALS_MISMATCH = "用户名、密码或者租户不匹配";
