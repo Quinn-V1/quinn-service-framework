@@ -229,15 +229,15 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
                     MultiInstanceLoopCharacteristics loopCharacteristics = task.getLoopCharacteristics();
                     if (loopCharacteristics != null) {
-                        String loopCardinality = loopCharacteristics.getAttributeValue(ACTIVITY_NAMESPACE,
-                                TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
-                        if (StringUtil.isEmpty(loopCardinality)) {
-                            ExtensionAttribute attribute = new ExtensionAttribute();
-                            attribute.setNamespace(ACTIVITY_NAMESPACE);
-                            attribute.setName(TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
-                            attribute.setValue(TASK_EXPRESSION_COUNTERSIGN_USER);
-                            loopCharacteristics.addAttribute(attribute);
-                        }
+                        // String loopCardinality = loopCharacteristics.getAttributeValue(ACTIVITY_NAMESPACE,
+                        //         TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
+                        // if (StringUtil.isEmpty(loopCardinality)) {
+                        //     ExtensionAttribute attribute = new ExtensionAttribute();
+                        //     attribute.setNamespace(ACTIVITY_NAMESPACE);
+                        //     attribute.setName(TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
+                        //     attribute.setValue(TASK_EXPRESSION_COUNTERSIGN_USER);
+                        //     loopCharacteristics.addAttribute(attribute);
+                        // }
 
                         String elementVariable = loopCharacteristics.getElementVariable();
                         if (StringUtil.isEmpty(elementVariable)) {
