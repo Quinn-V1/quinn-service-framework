@@ -8,7 +8,7 @@ import com.quinn.util.base.model.BaseResult;
  * @author Qunhua.Liao
  * @since 2020-05-21
  */
-public interface LoginPostProcessor {
+public interface LoginPostProcessor<A extends AuthInfo, T extends TokenInfo> {
 
     /**
      * 优先级：越小越优先
@@ -26,7 +26,7 @@ public interface LoginPostProcessor {
      * @param <T>      令牌信息泛型
      * @return 处理结果
      */
-    <A extends AuthInfo, T extends TokenInfo> BaseResult process(A authInfo, T token, Exception exception);
+    BaseResult process(A authInfo, T token, Exception exception);
 
     /**
      * 是否接受这类令牌的增强
@@ -35,7 +35,7 @@ public interface LoginPostProcessor {
      * @param <T>       令牌泛型
      * @return 是否接受
      */
-    default <T extends TokenInfo> boolean accept(T tokenInfo) {
+    default boolean accept(T tokenInfo) {
         return true;
     }
 
