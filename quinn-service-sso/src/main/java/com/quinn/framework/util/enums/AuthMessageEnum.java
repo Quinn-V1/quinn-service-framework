@@ -41,6 +41,9 @@ public enum AuthMessageEnum implements MessageEnumFlag {
     // 用户名名或密码不匹配
     AUTH_INFO_NOT_FOUND(DESC_AUTH_INFO_NOT_FOUND),
 
+    // 当前时间超出用户有效期
+    AUTH_INFO_BEYOND_EFFECT(DESC_AUTH_INFO_BEYOND_EFFECT),
+
     // 用户名名或密码不匹配
     AUTH_CREDENTIALS_MISMATCH(DESC_AUTH_CREDENTIALS_MISMATCH),
 
