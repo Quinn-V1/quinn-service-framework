@@ -43,4 +43,9 @@ public interface AuthParamName {
      */
     String PARAM_NAME_OF_INIT_PASSWORD = "initPassword";
 
+    /**
+     * 权限信息状态
+     */
+    String PARAM_NAME_OF_AUTH_STATUS = "authStatus";
+
 }
