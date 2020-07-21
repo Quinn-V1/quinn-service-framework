@@ -5,6 +5,7 @@ import com.quinn.framework.component.KeyValueMultiService;
 import com.quinn.framework.util.Base64Util;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.NumberUtil;
 import com.quinn.util.base.StringUtil;
 
 /**
@@ -23,6 +24,7 @@ public class BaseStaticMethodRegister implements StaticMethodRegister {
                 SessionUtil.class,
                 KeyValueMultiService.class,
                 Base64Util.class,
+                NumberUtil.class,
         };
     }
 

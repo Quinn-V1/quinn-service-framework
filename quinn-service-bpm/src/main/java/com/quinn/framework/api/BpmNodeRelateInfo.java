@@ -23,6 +23,13 @@ public interface BpmNodeRelateInfo {
     void setModelKey(String modelKey);
 
     /**
+     * 设置Bpm编码
+     *
+     * @param bpmKey 编码
+     */
+    void setBpmKey(String bpmKey);
+
+    /**
      * 设置模型版本
      *
      * @param modelVersion 模型版本

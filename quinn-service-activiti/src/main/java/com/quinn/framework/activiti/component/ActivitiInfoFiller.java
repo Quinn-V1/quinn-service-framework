@@ -62,7 +62,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
     private static final String TASK_ATTR_NAME_COUNTERSIGN_COLLECTION = "collection";
 
-    private static final String TASK_EXPRESSION_COUNTERSIGN_USER = "countersignUser";
+    private static final String TASK_EXPRESSION_COUNTERSIGN_USERS = "countersignUsers";
 
     private static final String TASK_EXPRESSION_COUNTERSIGN_ELEMENT = "countersignAssignee";
 
@@ -231,14 +231,9 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
                     MultiInstanceLoopCharacteristics loopCharacteristics = task.getLoopCharacteristics();
                     if (loopCharacteristics != null) {
-                        String loopCardinality = loopCharacteristics.getAttributeValue(ACTIVITY_NAMESPACE,
-                                TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
-                        if (StringUtil.isEmpty(loopCardinality)) {
-                            ExtensionAttribute attribute = new ExtensionAttribute();
-                            attribute.setNamespace(ACTIVITY_NAMESPACE);
-                            attribute.setName(TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
-                            attribute.setValue(TASK_EXPRESSION_COUNTERSIGN_USER);
-                            loopCharacteristics.addAttribute(attribute);
+                        String inputDataItem = loopCharacteristics.getInputDataItem();
+                        if (StringUtil.isEmpty(inputDataItem)) {
+                            loopCharacteristics.setInputDataItem(TASK_EXPRESSION_COUNTERSIGN_USERS);
                         }
 
                         String completionCondition = loopCharacteristics.getCompletionCondition();
@@ -250,14 +245,12 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
                         if (StringUtil.isEmpty(elementVariable)) {
                             loopCharacteristics.setElementVariable(TASK_EXPRESSION_COUNTERSIGN_ELEMENT);
 
-                            String assignee = loopCharacteristics.getAttributeValue(ACTIVITY_NAMESPACE,
-                                    TASK_ATTR_NAME_COUNTERSIGN_COLLECTION);
-                            if (StringUtil.isEmpty(assignee)) {
-                                ExtensionAttribute attribute = new ExtensionAttribute();
-                                attribute.setNamespace(ACTIVITY_NAMESPACE);
-                                attribute.setName("assignee");
-                                attribute.setValue(TASK_EXPRESSION_COUNTERSIGN_TASK_ASSIGNEE);
-                                task.addAttribute(attribute);
+                            if (task instanceof UserTask) {
+                                UserTask userTask = (UserTask) task;
+                                String assignee = userTask.getAssignee();
+                                if (StringUtil.isEmpty(assignee)) {
+                                    userTask.setAssignee(TASK_EXPRESSION_COUNTERSIGN_TASK_ASSIGNEE);
+                                }
                             }
                         }
                     }
@@ -557,6 +550,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
      */
     public BpmNodeRelateInfo generateNodeRelate(SequenceFlow sequence) {
         BpmNodeRelateInfo relateInfo = modelSupplier.newBpmNodeRelateInfo();
+        relateInfo.setBpmKey(sequence.getId());
         String leadNodeCode = sequence.getSourceRef();
         String followNodeCode = sequence.getTargetRef();
         FlowElement sourceElement = sequence.getSourceFlowElement();
