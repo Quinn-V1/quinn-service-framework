@@ -24,4 +24,11 @@ public interface BpmInstSupplier extends Serializable {
      */
     BpmTaskInfo newBpmTaskInfo();
 
+    /**
+     * 新建流程参数值
+     *
+     * @return 具体流程参数值
+     */
+    BpmParamValue newBpmParamValue();
+
 }

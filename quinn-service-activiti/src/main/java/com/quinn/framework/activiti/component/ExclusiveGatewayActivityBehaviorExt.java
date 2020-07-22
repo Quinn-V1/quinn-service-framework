@@ -4,6 +4,7 @@ import com.quinn.framework.activiti.model.ActToBpmInfoFactory;
 import com.quinn.framework.api.BpmNodeRelateInfo;
 import com.quinn.framework.util.BpmParamName;
 import com.quinn.framework.util.enums.NodeRelateTypeEnum;
+import com.quinn.util.base.api.MethodInvokerThreeParam;
 import com.quinn.util.base.api.MethodInvokerTwoParam;
 import com.quinn.util.constant.NumberConstant;
 import org.activiti.bpmn.model.ExclusiveGateway;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 public class ExclusiveGatewayActivityBehaviorExt extends ExclusiveGatewayActivityBehavior {
 
-    private MethodInvokerTwoParam<BpmNodeRelateInfo, String, String> exclusiveGatewayDelegateProxy;
+    private MethodInvokerThreeParam<BpmNodeRelateInfo, String, String, String> exclusiveGatewayDelegateProxy;
 
     @Override
     public void leave(DelegateExecution execution) {
@@ -40,7 +41,8 @@ public class ExclusiveGatewayActivityBehaviorExt extends ExclusiveGatewayActivit
         bpmNodeRelateInfo.setRelateType(NodeRelateTypeEnum.CONDITION.name());
         bpmNodeRelateInfo.setLeadNodeCode(exclusiveGateway.getId());
         bpmNodeRelateInfo.setModelKey(execution.getProcessDefinitionId());
-        String matchNodeCode = exclusiveGatewayDelegateProxy.invoke(bpmNodeRelateInfo, execution.getProcessInstanceId());
+        String matchNodeCode = exclusiveGatewayDelegateProxy.invoke(bpmNodeRelateInfo,
+                execution.getProcessInstanceId(), execution.getId());
 
         List<SequenceFlow> outgoingFlows = exclusiveGateway.getOutgoingFlows();
         SequenceFlow sequenceFlowMath = null;
@@ -64,8 +66,8 @@ public class ExclusiveGatewayActivityBehaviorExt extends ExclusiveGatewayActivit
      *
      * @param exclusiveGatewayDelegateProxy 生效策略
      */
-    public void setExclusiveGatewayDelegateProxy(MethodInvokerTwoParam<BpmNodeRelateInfo,
-            String, String> exclusiveGatewayDelegateProxy) {
+    public void setExclusiveGatewayDelegateProxy(MethodInvokerThreeParam<BpmNodeRelateInfo,
+            String, String, String> exclusiveGatewayDelegateProxy) {
         this.exclusiveGatewayDelegateProxy = exclusiveGatewayDelegateProxy;
     }
 }

@@ -1,11 +1,9 @@
 package com.quinn.framework.activiti.model;
 
 import com.quinn.framework.activiti.api.EventToBpmTaskDecorator;
-import com.quinn.framework.api.BpmInstSupplier;
-import com.quinn.framework.api.BpmModelSupplier;
-import com.quinn.framework.api.BpmNodeRelateInfo;
-import com.quinn.framework.api.BpmTaskInfo;
+import com.quinn.framework.api.*;
 import com.quinn.util.base.model.ClassComparator;
+import org.activiti.engine.delegate.DelegateExecution;
 
 import java.util.*;
 
@@ -90,6 +88,20 @@ public class ActToBpmInfoFactory {
      */
     public static BpmNodeRelateInfo createBpmNodeRelateInfo() {
         return bpmModelSupplier.newBpmNodeRelateInfo();
+    }
+
+    /**
+     * 生成流程实例参数
+     *
+     * @return 生成流程实例参数
+     */
+    public static BpmParamValue createBpmParamValue(DelegateExecution execution, String variableName, Object value) {
+        BpmParamValue bpmParamValue = bpmInstSupplier.newBpmParamValue();
+        bpmParamValue.setBpmExecKey(execution.getId());
+        bpmParamValue.setBpmInstKey(execution.getProcessInstanceId());
+        bpmParamValue.setParamName(variableName);
+        bpmParamValue.setValue(value);
+        return bpmParamValue;
     }
 
 }

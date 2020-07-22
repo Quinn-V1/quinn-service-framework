@@ -7,8 +7,9 @@ import com.quinn.framework.activiti.component.ServiceTaskDelegate;
 import com.quinn.framework.activiti.listener.GlobalBpmListener;
 import com.quinn.framework.api.*;
 import com.quinn.util.base.api.MethodInvokerOneParam;
-import com.quinn.util.base.api.MethodInvokerTwoParam;
+import com.quinn.util.base.api.MethodInvokerThreeParam;
 import com.quinn.util.base.factory.PrefixThreadFactory;
+import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.OrderedConstant;
 import com.quinn.util.constant.StringConstant;
@@ -31,7 +32,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -55,13 +55,19 @@ public class BpmActivitiConfiguration {
 
     @Bean("exclusiveGatewayDelegateProxy")
     @ConditionalOnMissingBean(name = "exclusiveGatewayDelegateProxy")
-    public MethodInvokerTwoParam<BpmNodeRelateInfo, String, String> exclusiveGatewayDelegateProxy() {
-        return (relateInfo, cond) -> StringConstant.STRING_EMPTY;
+    public MethodInvokerThreeParam<BpmNodeRelateInfo, String, String, String> exclusiveGatewayDelegateProxy() {
+        return (relateInfo, bpmInstKey, bpmExecKey) -> StringConstant.STRING_EMPTY;
+    }
+
+    @Bean("multiInstanceBehaviorProxy")
+    @ConditionalOnMissingBean(name = "multiInstanceBehaviorProxy")
+    public MethodInvokerOneParam<BpmParamValue, BaseResult> multiInstanceBehaviorProxy() {
+        return (paramValue) -> BaseResult.SUCCESS;
     }
 
     @Bean
     public ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt(
-            MethodInvokerTwoParam<BpmNodeRelateInfo, String, String> exclusiveGatewayDelegateProxy
+            MethodInvokerThreeParam<BpmNodeRelateInfo, String, String, String> exclusiveGatewayDelegateProxy
     ) {
         ExclusiveGatewayActivityBehaviorExt activityBehavior = new ExclusiveGatewayActivityBehaviorExt();
         activityBehavior.setExclusiveGatewayDelegateProxy(exclusiveGatewayDelegateProxy);
@@ -70,10 +76,12 @@ public class BpmActivitiConfiguration {
 
     @Bean
     public ActivityBehaviorFactory activityBehaviorFactoryExt(
-            ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt
+            ExclusiveGatewayActivityBehavior exclusiveGatewayActivityBehaviorExt,
+            MethodInvokerOneParam<BpmParamValue, BaseResult> multiInstanceBehaviorProxy
     ) {
         ActivityBehaviorFactoryExt activityBehaviorFactoryExt = new ActivityBehaviorFactoryExt();
         activityBehaviorFactoryExt.setExclusiveGatewayActivityBehavior(exclusiveGatewayActivityBehaviorExt);
+        activityBehaviorFactoryExt.setMultiInstanceBehaviorProxy(multiInstanceBehaviorProxy);
         return activityBehaviorFactoryExt;
     }
 
@@ -138,6 +146,11 @@ public class BpmActivitiConfiguration {
 
             @Override
             public BpmTaskInfo newBpmTaskInfo() {
+                return null;
+            }
+
+            @Override
+            public BpmParamValue newBpmParamValue() {
                 return null;
             }
         };
