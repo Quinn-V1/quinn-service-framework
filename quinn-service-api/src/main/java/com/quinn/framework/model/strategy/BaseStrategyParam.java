@@ -45,7 +45,7 @@ public class BaseStrategyParam<T> {
         JSONObject jsonObject = new JSONObject();
         LinkedList<String> paramTempChain = strategyScript.getParamTempChain();
         param = param == null ? new HashMap<>() : param;
-        if (paramTempChain == null) {
+        if (CollectionUtil.isEmpty(paramTempChain)) {
             jsonObject.putAll(param);
             setJsonParam(jsonObject);
             return;
