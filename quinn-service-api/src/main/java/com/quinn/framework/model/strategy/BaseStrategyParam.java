@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.CollectionUtil;
+import com.quinn.util.base.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,7 +46,7 @@ public class BaseStrategyParam<T> {
         JSONObject jsonObject = new JSONObject();
         LinkedList<String> paramTempChain = strategyScript.getParamTempChain();
         param = param == null ? new HashMap<>() : param;
-        if (paramTempChain == null) {
+        if (StringUtil.isEmpty(paramTempChain)) {
             jsonObject.putAll(param);
             setJsonParam(jsonObject);
             return;
