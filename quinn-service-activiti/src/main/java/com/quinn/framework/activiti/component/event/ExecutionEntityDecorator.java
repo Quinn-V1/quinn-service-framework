@@ -1,7 +1,7 @@
 package com.quinn.framework.activiti.component.event;
 
-import com.quinn.framework.api.BpmTaskInfo;
 import com.quinn.framework.activiti.api.EventToBpmTaskDecorator;
+import com.quinn.framework.api.BpmTaskInfo;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.base.convertor.BaseConverter;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
@@ -22,6 +22,8 @@ public class ExecutionEntityDecorator implements EventToBpmTaskDecorator<Executi
         if (executionEntityImpl.getParent() != null && executionEntityImpl.getParent().getBusinessKey() != null) {
             bpmTaskInfo.setInstanceId(BaseConverter.staticConvert(executionEntityImpl.getParent().getBusinessKey(), Long.class));
         }
+        bpmTaskInfo.setBpmExecKey(executionEntityImpl.getId());
+        bpmTaskInfo.setParentExecKey(executionEntityImpl.getSuperExecutionId());
         bpmTaskInfo.setTodoType(BpmTodoTypeEnum.AUTO.name());
     }
 

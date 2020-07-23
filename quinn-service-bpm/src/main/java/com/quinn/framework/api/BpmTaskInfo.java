@@ -48,6 +48,20 @@ public interface BpmTaskInfo extends Serializable {
     void setBpmKey(String bpmKey);
 
     /**
+     * 设置上级BPM执行路由
+     *
+     * @return 上级BPM执行路由
+     */
+    String getParentExecKey();
+
+    /**
+     * 设置上级BPM执行路由
+     *
+     * @param parentExecKey 上级BPM执行路由
+     */
+    void setParentExecKey(String parentExecKey);
+
+    /**
      * 设置BPM主键
      *
      * @return BPM执行主键

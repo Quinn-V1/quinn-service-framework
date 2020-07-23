@@ -20,6 +20,7 @@ public class HistoricActivityInstanceEntityDecorator implements
         bpmTaskInfo.setBpmInstKey(entity.getProcessInstanceId());
         bpmTaskInfo.setBpmKey(entity.getId());
         bpmTaskInfo.setBpmExecKey(entity.getExecutionId());
+        bpmTaskInfo.setParentExecKey(StringConstant.NONE_OF_DATA);
         bpmTaskInfo.setBpmInstKey(entity.getProcessInstanceId());
         bpmTaskInfo.setBpmModelKey(entity.getProcessDefinitionId());
 

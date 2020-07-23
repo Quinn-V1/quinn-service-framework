@@ -103,6 +103,9 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
     @Resource
     private BpmModelSupplier modelSupplier;
 
+    @Resource
+    private BpmInstHelpService bpmInstHelpService;
+
     @Override
     public void generateModelInfo(FileAdapter adapter, BpmModelInfo modelInfo) {
         // 解析获取BpmModel
@@ -426,37 +429,39 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
     @Override
     public void downloadInstPng(HttpServletResponse response, String bpmKey) {
-
         // 获取历史流程实例
         HistoricProcessInstance historicProcessInstance = historyService
                 .createHistoricProcessInstanceQuery()
                 .processInstanceId(bpmKey)
                 .singleResult();
 
-        // 获取流程中已经执行的节点，按照执行先后顺序排序
-        List<HistoricActivityInstance> historicInstanceList = historyService
-                .createHistoricActivityInstanceQuery()
-                .processInstanceId(bpmKey)
-                .orderByHistoricActivityInstanceId()
-                .asc().list();
-
-        // 高亮已经执行流程节点ID集合
-        List<String> highLightedActivityIds = new ArrayList<>();
-        int index = 1;
-        for (HistoricActivityInstance historicInstance : historicInstanceList) {
-            highLightedActivityIds.add(historicInstance.getActivityId());
-            index++;
-        }
-
+//        // 获取流程中已经执行的节点，按照执行先后顺序排序
+//        List<HistoricActivityInstance> historicInstanceList = historyService
+//                .createHistoricActivityInstanceQuery()
+//                .processInstanceId(bpmKey)
+//                .orderByHistoricActivityInstanceId()
+//                .asc().list();
+//
+//        // 高亮已经执行流程节点ID集合
+//        List<String> highLightedActivityIds = new ArrayList<>();
+//        int index = 1;
+//        for (HistoricActivityInstance historicInstance : historicInstanceList) {
+//            highLightedActivityIds.add(historicInstance.getActivityId());
+//            index++;
+//        }
+//
         // 使用默认的程序图片生成器
         ProcessDiagramGenerator generator = new CustomProcessDiagramGenerator(activeColor, historyColor);
-
-        // 获取bpmnModel
+//
+//        // 获取bpmnModel
         String definitionId = historicProcessInstance.getProcessDefinitionId();
         BpmnModel bpmnModel = repositoryService.getBpmnModel(definitionId);
+//
+//        // 高亮流程已发生流转的线id集合
+//        List<String> highLightedFlowIds = this.getHighLightedFlows(bpmnModel, historicInstanceList);
 
-        // 高亮流程已发生流转的线id集合
-        List<String> highLightedFlowIds = this.getHighLightedFlows(bpmnModel, historicInstanceList);
+        List<String> highLightedActivityIds = bpmInstHelpService.selectActiveNodeCodes(bpmKey);
+        List<String> highLightedFlowIds = bpmInstHelpService.selectHistoryNodeCodes(bpmKey);
         InputStream inputStream = generator.generateDiagram(bpmnModel, highLightedActivityIds, highLightedFlowIds,
                 activityFontName, labelFontName, annotationFontName);
 

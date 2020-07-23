@@ -18,6 +18,7 @@ public class ActivitiActivityEventImplDecorator implements EventToBpmTaskDecorat
     public void decorate(BpmTaskInfo bpmTaskInfo, ActivitiActivityEvent entity) {
         bpmTaskInfo.setBpmKey(entity.getActivityId() + StringConstant.CHAR_COLON + entity.getExecutionId());
         bpmTaskInfo.setBpmExecKey(entity.getExecutionId());
+        bpmTaskInfo.setParentExecKey(StringConstant.NONE_OF_DATA);
         bpmTaskInfo.setNodeCode(entity.getActivityId());
         bpmTaskInfo.setNodeName(entity.getActivityName());
         bpmTaskInfo.setNodeType(entity.getActivityType());

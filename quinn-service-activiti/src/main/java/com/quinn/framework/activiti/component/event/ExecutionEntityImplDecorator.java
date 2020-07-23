@@ -19,6 +19,8 @@ public class ExecutionEntityImplDecorator implements EventToBpmTaskDecorator<Exe
         bpmTaskInfo.setBpmKey(entity.getId());
         bpmTaskInfo.setParams(entity.getVariables());
         bpmTaskInfo.setTodoType(BpmTodoTypeEnum.AUTO.name());
+        bpmTaskInfo.setBpmExecKey(entity.getId());
+        bpmTaskInfo.setParentExecKey(entity.getSuperExecutionId());
     }
 
     @Override

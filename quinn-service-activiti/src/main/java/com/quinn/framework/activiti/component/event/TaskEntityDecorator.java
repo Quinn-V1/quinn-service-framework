@@ -17,6 +17,7 @@ public class TaskEntityDecorator implements EventToBpmTaskDecorator<TaskEntity> 
     public void decorate(BpmTaskInfo bpmTaskInfo, TaskEntity entity) {
         bpmTaskInfo.setBpmKey(entity.getId());
         bpmTaskInfo.setBpmExecKey(entity.getExecutionId());
+        bpmTaskInfo.setParentExecKey(entity.getExecution().getParentId());
         bpmTaskInfo.setBpmInstKey(entity.getProcessInstanceId());
 
         bpmTaskInfo.setBpmModelKey(entity.getProcessDefinitionId());
