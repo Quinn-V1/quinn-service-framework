@@ -13,6 +13,7 @@ import com.quinn.util.base.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.exception.file.FileFormatException;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.StringKeyValue;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
@@ -435,33 +436,25 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
                 .processInstanceId(bpmKey)
                 .singleResult();
 
-//        // 获取流程中已经执行的节点，按照执行先后顺序排序
-//        List<HistoricActivityInstance> historicInstanceList = historyService
-//                .createHistoricActivityInstanceQuery()
-//                .processInstanceId(bpmKey)
-//                .orderByHistoricActivityInstanceId()
-//                .asc().list();
-//
-//        // 高亮已经执行流程节点ID集合
-//        List<String> highLightedActivityIds = new ArrayList<>();
-//        int index = 1;
-//        for (HistoricActivityInstance historicInstance : historicInstanceList) {
-//            highLightedActivityIds.add(historicInstance.getActivityId());
-//            index++;
-//        }
-//
-        // 使用默认的程序图片生成器
-        ProcessDiagramGenerator generator = new CustomProcessDiagramGenerator(activeColor, historyColor);
-//
-//        // 获取bpmnModel
+        // 获取bpmnModel
         String definitionId = historicProcessInstance.getProcessDefinitionId();
         BpmnModel bpmnModel = repositoryService.getBpmnModel(definitionId);
-//
-//        // 高亮流程已发生流转的线id集合
-//        List<String> highLightedFlowIds = this.getHighLightedFlows(bpmnModel, historicInstanceList);
 
-        List<String> highLightedActivityIds = bpmInstHelpService.selectActiveNodeCodes(bpmKey);
-        List<String> highLightedFlowIds = bpmInstHelpService.selectHistoryNodeCodes(bpmKey);
+        // 使用默认的程序图片生成器
+        ProcessDiagramGenerator generator = new CustomProcessDiagramGenerator(activeColor, historyColor);
+
+        List<String> highLightedActivityIds = new ArrayList<>();
+        List<String> highLightedFlowIds = new ArrayList<>();
+        BaseResult<List<StringKeyValue>> historyRes = bpmInstHelpService.selectActiveNodeCodeAndFlows(bpmKey);
+        if (historyRes.isSuccess()) {
+            for (StringKeyValue kv : historyRes.getData()) {
+                highLightedActivityIds.add(kv.getDataKey());
+                if (!StringUtil.isEmptyInFrame(kv.getDataValue())) {
+                    highLightedFlowIds.add(kv.getDataValue());
+                }
+            }
+        }
+
         InputStream inputStream = generator.generateDiagram(bpmnModel, highLightedActivityIds, highLightedFlowIds,
                 activityFontName, labelFontName, annotationFontName);
 

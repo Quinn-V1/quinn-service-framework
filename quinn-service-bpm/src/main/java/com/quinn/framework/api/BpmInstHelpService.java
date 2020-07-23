@@ -1,5 +1,8 @@
 package com.quinn.framework.api;
 
+import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.model.StringKeyValue;
+
 import java.util.List;
 
 /**
@@ -16,14 +19,6 @@ public interface BpmInstHelpService {
      * @param bpmInstId BPM流程实例ID
      * @return 活动节点编码
      */
-    List<String> selectActiveNodeCodes(String bpmInstId);
-
-    /**
-     * 选择历史流程的节点
-     *
-     * @param bpmInstId BPM流程实例ID
-     * @return 历史审批节点编码
-     */
-    List<String> selectHistoryNodeCodes(String bpmInstId);
+    BaseResult<List<StringKeyValue>> selectActiveNodeCodeAndFlows(String bpmInstId);
 
 }
