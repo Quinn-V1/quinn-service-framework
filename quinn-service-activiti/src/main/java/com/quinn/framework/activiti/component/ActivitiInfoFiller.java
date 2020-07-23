@@ -167,6 +167,17 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
 
         // 生成流程图 都不高亮
         inputStream = generator.generateDiagram(model, activityFontName, labelFontName, annotationFontName);
+        showBpmImage(response, bpmKey, inputStream);
+    }
+
+    /**
+     * 显示图片
+     *
+     * @param response    响应体
+     * @param bpmKey      BPM编码
+     * @param inputStream 数据流
+     */
+    private void showBpmImage(HttpServletResponse response, String bpmKey, InputStream inputStream) {
         response.setContentType("application/octet-stream; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=" + bpmKey + CharConstant.DOT + imageType);
 
@@ -449,18 +460,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
         InputStream inputStream = generator.generateDiagram(bpmnModel, highLightedActivityIds, highLightedFlowIds,
                 activityFontName, labelFontName, annotationFontName);
 
-        response.setContentType("application/octet-stream; charset=UTF-8");
-        response.setHeader("Content-Disposition", "attachment; filename="
-                + definitionId + CharConstant.DOT + imageType);
-
-        try {
-            ImageUtil.convertSvg2Png(inputStream, response.getOutputStream());
-        } catch (IOException e) {
-            throw new BaseBusinessException();
-        } finally {
-            StreamUtil.closeQuietly(inputStream);
-        }
-
+        showBpmImage(response, definitionId, inputStream);
     }
 
 
@@ -469,7 +469,7 @@ public final class ActivitiInfoFiller implements BpmInfoFiller {
      *
      * @param bpmModel             流程模型
      * @param historicInstanceList 历史节点
-     * @return
+     * @return 高亮节点
      */
     private List<String> getHighLightedFlows(BpmnModel bpmModel, List<HistoricActivityInstance> historicInstanceList) {
         // 流转线ID集合
