@@ -304,119 +304,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
     }
 
     @Override
-    @SneakyThrows
-    public BaseResult<VO> getById(Long id) {
-        TO condition = TOClass.getConstructor().newInstance();
-        condition.setId(id);
-        condition.setAvailableStatus(AvailableStatusEnum.ALL);
-        return get(condition);
-    }
-
-    @Override
-    public BaseResult<VO> get(TO condition) {
-        BaseResult<VO> result = BaseResult.build(true);
-        condition.setResultNumExpected(NumberConstant.INT_ONE);
-        try {
-            pageAdapter.handlePageParam(NumberConstant.INT_ONE, NumberConstant.INT_TWO);
-            entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
-
-                @Override
-                public void invoke() {
-                    Page<VO> select = baseMapper.select(getData());
-                    if (CollectionUtils.isEmpty(select)) {
-                        String dataKey = getData().dataKey();
-                        dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
-                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
-                                .buildMessage(DATA_OPERATION_MISS_HINT.key(), 2, 1)
-                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.key())
-                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
-                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                                .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], dataKey)
-                        ;
-                    } else if (select.size() > 1) {
-                        String dataKey = getData().dataKey();
-                        dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
-                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
-                                .buildMessage(RESULT_NOT_UNIQUE.key(), 2, 1)
-                                .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0],
-                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                                .addParam(RESULT_NOT_UNIQUE.paramNames[1], dataKey)
-                                .addParam(RESULT_NOT_UNIQUE.paramNames[2], select.size())
-                        ;
-                    } else {
-                        getResult().ofData(select.get(0));
-                    }
-                }
-            });
-        } finally {
-            pageAdapter.clearPage();
-        }
-        return result;
-    }
-
-    @Override
-    public BaseResult<List<VO>> selectByMap(Map condition) {
-        return select(new JSONObject(condition).toJavaObject(getTOClass()));
-    }
-
-    @Override
-    public BaseResult<PageInfo<VO>> pageByMap(Map condition) {
-        return page(new JSONObject(condition).toJavaObject(getTOClass()));
-    }
-
-    @Override
-    public BaseResult<List<VO>> select(TO condition) {
-        BaseResult<List<VO>> result = BaseResult.build(true);
-        condition.ofEntityClass(DOClass);
-        entityServiceInterceptorChain.doChain(new BaseSelectMethodInvoker<TO>(result, condition) {
-
-            @Override
-            public void invoke() {
-                Page<VO> select = baseMapper.select(getData());
-                if (CollectionUtils.isEmpty(select)) {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(Collections.emptyList())
-                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
-                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                    ;
-                } else {
-                    getResult().ofData(select);
-                }
-            }
-        });
-        return result;
-    }
-
-    @Override
-    public BaseResult<PageInfo<VO>> page(TO condition) {
-        BaseResult<PageInfo<VO>> result = BaseResult.build(true);
-        condition.ofEntityClass(DOClass);
-        entityServiceInterceptorChain.doChain(new BaseReadMethodInvoker<TO>(result, condition) {
-
-            @Override
-            public void invoke() {
-                BaseResult res = pageAdapter.handlePageParam((PageDTO) condition);
-                if (!res.isSuccess()) {
-                    result.appendPrev(res);
-                    return;
-                }
-
-                Page<VO> select = baseMapper.select(getData());
-                if (CollectionUtils.isEmpty(select)) {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(PageInfo.EMPTY)
-                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
-                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                    ;
-                } else {
-                    getResult().ofData(pageAdapter.toPageInf(select));
-                }
-            }
-        });
-        return result;
-    }
-
-    @Override
     public BatchResult<VO> insertList(List<VO> list, boolean transaction) {
         BatchResult<VO> result = new BatchResult(list.size());
         for (int i = 0; i < list.size(); i++) {
@@ -536,6 +423,155 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         return updateBatchExec(dataList, transaction);
     }
 
+    @Override
+    @SneakyThrows
+    public BaseResult<VO> getById(Long id) {
+        TO condition = TOClass.getConstructor().newInstance();
+        condition.setId(id);
+        condition.setAvailableStatus(AvailableStatusEnum.ALL);
+        return get(condition);
+    }
+
+    @Override
+    public BaseResult<List<VO>> selectByMap(Map condition) {
+        return select(new JSONObject(condition).toJavaObject(getTOClass()));
+    }
+
+    @Override
+    public BaseResult<PageInfo<VO>> pageByMap(Map condition) {
+        return page(new JSONObject(condition).toJavaObject(getTOClass()));
+    }
+
+    @Override
+    public BaseResult<VO> get(TO condition) {
+        BaseResult<TO> res = handDataAuthParam(condition);
+        if (!res.isSuccess()) {
+            return BaseResult.fromPrev(res);
+        }
+
+        BaseResult<VO> result = BaseResult.build(true);
+        condition.setResultNumExpected(NumberConstant.INT_ONE);
+        try {
+            pageAdapter.handlePageParam(NumberConstant.INT_ONE, NumberConstant.INT_TWO);
+            entityServiceInterceptorChain.doChain(new BaseGetMethodInvoker<TO>(result, condition) {
+
+                @Override
+                public void invoke() {
+                    Page<VO> select = baseMapper.select(getData());
+                    if (CollectionUtils.isEmpty(select)) {
+                        String dataKey = getData().dataKey();
+                        dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.WARN)
+                                .buildMessage(DATA_OPERATION_MISS_HINT.key(), 2, 1)
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.QUERY.key())
+                                .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[1],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                .addParam(DATA_OPERATION_MISS_HINT.paramNames[2], dataKey)
+                        ;
+                    } else if (select.size() > 1) {
+                        String dataKey = getData().dataKey();
+                        dataKey = StringUtil.isEmpty(dataKey) ? BaseConverter.staticToString(condition.getId()) : dataKey;
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
+                                .buildMessage(RESULT_NOT_UNIQUE.key(), 2, 1)
+                                .addParamI8n(RESULT_NOT_UNIQUE.paramNames[0],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                .addParam(RESULT_NOT_UNIQUE.paramNames[1], dataKey)
+                                .addParam(RESULT_NOT_UNIQUE.paramNames[2], select.size())
+                        ;
+                    } else {
+                        getResult().ofData(select.get(0));
+                    }
+                }
+            });
+        } finally {
+            pageAdapter.clearPage();
+        }
+        return result;
+    }
+
+    @Override
+    public BaseResult<List<VO>> select(TO condition) {
+        BaseResult<TO> res = handDataAuthParam(condition);
+        if (!res.isSuccess()) {
+            return BaseResult.fromPrev(res);
+        }
+
+        BaseResult<List<VO>> result = BaseResult.build(true);
+        condition.ofEntityClass(DOClass);
+        entityServiceInterceptorChain.doChain(new BaseSelectMethodInvoker<TO>(result, condition) {
+
+            @Override
+            public void invoke() {
+                Page<VO> select = baseMapper.select(getData());
+                if (CollectionUtils.isEmpty(select)) {
+                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(Collections.emptyList())
+                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
+                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
+                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                    ;
+                } else {
+                    getResult().ofData(select);
+                }
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public BaseResult<PageInfo<VO>> page(TO condition) {
+        BaseResult<TO> res = handDataAuthParam(condition);
+        if (!res.isSuccess()) {
+            return BaseResult.fromPrev(res);
+        }
+
+        BaseResult<PageInfo<VO>> result = BaseResult.build(true);
+        condition.ofEntityClass(DOClass);
+        entityServiceInterceptorChain.doChain(new BaseReadMethodInvoker<TO>(result, condition) {
+
+            @Override
+            public void invoke() {
+                BaseResult res = pageAdapter.handlePageParam((PageDTO) condition);
+                if (!res.isSuccess()) {
+                    result.appendPrev(res);
+                    return;
+                }
+
+                Page<VO> select = baseMapper.select(getData());
+                if (CollectionUtils.isEmpty(select)) {
+                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(PageInfo.EMPTY)
+                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
+                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
+                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                    ;
+                } else {
+                    getResult().ofData(pageAdapter.toPageInf(select));
+                }
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public BaseEntityService addEntityServiceInterceptor(EntityServiceInterceptor entityServiceInterceptor) {
+        entityServiceInterceptorChain.addInterceptor(entityServiceInterceptor);
+        return this;
+    }
+
+    @Override
+    public Class<DO> getDOClass() {
+        return DOClass;
+    }
+
+    @Override
+    public Class<TO> getTOClass() {
+        return TOClass;
+    }
+
+    @Override
+    public Class<VO> getVOClass() {
+        return VOClass;
+    }
+
     /**
      * 根据标记更新列表
      *
@@ -587,27 +623,6 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
         return result;
     }
 
-    @Override
-    public BaseEntityService addEntityServiceInterceptor(EntityServiceInterceptor entityServiceInterceptor) {
-        entityServiceInterceptorChain.addInterceptor(entityServiceInterceptor);
-        return this;
-    }
-
-    @Override
-    public Class<DO> getDOClass() {
-        return DOClass;
-    }
-
-    @Override
-    public Class<TO> getTOClass() {
-        return TOClass;
-    }
-
-    @Override
-    public Class<VO> getVOClass() {
-        return VOClass;
-    }
-
     /**
      * 处理分页参数
      *
@@ -648,6 +663,16 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
      */
     protected <V> PageInfo<V> toPageInf(Object t) {
         return this.pageAdapter.toPageInf(t);
+    }
+
+    /**
+     * 处理授权参数（具体交给子类实现：可能根据用户、角色、组织）
+     *
+     * @param to 参数
+     * @return 是否成功
+     */
+    protected BaseResult<TO> handDataAuthParam(TO to) {
+        return BaseResult.success(to);
     }
 
 }

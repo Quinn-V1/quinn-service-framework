@@ -104,13 +104,19 @@ public abstract class BaseDTO<T> {
     /**
      * 操作者(用作权限控制)
      */
-    @ApiModelProperty("操作者")
+    @ApiModelProperty("操作者:用作用户权限控制")
     private String operator;
+
+    /**
+     * 操作者(用作角色权限控制)
+     */
+    @ApiModelProperty("操作者:用作角色权限控制")
+    private String operatorForRole;
 
     /**
      * 操作者组织（用作权限控制）
      */
-    @ApiModelProperty("操作者组织")
+    @ApiModelProperty("操作者组织:用作组织权限控制")
     private String operatorOrg;
 
     /**
