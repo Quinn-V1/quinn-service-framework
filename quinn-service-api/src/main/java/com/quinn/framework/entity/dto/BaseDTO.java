@@ -66,6 +66,11 @@ public abstract class BaseDTO<T> {
     private Boolean useCache;
 
     /**
+     * 是否分页处理
+     */
+    private Boolean pageFlag;
+
+    /**
      * 期望结果数：如果确定只找一个结果，加一个limit 2
      */
     @ApiModelProperty("期望结果数")

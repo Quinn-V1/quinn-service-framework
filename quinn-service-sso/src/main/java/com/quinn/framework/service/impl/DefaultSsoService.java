@@ -87,7 +87,6 @@ public class DefaultSsoService implements SsoService {
             }
         }
 
-        loginProcessor.logout();
         // 登录动作
         AuthInfo authInfo = null;
         RuntimeException exception = null;

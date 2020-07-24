@@ -502,15 +502,27 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
 
             @Override
             public void invoke() {
-                Page<VO> select = baseMapper.select(getData());
-                if (CollectionUtils.isEmpty(select)) {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(Collections.emptyList())
-                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
-                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                    ;
-                } else {
-                    getResult().ofData(select);
+                TO data = getData();
+                Boolean pageFlag = data.getPageFlag();
+                if (pageFlag != null && pageFlag) {
+                    pageAdapter.handlePageParam((PageDTO) condition);
+                }
+
+                try {
+                    Page<VO> select = baseMapper.select(data);
+                    if (CollectionUtils.isEmpty(select)) {
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(Collections.emptyList())
+                                .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
+                                .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                        ;
+                    } else {
+                        getResult().ofData(select);
+                    }
+                } finally {
+                    if (pageFlag != null && pageFlag) {
+                        pageAdapter.clearPage();
+                    }
                 }
             }
         });
@@ -536,15 +548,19 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     return;
                 }
 
-                Page<VO> select = baseMapper.select(getData());
-                if (CollectionUtils.isEmpty(select)) {
-                    getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(PageInfo.EMPTY)
-                            .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
-                            .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
-                                    CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
-                    ;
-                } else {
-                    getResult().ofData(pageAdapter.toPageInf(select));
+                try {
+                    Page<VO> select = baseMapper.select(getData());
+                    if (CollectionUtils.isEmpty(select)) {
+                        getResult().ofSuccess(false).ofLevel(MessageLevelEnum.DEBUG).ofData(PageInfo.EMPTY)
+                                .buildMessage(RESULT_NOT_FOUND.key(), 0, 1)
+                                .addParamI8n(RESULT_NOT_FOUND.paramNames[0],
+                                        CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                        ;
+                    } else {
+                        getResult().ofData(pageAdapter.toPageInf(select));
+                    }
+                } finally {
+                    pageAdapter.clearPage();
                 }
             }
         });
