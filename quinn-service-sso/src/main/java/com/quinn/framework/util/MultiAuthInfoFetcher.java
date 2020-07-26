@@ -6,8 +6,8 @@ import com.quinn.framework.api.TokenInfo;
 import com.quinn.framework.exception.AuthTypeNotSupportException;
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.framework.util.enums.AuthMessageEnum;
-import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.enums.FunctionTypeEnum;
+import com.quinn.util.constant.ConfigConstant;
+import com.quinn.util.constant.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 

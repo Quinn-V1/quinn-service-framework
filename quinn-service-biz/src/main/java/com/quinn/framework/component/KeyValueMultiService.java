@@ -9,7 +9,7 @@ import com.quinn.util.base.api.KeyValue;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 
 import java.util.List;
 import java.util.Map;

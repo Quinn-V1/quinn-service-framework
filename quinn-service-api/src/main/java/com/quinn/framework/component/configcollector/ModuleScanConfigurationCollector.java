@@ -4,7 +4,7 @@ import com.quinn.framework.api.ConfigInfoCollector;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;

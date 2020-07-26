@@ -1,7 +1,7 @@
 package com.quinn.framework.configuration;
 
 import com.quinn.framework.model.SwaggerDocketFactory;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

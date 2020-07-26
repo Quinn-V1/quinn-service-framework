@@ -1,7 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.cache.CacheAllService;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;

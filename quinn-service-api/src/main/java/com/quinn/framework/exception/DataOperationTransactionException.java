@@ -1,6 +1,6 @@
 package com.quinn.framework.exception;
 
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 
 /**
  * 数据操作事务异常

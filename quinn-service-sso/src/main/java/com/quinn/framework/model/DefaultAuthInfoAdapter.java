@@ -3,7 +3,7 @@ package com.quinn.framework.model;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.AuthInfo;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 
 import java.util.Map;
 

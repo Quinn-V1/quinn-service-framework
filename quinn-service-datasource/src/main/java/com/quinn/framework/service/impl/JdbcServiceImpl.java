@@ -11,8 +11,8 @@ import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.base.enums.CommonMessageEnum;
-import com.quinn.util.base.enums.DataOperateTypeEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
@@ -32,7 +32,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quinn.util.base.enums.CommonMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
+import static com.quinn.util.constant.enums.CommonMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
 
 /**
  * 数据库直接操作层

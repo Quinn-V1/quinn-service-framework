@@ -7,7 +7,7 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.FileUtil;
 import com.quinn.util.base.StreamUtil;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.constant.enums.StorageTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

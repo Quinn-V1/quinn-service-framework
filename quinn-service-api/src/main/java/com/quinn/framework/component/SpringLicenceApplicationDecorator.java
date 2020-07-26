@@ -2,8 +2,8 @@ package com.quinn.framework.component;
 
 import com.quinn.framework.api.SpringApplicationDecorator;
 import com.quinn.util.base.CollectionUtil;
-import com.quinn.util.base.constant.ConfigConstant;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.ConfigConstant;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.factory.LicenceClassLoader;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.LicenceInfo;

@@ -1,7 +1,7 @@
 package com.quinn.framework.controller;
 
 import com.quinn.framework.service.SsoService;
-import com.quinn.util.base.enums.FunctionTypeEnum;
+import com.quinn.util.constant.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

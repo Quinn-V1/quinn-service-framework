@@ -2,7 +2,7 @@ package com.quinn.framework.model;
 
 import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.AuthInfoSupplier;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 
 /**
  * 数据库权限信息供应商

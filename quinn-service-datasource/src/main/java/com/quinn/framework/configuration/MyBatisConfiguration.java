@@ -1,6 +1,6 @@
 package com.quinn.framework.configuration;
 
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 import org.apache.ibatis.mapping.DatabaseIdProvider;

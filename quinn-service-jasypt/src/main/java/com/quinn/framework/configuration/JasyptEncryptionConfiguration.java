@@ -1,7 +1,7 @@
 package com.quinn.framework.configuration;
 
 import com.quinn.framework.component.JasyptEncryption;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 import org.jasypt.encryption.StringEncryptor;

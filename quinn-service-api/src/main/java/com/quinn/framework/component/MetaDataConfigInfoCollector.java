@@ -4,7 +4,7 @@ import com.quinn.framework.api.CustomApplicationListener;
 import com.quinn.framework.component.serializer.JsonApplicationSerializer;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StreamUtil;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.licence.model.ApplicationInfo;
 import com.quinn.util.licence.model.ConfigMetadata;
 import lombok.SneakyThrows;

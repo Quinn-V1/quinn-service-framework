@@ -1,7 +1,7 @@
 package com.quinn.framework.listener;
 
 import com.quinn.util.base.api.LoggerExtend;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;

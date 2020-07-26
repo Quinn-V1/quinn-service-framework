@@ -7,7 +7,7 @@ import com.quinn.framework.component.ByteApplicationRedisSerializer;
 import com.quinn.framework.component.JsonApplicationRedisSerializer;
 import com.quinn.framework.component.RedisCacheServiceManager;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.constant.StringConstant;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

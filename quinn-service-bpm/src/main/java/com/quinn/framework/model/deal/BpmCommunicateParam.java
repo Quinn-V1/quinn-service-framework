@@ -6,7 +6,7 @@ import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

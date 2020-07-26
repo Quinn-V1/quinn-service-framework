@@ -9,7 +9,7 @@ import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StreamUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.FileAdapter;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.exception.file.FileFormatException;
 import com.quinn.util.base.model.BaseResult;

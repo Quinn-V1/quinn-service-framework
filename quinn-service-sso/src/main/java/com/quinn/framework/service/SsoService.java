@@ -4,7 +4,7 @@ import com.quinn.framework.api.AuthInfo;
 import com.quinn.framework.api.LoginPostProcessor;
 import com.quinn.framework.api.LoginPrevProcessor;
 import com.quinn.framework.model.DefaultTokenInfo;
-import com.quinn.util.base.enums.FunctionTypeEnum;
+import com.quinn.util.constant.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 

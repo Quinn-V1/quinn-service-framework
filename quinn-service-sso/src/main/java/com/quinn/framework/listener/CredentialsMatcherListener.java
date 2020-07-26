@@ -5,7 +5,7 @@ import com.quinn.framework.api.AuthInfoSupplier;
 import com.quinn.framework.api.CredentialsSubMatcher;
 import com.quinn.framework.model.AuthInfoFactory;
 import com.quinn.framework.util.MultiCredentialsMatcher;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.MandatoryBeanMissException;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

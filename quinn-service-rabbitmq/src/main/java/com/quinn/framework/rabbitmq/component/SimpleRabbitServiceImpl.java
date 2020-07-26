@@ -6,7 +6,7 @@ import com.quinn.framework.api.MqService;
 import com.quinn.framework.api.MqTarget;
 import com.quinn.framework.util.enums.ExchangeTypeEnum;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.DataStyleNotMatchException;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.StringConstant;

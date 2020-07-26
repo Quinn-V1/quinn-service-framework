@@ -18,7 +18,7 @@ import com.quinn.framework.util.enums.CmTypeEnum;
 import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.LoggerExtend;
-import com.quinn.util.base.enums.FunctionTypeEnum;
+import com.quinn.util.constant.enums.FunctionTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;

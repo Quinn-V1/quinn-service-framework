@@ -3,7 +3,7 @@ package com.quinn.framework.model.strategy;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.constant.StringConstant;
 import lombok.Getter;
 import lombok.Setter;

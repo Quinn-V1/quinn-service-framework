@@ -20,7 +20,7 @@ import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.base.enums.DataOperateTypeEnum;
+import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.quinn.util.base.enums.CommonMessageEnum.*;
+import static com.quinn.util.constant.enums.CommonMessageEnum.*;
 
 /**
  * 基础实体类业务实现层

@@ -5,7 +5,7 @@ import com.quinn.framework.api.message.MessageSender;
 import com.quinn.framework.api.message.MessageSenderSupplier;
 import com.quinn.framework.api.message.MessageServer;
 import com.quinn.framework.model.EmailSender;
-import com.quinn.util.base.enums.MessageTypeEnum;
+import com.quinn.util.constant.enums.MessageTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 
 import java.util.LinkedHashMap;

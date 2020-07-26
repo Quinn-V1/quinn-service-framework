@@ -3,7 +3,7 @@ package com.quinn.framework;
 import com.quinn.framework.api.CustomApplicationListener;
 import com.quinn.framework.component.BaseConfigInfoReWriter;
 import com.quinn.framework.model.SpringApplicationFactory;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.boot.SpringApplication;

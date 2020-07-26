@@ -2,7 +2,7 @@ package com.quinn.framework.component.serializer;
 
 import com.quinn.framework.api.ApplicationSerializer;
 import com.quinn.util.base.StreamUtil;
-import com.quinn.util.base.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.constant.StringConstant;
 import lombok.SneakyThrows;

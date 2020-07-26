@@ -5,7 +5,7 @@ import com.quinn.framework.exception.UnauthorizedException;
 import com.quinn.framework.util.MultiErrorHandler;
 import com.quinn.framework.util.RequestUtil;
 import com.quinn.framework.util.enums.AuthMessageEnum;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.constant.NumberConstant;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;

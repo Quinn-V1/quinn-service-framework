@@ -2,7 +2,7 @@ package com.quinn.framework.component.configcollector;
 
 import com.quinn.framework.api.ConfigInfoCollector;
 import com.quinn.framework.util.PropertiesUtil;
-import com.quinn.util.base.constant.ConfigConstant;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 

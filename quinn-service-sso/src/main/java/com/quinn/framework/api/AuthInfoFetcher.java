@@ -2,7 +2,7 @@ package com.quinn.framework.api;
 
 import com.quinn.framework.model.DefaultPermission;
 import com.quinn.util.base.api.ClassDivAble;
-import com.quinn.util.base.enums.FunctionTypeEnum;
+import com.quinn.util.constant.enums.FunctionTypeEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
 
