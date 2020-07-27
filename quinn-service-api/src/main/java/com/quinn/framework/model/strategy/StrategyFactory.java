@@ -126,7 +126,7 @@ public class StrategyFactory {
                     if (BaseUtil.isEmpty(paramValue)) {
                         if (paramItem.isMustFlag()) {
                             throw new ParameterShouldNotEmpty().getMessageProp()
-                                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames, paramName)
+                                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], paramName)
                                     .exception();
                         }
                     } else {
