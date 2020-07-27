@@ -158,7 +158,7 @@ public class StrategyFactory {
          * @return 本身
          */
         public StrategyBuilder ofResultClass(String clazz) {
-            if (StringUtil.isNotEmpty(clazz)) {
+            if (!StringUtil.isEmptyInFrame(clazz)) {
                 strategyParam.setResultClass(BaseConverter.classOf(clazz));
             }
             return this;
