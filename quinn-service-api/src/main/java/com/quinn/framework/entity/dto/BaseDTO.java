@@ -333,13 +333,14 @@ public abstract class BaseDTO<T> {
      * @return
      */
     public String dataKey() {
-        return String.valueOf(id);
+        return BaseConverter.staticToString(id);
     }
 
     /**
      * 逆向解析数据编码
      */
     public boolean dataKey(String dataKey) {
+
         return dataKey(dataKey, DATA_KEY_DELIMITER);
     }
 
@@ -347,6 +348,9 @@ public abstract class BaseDTO<T> {
      * 逆向解析数据编码
      */
     public boolean dataKey(String dataKey, String delimiter) {
+        if (StringUtil.isEmpty(dataKey)) {
+            return false;
+        }
         this.id = BaseConverter.staticConvert(dataKey, Long.class);
         return true;
     }

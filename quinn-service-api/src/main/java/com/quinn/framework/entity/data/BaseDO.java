@@ -3,6 +3,7 @@ package com.quinn.framework.entity.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.api.entityflag.IdGenerateAble;
 import com.quinn.framework.entity.dto.BaseDTO;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.enums.DataStatusEnum;
 import com.quinn.util.constant.enums.DbOperateTypeEnum;
@@ -103,7 +104,7 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
      * @return 缓存Key
      */
     public String dataKey() {
-        return String.valueOf(id);
+        return BaseConverter.staticToString(id);
     }
 
     @Override

@@ -5,11 +5,14 @@ import com.quinn.framework.util.BpmInstParamName;
 import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Map;
 
 /**
  * BPM 任务同意参数
@@ -36,6 +39,12 @@ public class BpmRejectParam extends AbstractBpmDealParam {
     public void initWithParam(ComplexDealParam param) {
         super.initWithParam(param);
         setToNodeKey(param.getToNodeKey());
+    }
+
+    @Override
+    public void initWithMap(Map<String, Object> param) {
+        super.initWithMap(param);
+        setToNodeKey(BaseConverter.staticToString(param.get(BpmInstParamName.TO_NODE_KEY)));
     }
 
     @Override

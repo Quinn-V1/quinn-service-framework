@@ -59,6 +59,11 @@ public interface BpmInstParamName {
     String START_USER = "startUser";
 
     /**
+     * 驳回节点
+     */
+    String TO_NODE_KEY = "toNodeKey";
+
+    /**
      * 转办用户
      */
     String TO_USER_KEY = "toUserKey";

@@ -1,6 +1,8 @@
 package com.quinn.framework.model.deal;
 
 import com.quinn.framework.api.BpmDealParamSupplier;
+import com.quinn.framework.util.BpmInstParamName;
+import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.DataStyleNotMatchException;
 
 import java.util.HashMap;
@@ -45,6 +47,25 @@ public class BpmDealParamFactory {
 
         AbstractBpmDealParam param = supplier.supply();
         param.initWithParam(complexDealParam);
+        return (T) param;
+    }
+
+    /**
+     * 创建具体处理参数
+     *
+     * @param complexDealParam 复杂参数
+     * @param <T>              泛型
+     * @return 具体参数
+     */
+    public static <T extends AbstractBpmDealParam> T create(Map<String, Object> complexDealParam) {
+        String dealType = BaseConverter.staticToString(complexDealParam.get(BpmInstParamName.DEAL_TYPE));
+        BpmDealParamSupplier supplier = supplierMap.get(dealType);
+        if (supplier == null) {
+            throw new DataStyleNotMatchException();
+        }
+
+        AbstractBpmDealParam param = supplier.supply();
+        param.initWithMap(complexDealParam);
         return (T) param;
     }
 

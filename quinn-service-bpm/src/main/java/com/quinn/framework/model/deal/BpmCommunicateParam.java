@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 /**
  * BPM 任务沟通、抄送参数
  *
@@ -37,6 +39,13 @@ public class BpmCommunicateParam extends AbstractBpmDealParam {
     public void initWithParam(ComplexDealParam param) {
         super.initWithParam(param);
         setToUserKeys(param.getToUserKeys());
+    }
+
+    @Override
+    public void initWithMap(Map<String, Object> param) {
+        super.initWithMap(param);
+        String[] toUserKeys = CollectionUtil.toArray(param.get(BpmInstParamName.TO_USER_KEYS), String.class);
+        setToUserKeys(toUserKeys);
     }
 
     @Override
