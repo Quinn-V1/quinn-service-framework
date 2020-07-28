@@ -126,7 +126,7 @@ public class StrategyFactory {
                     if (BaseUtil.isEmpty(paramValue)) {
                         if (paramItem.isMustFlag()) {
                             throw new ParameterShouldNotEmpty().getMessageProp()
-                                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames, paramName)
+                                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], paramName)
                                     .exception();
                         }
                     } else {
@@ -158,7 +158,7 @@ public class StrategyFactory {
          * @return 本身
          */
         public StrategyBuilder ofResultClass(String clazz) {
-            if (StringUtil.isNotEmpty(clazz)) {
+            if (!StringUtil.isEmptyInFrame(clazz)) {
                 strategyParam.setResultClass(BaseConverter.classOf(clazz));
             }
             return this;

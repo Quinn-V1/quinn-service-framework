@@ -1,4 +1,3 @@
-
 package com.quinn.framework.controller;
 
 import com.quinn.framework.component.KeyValueMultiService;
@@ -21,7 +20,7 @@ import java.util.Map;
 @Api(tags = {"0ZY010数据：通用主数据"})
 public class KeyValueController extends AbstractController {
 
-    @PostMapping(value = "list")
+    @PostMapping(value = {"list","list-basic"})
     @ApiOperation("综合获取通用主数据列表")
     public BaseResult list(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
@@ -30,7 +29,7 @@ public class KeyValueController extends AbstractController {
         return KeyValueMultiService.selectByMap(condition);
     }
 
-    @PostMapping(value = "page")
+    @PostMapping(value = {"page","page-basic"})
     @ApiOperation("分页获取通用主数据列表")
     public BaseResult page(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
