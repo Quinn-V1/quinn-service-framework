@@ -20,15 +20,11 @@ import com.quinn.framework.util.enums.CommonDataTypeEnum;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.NumberConstant;
-import com.quinn.util.constant.enums.AvailableStatusEnum;
-import com.quinn.util.constant.enums.DataStatusEnum;
-import com.quinn.util.constant.enums.DbOperateTypeEnum;
-import com.quinn.util.constant.enums.MessageLevelEnum;
+import com.quinn.util.constant.enums.*;
 import lombok.SneakyThrows;
 import org.springframework.util.CollectionUtils;
 
@@ -668,6 +664,22 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
      */
     protected BaseResult handlePageParam(Map<String, Object> cond) {
         return this.pageAdapter.handlePageParam(cond);
+    }
+
+    /**
+     * 清除分业参数
+     */
+    protected void clearPageParam() {
+        pageAdapter.clearPage();
+    }
+
+    /**
+     * 获取分页工具适配器
+     *
+     * @return 分页工具适配器
+     */
+    protected PageAdapter getPageAdapter() {
+        return pageAdapter;
     }
 
     /**
