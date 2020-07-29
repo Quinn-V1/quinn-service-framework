@@ -11,6 +11,7 @@ import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.StringKeyValue;
+import com.quinn.util.constant.ConfigConstant;
 import com.quinn.util.constant.StringConstant;
 
 import java.util.*;
@@ -23,7 +24,100 @@ import java.util.*;
  */
 public final class EntityUtil {
 
+    /**
+     * 组织编码分隔符
+     */
+    public static final String KEY_PATH_SPLIT;
+
+    static {
+        KEY_PATH_SPLIT = System.getProperty(ConfigConstant.PROP_KEY_OF_KEY_PATH_SPLIT,
+                ConfigConstant.DEFAULT_KEY_PATH_SPLIT);
+    }
+
     private EntityUtil() {
+    }
+
+    /**
+     * 判断一个组织编码是否为顶层组织
+     *
+     * @param key 顶层组织
+     * @return 顶层组织 true
+     */
+    public static boolean isRootKey(String key) {
+        if (StringUtil.isEmpty(key)) {
+            return true;
+        }
+        return !key.contains(KEY_PATH_SPLIT);
+    }
+
+    /**
+     * 判断一个组织编码是否为顶层组织
+     *
+     * @param key 顶层组织
+     * @return 顶层组织 true
+     */
+    public static String parentKey(String key) {
+        if (isRootKey(key)) {
+            return StringConstant.TOP_OF_DATA;
+        }
+        return key.substring(0, key.lastIndexOf(KEY_PATH_SPLIT));
+    }
+
+    /**
+     * 生成编码路径
+     *
+     * @param parentKey 上级编码路径
+     * @param code      数据编码
+     * @param delimiter 分隔符
+     * @return 父类编码
+     */
+    public static String generateKeyByCode(String parentKey, String code, String delimiter) {
+        if (StringUtil.isEmptyInFrame(parentKey)) {
+            return code;
+        }
+        return parentKey + delimiter + code;
+    }
+
+    /**
+     * 判断一个组织编码是否为顶层组织
+     *
+     * @param key 顶层组织
+     * @param delimiter 分隔符
+     * @return 顶层组织 true
+     */
+    public static boolean isRootKey(String key, String delimiter) {
+        if (StringUtil.isEmpty(key)) {
+            return true;
+        }
+        return !key.contains(delimiter);
+    }
+
+    /**
+     * 判断一个组织编码是否为顶层组织
+     *
+     * @param key 顶层组织
+     * @param delimiter 分隔符
+     * @return 顶层组织 true
+     */
+    public static String parentKey(String key, String delimiter) {
+        if (isRootKey(key)) {
+            return StringConstant.TOP_OF_DATA;
+        }
+        return key.substring(0, key.lastIndexOf(delimiter));
+    }
+
+    /**
+     * 生成编码路径
+     *
+     * @param parentKey 上级编码路径
+     * @param code      数据编码
+     * @return 父类编码
+     */
+    public static String generateKeyByCode(String parentKey, String code) {
+        if (StringUtil.isEmptyInFrame(parentKey)) {
+            return code;
+        }
+        return parentKey + KEY_PATH_SPLIT + code;
     }
 
     /**
