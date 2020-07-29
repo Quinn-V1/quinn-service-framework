@@ -74,6 +74,15 @@ public class EhCacheAllServiceImpl implements CacheAllService {
     }
 
     @Override
+    public void multiSet(Map<String, Object> values) {
+        if (values != null) {
+            for (Map.Entry<String, Object> entry : values.entrySet()) {
+                cache.put(new Element(entry.getKey(), entry.getValue()));
+            }
+        }
+    }
+
+    @Override
     public void set(String key, Object value, long expire) {
         Element element = new Element(key, value);
         element.setTimeToLive(BaseConverter.staticConvert(expire, Integer.class));

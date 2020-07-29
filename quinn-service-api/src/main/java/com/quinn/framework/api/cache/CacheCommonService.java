@@ -1,6 +1,7 @@
 package com.quinn.framework.api.cache;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,16 +15,23 @@ public interface CacheCommonService extends CacheBaseService {
     /**
      * 设置值：不限时间
      *
-     * @param key 键
+     * @param key   键
      * @param value 值
      */
     void set(String key, Object value);
 
     /**
+     * 设置值：不限时间
+     *
+     * @param values 值
+     */
+    void multiSet(Map<String, Object> values);
+
+    /**
      * 设置值：限制过期事件
      *
-     * @param key 键
-     * @param value 值
+     * @param key    键
+     * @param value  值
      * @param expire 有效时间（秒）
      */
     void set(String key, Object value, long expire);
@@ -48,16 +56,16 @@ public interface CacheCommonService extends CacheBaseService {
 
     /**
      * 获取缓存大小
-     * @param pattern   键样式
      *
-     * @return      符合样式的键的数量
+     * @param pattern 键样式
+     * @return 符合样式的键的数量
      */
     int size(String pattern);
 
     /**
      * 获取缓存大小
      *
-     * @return  缓存键总数
+     * @return 缓存键总数
      */
     int size();
 
@@ -78,16 +86,16 @@ public interface CacheCommonService extends CacheBaseService {
 
     /**
      * 获取所有值
-     * @param pattern   键样式
      *
-     * @return  符合键样式对应的所有的值
+     * @param pattern 键样式
+     * @return 符合键样式对应的所有的值
      */
     <T> Collection<T> values(String pattern);
 
     /**
      * 获取所有值
      *
-     * @return  所有人值
+     * @return 所有人值
      */
     <T> Collection<T> values();
 
@@ -117,7 +125,7 @@ public interface CacheCommonService extends CacheBaseService {
     /**
      * 清除所有键
      *
-     * @param pattern   键样式
+     * @param pattern 键样式
      */
     void clear(String pattern);
 

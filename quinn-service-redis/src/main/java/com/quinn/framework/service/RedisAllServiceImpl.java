@@ -31,6 +31,11 @@ public class RedisAllServiceImpl extends AbstractRedisService implements CacheAl
     }
 
     @Override
+    public void multiSet(Map<String, Object> values) {
+        doSet(values, -1L);
+    }
+
+    @Override
     public void set(final String key, final Object value, final long expire) {
         doSet(key, value, expire);
     }

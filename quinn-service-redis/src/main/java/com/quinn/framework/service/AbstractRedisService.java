@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Redis缓存操作基础类
@@ -64,6 +66,33 @@ public abstract class AbstractRedisService implements CacheCommonService {
     /**
      * 放入操作
      *
+     * @param values 值
+     * @param expire 过期时间
+     */
+    public void doSet(Map<String, Object> values, long expire) {
+        if (values == null) {
+            return;
+        }
+
+        redisTemplate.execute((RedisCallback) redisConnection -> {
+            Map<byte[], byte[]> byteMap = new HashMap<>(values.size());
+            for (Map.Entry<String, Object> entry : values.entrySet()) {
+                String wKey = wrapperKey(entry.getKey());
+                byte[] val = redisSerializer.serialize(entry.getValue());
+                byte[] keyBytes = StringUtil.getBytes(wKey);
+                byteMap.put(keyBytes, val);
+            }
+
+            if (expire > 0) {
+                redisConnection.mSet(byteMap);
+            }
+            return 1L;
+        });
+    }
+
+    /**
+     * 放入操作
+     *
      * @param key    键
      * @param value  值
      * @param expire 过期时间
@@ -78,7 +107,6 @@ public abstract class AbstractRedisService implements CacheCommonService {
         redisTemplate.execute((RedisCallback) redisConnection -> {
             byte[] val = redisSerializer.serialize(value);
             byte[] keyBytes = StringUtil.getBytes(wKey);
-
             if (val != null) {
                 redisConnection.set(keyBytes, val);
                 if (expire > 0) {
