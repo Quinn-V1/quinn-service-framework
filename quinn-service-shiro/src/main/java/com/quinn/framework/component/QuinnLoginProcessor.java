@@ -5,9 +5,9 @@ import com.quinn.framework.api.LoginProcessor;
 import com.quinn.framework.api.TokenInfo;
 import com.quinn.framework.exception.UnauthorizedException;
 import com.quinn.framework.model.AuthInfoFactory;
-import com.quinn.framework.model.DefaultAuthInfoAdapter;
 import com.quinn.framework.model.QuinnTokenAdapter;
 import com.quinn.framework.util.MultiAuthInfoFetcher;
+import com.quinn.framework.util.MultiErrorHandler;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.framework.util.enums.AuthMessageEnum;
 import com.quinn.util.base.model.BaseResult;
@@ -36,9 +36,14 @@ public class QuinnLoginProcessor implements LoginProcessor {
     @Override
     public AuthInfo login(TokenInfo token) {
         Subject subject = SecurityUtils.getSubject();
-        subject.login(new QuinnTokenAdapter(token));
-        Object principal = subject.getPrincipal();
+        try {
+            subject.login(new QuinnTokenAdapter(token));
+        } catch (Exception e) {
+            MultiErrorHandler.handleError(e, SessionUtil.getRequest(), SessionUtil.getResponse());
+            return null;
+        }
 
+        Object principal = subject.getPrincipal();
         AuthInfo authInfo = AuthInfoFactory.generate(principal);
         boolean superAdmin = subject.hasRole(SessionUtil.SUPER_ADMIN_ROLE_NAME);
         boolean orgAdmin = subject.hasRole(SessionUtil.ORG_ADMIN_ROLE_NAME);

@@ -61,10 +61,21 @@ public class BaseStrategyParam<T> {
         if (o instanceof Map) {
             Map<String, String> mapping = (Map<String, String>) o;
             for (Map.Entry<String, String> entry : mapping.entrySet()) {
-                jsonObject.put(entry.getKey(), entry.getValue());
+                String valueKey = entry.getValue();
+                if (valueKey.startsWith(DIRECT_PARAM_PREFIX)) {
+                    String key = valueKey.substring(DIRECT_PARAM_PREFIX.length());
+                    jsonObject.put(entry.getKey(), key);
+                } else {
+                    Object val = jsonObject.get(valueKey);
+                    if (val == null) {
+                        val = param.get(valueKey);
+                    }
+                    if (val != null) {
+                        jsonObject.put(entry.getKey(), val);
+                    }
+                }
             }
         }
-
         setJsonParam(jsonObject);
     }
 

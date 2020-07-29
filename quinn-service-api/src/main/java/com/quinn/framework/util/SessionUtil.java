@@ -11,6 +11,7 @@ import com.quinn.util.constant.enums.RoleTypeEnum;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -186,6 +187,15 @@ public class SessionUtil {
     }
 
     /**
+     * 获取请求对象
+     *
+     * @return 请求对象
+     */
+    public static HttpServletResponse getResponse() {
+        return getValue(SESSION_KEY_RESPONSE, null);
+    }
+
+    /**
      * 获取会话
      *
      * @return 会话
@@ -271,6 +281,15 @@ public class SessionUtil {
      */
     public static void putRequest(HttpServletRequest request) {
         setValue(SESSION_KEY_REQUEST, request);
+    }
+
+    /**
+     * 设置请求对象
+     *
+     * @param response 请求对象
+     */
+    public static void putResponse(HttpServletResponse response) {
+        setValue(SESSION_KEY_RESPONSE, response);
     }
 
     /**
