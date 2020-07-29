@@ -113,8 +113,12 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                         if (oldDataRes.isSuccess()) {
                             VO data = oldDataRes.getData();
                             if (data.isAvailable()) {
-                                getResult().ofSuccess(false)
-                                        .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2);
+                                getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
+                                        .buildMessage(BUSINESS_KEY_REPEAT.key(), 1, 1)
+                                        .addParamI8n(BUSINESS_KEY_REPEAT.paramNames[0],
+                                                CommonDataTypeEnum.wrapperKey(VOClass.getSimpleName()))
+                                        .addParam(BUSINESS_KEY_REPEAT.paramNames[1], getData().dataKey())
+                                ;
                                 return;
                             }
 
