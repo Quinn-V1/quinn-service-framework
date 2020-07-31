@@ -18,13 +18,30 @@ import java.util.regex.Pattern;
 @Component("dataIntegrityViolationExceptionHandler")
 public class DataIntegrityViolationExceptionHandler extends DefaultErrorHandler<DataIntegrityViolationException> {
 
-    private static final Pattern PATTERN = Pattern.compile("(Column ')(.*)(' cannot be null)");
+    /**
+     * 样式-不可为空
+     */
+    private static final Pattern PATTERN_NOT_NULL = Pattern.compile("(Column ')(.*)(' cannot be null)");
+
+    /**
+     * 样式
+     */
+    private static final Pattern PATTERN_STYLE_NOT_MATCH =
+            Pattern.compile("(Data truncation: Incorrect )(.*)( value: ')(.*)(' for column ')(.*)(' at row)");
+
 
     @Override
     public void generateMessage(DataIntegrityViolationException e, BaseResult result) {
-        Matcher matcher = PATTERN.matcher(e.getMessage());
+        Matcher matcher = PATTERN_NOT_NULL.matcher(e.getMessage());
         if (matcher.find()) {
             result.setMessage("字段" + matcher.group(2) + "不可为空");
+            return;
+        }
+
+        matcher = PATTERN_STYLE_NOT_MATCH.matcher(e.getMessage());
+        if (matcher.find()) {
+            result.setMessage(("数据【" + matcher.group(4) + "】（" + matcher.group(2) + "）格式错误-或超出有效区间，列名【"
+                    + matcher.group(6) + "】"));
         }
     }
 
