@@ -105,7 +105,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     @SneakyThrows
     public BaseResult executeJob(JobTemplate jobTemplate) {
         String keyCode = jobTemplate.getScheduleKey();
-        JobKey jobKey = JobKey.jobKey(keyCode);
+        JobKey jobKey = JobKey.jobKey(keyCode , jobTemplate.getSyncType());
         scheduler.triggerJob(jobKey);
         return BaseResult.SUCCESS;
     }
