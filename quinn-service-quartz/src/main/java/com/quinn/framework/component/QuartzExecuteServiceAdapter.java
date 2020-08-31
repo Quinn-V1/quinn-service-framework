@@ -105,7 +105,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     @SneakyThrows
     public BaseResult executeJob(JobTemplate jobTemplate) {
         String keyCode = jobTemplate.getScheduleKey();
-        JobKey jobKey = JobKey.jobKey(keyCode);
+        JobKey jobKey = JobKey.jobKey(keyCode , jobTemplate.getSyncType());
         scheduler.triggerJob(jobKey);
         return BaseResult.SUCCESS;
     }
@@ -118,7 +118,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     @Override
     public BaseResult enableJob(JobTemplate jobTemplate) {
         String keyCode = jobTemplate.getScheduleKey();
-        JobKey jobKey = JobKey.jobKey(keyCode);
+        JobKey jobKey = JobKey.jobKey(keyCode, jobTemplate.getSyncType());
         try {
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             if (jobDetail == null) {
@@ -138,7 +138,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     @Override
     public BaseResult updateJob(JobTemplate jobTemplate) {
         String keyCode = jobTemplate.getScheduleKey();
-        JobKey jobKey = JobKey.jobKey(keyCode);
+        JobKey jobKey = JobKey.jobKey(keyCode, jobTemplate.getSyncType());
         try {
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             if (jobDetail != null) {
@@ -159,7 +159,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     @Override
     public BaseResult deleteJob(JobTemplate jobTemplate) {
         String keyCode = jobTemplate.getScheduleKey();
-        JobKey jobKey = JobKey.jobKey(keyCode);
+        JobKey jobKey = JobKey.jobKey(keyCode, jobTemplate.getSyncType());
         try {
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             if (jobDetail == null) {

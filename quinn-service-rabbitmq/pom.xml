@@ -23,10 +23,10 @@
             <artifactId>quinn-service-mq</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.quinn.framework</groupId>
-            <artifactId>quinn-service-biz</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.quinn.framework</groupId>-->
+<!--            <artifactId>quinn-service-biz</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.amqp</groupId>
@@ -56,7 +56,17 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
         </dependency>
 
         <dependency>
