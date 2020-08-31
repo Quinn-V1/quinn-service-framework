@@ -3,6 +3,8 @@ package com.quinn.framework.model.strategy;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.FreeMarkTemplateLoader;
+import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.enums.HttpMethodEnum;
@@ -27,6 +29,8 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
 
     private static final String HEADER_PARAM_KEY = "Headers";
 
+    private static final String PARAM_NAME_RESULT_PATH = "_resultPath";
+
     /**
      * URL模板：可能有占位参数
      */
@@ -36,6 +40,11 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * 方法POST\GET
      */
     private HttpMethodEnum method;
+
+    /**
+     * 结果路径
+     */
+    private String resultPath;
 
     /**
      * 从脚本解析参数
@@ -48,6 +57,7 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
         HttpRequestParam requestParam = new HttpRequestParam();
         requestParam.initParam(strategyScript, param);
         requestParam.setUrl(FreeMarkTemplateLoader.invoke(strategyScript.getScriptUrl(), param));
+        requestParam.resultPath = BaseConverter.staticToString(requestParam.getJsonParam().remove(PARAM_NAME_RESULT_PATH));
         return requestParam;
     }
 
@@ -75,7 +85,7 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * @return 包装后的结果 BaseResult
      */
     public Object wrapResult(ResponseEntity<T> res) {
-        return res.getBody();
+        return customWrapResult(res.getBody());
     }
 
     /**
@@ -85,7 +95,10 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      * @return 包装体
      */
     private BaseResult customWrapResult(T body) {
-        return BaseResult.success(body);
+        if (StringUtil.isEmpty(resultPath)) {
+            return BaseResult.success(body);
+        }
+        return BaseResult.success(BaseUtil.getFieldInstance(body, resultPath));
     }
 
     /**

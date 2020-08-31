@@ -13,8 +13,6 @@ import com.quinn.util.base.model.BaseResult;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -38,7 +36,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
      */
     @Override
     public BaseResult<JobInstance> execute(String templateKey) {
-        LOGGER.error("Job execute start of ${templateKey}", templateKey);
+        LOGGER.error("Job execute start of ${0}", templateKey);
 
         BaseResult<JobTemplate> res = jobHelpService.getTemplate(templateKey);
         if (!res.isSuccess()) {
@@ -82,7 +80,7 @@ public abstract class AbstractBusinessJob implements BusinessJob {
             // 更新最新运行时间
             jobTemplate.lastExecute(jobInstance.getStartDateTime(), result.isSuccess());
             jobHelpService.updateTemplate(jobTemplate);
-            LOGGER.error("Job execute end of ${templateKey}", templateKey);
+            LOGGER.error("Job execute end of ${0}", templateKey);
         }
 
         return result;
