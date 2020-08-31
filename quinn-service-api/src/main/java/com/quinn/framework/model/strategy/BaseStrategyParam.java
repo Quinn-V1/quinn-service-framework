@@ -1,5 +1,6 @@
 package com.quinn.framework.model.strategy;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyScript;
@@ -27,6 +28,8 @@ public class BaseStrategyParam<T> {
     private static final String OUT_PARAM_NAME = "_outParam";
 
     private static final String OUT_PARAM_NAME_MAPPING = "_paramNameMapping";
+
+    private static final String PARAM_NAME_REAL_PARAMS = "_realParams";
 
     /**
      * 结果类型
@@ -109,6 +112,19 @@ public class BaseStrategyParam<T> {
                 initDirectParam(array.get(i), param);
             }
         }
+    }
+
+    /**
+     * 获取真实参数
+     *
+     * @return 真实参数
+     */
+    public Object getRealParams() {
+        Object o = jsonParam.get(PARAM_NAME_REAL_PARAMS);
+        if (o != null) {
+            return o;
+        }
+        return jsonParam;
     }
 
 }

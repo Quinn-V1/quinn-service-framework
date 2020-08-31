@@ -7,6 +7,7 @@ import com.quinn.util.base.BaseUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.HttpMethodEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +32,8 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
     private static final String HEADER_PARAM_KEY = "Headers";
 
     private static final String PARAM_NAME_RESULT_PATH = "_resultPath";
+
+    private static final String PARAM_NAME_METHOD_NAME = "_httpMethod";
 
     /**
      * URL模板：可能有占位参数
@@ -56,8 +60,24 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
     public static HttpRequestParam fromScript(StrategyScript strategyScript, Map<String, Object> param) {
         HttpRequestParam requestParam = new HttpRequestParam();
         requestParam.initParam(strategyScript, param);
-        requestParam.setUrl(FreeMarkTemplateLoader.invoke(strategyScript.getScriptUrl(), param));
-        requestParam.resultPath = BaseConverter.staticToString(requestParam.getJsonParam().remove(PARAM_NAME_RESULT_PATH));
+
+        Map<String, Object> prams = new HashMap<>();
+        if (param != null) {
+            prams.putAll(param);
+        }
+        JSONObject jsonParam = requestParam.getJsonParam();
+        requestParam.resultPath = BaseConverter.staticToString(jsonParam.remove(PARAM_NAME_RESULT_PATH));
+        prams.putAll(jsonParam);
+
+        String remove = BaseConverter.staticToString(prams.remove(PARAM_NAME_METHOD_NAME));
+        if (StringUtil.isNotEmpty(remove)) {
+            try {
+                requestParam.method = HttpMethodEnum.valueOf(remove);
+            } catch (Exception e) {
+            }
+        }
+
+        requestParam.setUrl(FreeMarkTemplateLoader.invoke(strategyScript.getScriptUrl(), prams));
         return requestParam;
     }
 
@@ -96,8 +116,21 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
      */
     private BaseResult customWrapResult(T body) {
         if (StringUtil.isEmpty(resultPath)) {
+            if (body instanceof BaseResult) {
+                return (BaseResult) body;
+            } else if (body instanceof Map) {
+                Map map = (Map) body;
+                if (map.size() <= 4 && map.containsKey("success") && map.containsKey("data")) {
+                    return new JSONObject(map).toJavaObject(BaseResult.class);
+                }
+            }
             return BaseResult.success(body);
         }
+
+        if (body instanceof Map) {
+            return BaseResult.success(BaseUtil.valueOfJson(body, resultPath.split(StringConstant.CHAR_POUND_SIGN)));
+        }
+
         return BaseResult.success(BaseUtil.getFieldInstance(body, resultPath));
     }
 
@@ -119,4 +152,7 @@ public class HttpRequestParam<T> extends BaseStrategyParam<T> {
         return new HttpEntity(realParam, httpHeaders);
     }
 
+    public String getMethodName() {
+        return method != null ? method.name() : HttpMethodEnum.POST.name();
+    }
 }

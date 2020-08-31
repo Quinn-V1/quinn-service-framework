@@ -7,6 +7,7 @@ import com.quinn.framework.model.strategy.HttpRequestParam;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -20,8 +21,8 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-04-25
  */
-@Component("HTTP_POST_StrategyExecutor")
-public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
+@Component("HTTP_ALL_StrategyExecutor")
+public class HttpAllStrategy implements StrategyExecutor<HttpRequestParam> {
 
     @Resource
     @Qualifier("restTemplate")
@@ -35,11 +36,8 @@ public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
         Object realParam = httpRequestParam.getRealParams();
         HttpEntity entity = httpRequestParam.wrapParamToEntity(realParam);
 
-        if (entity == null) {
-            throw new ParameterShouldNotEmpty();
-        }
-
-        ResponseEntity res = restTemplate.postForEntity(httpRequestParam.getUrl(), entity, resultClass);
+        ResponseEntity res = restTemplate.exchange(httpRequestParam.getUrl(),
+                HttpMethod.valueOf(httpRequestParam.getMethodName()), entity, resultClass);
         return httpRequestParam.wrapResult(res);
     }
 
