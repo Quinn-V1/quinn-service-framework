@@ -61,6 +61,7 @@ public class BaseStrategyParam<T> {
 
         initDirectParam(jsonObject, param);
         Object o = param.remove(OUT_PARAM_NAME_MAPPING);
+        o = o == null ? jsonObject.remove(OUT_PARAM_NAME_MAPPING) : o;
         if (o instanceof Map) {
             Map<String, String> mapping = (Map<String, String>) o;
             for (Map.Entry<String, String> entry : mapping.entrySet()) {

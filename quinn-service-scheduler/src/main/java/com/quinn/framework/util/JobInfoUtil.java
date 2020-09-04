@@ -48,14 +48,15 @@ public final class JobInfoUtil {
      * @return 运行时参数
      */
     public static Map<String, Object> initRunParams(JobInstance jobInstance) {
-        Map<String, Object> res = new HashMap<>(8);
+        Map<String, Object> res = jobInstance.getRuntimeParams();
+        res = res == null ? new HashMap<>(8) : res;
         JobTemplate jobTemplate = jobInstance.getJobTemplate();
 
-        res.put(ScheduleParamName.PARAM_KEY_LAST_SUCCESS_DATETIME, jobTemplate.getLastSuccessDateTime());
-        res.put(ScheduleParamName.PARAM_KEY_LAST_FAIL_DATETIME, jobTemplate.getLastFailDateTime());
-        res.put(ScheduleParamName.PARAM_KEY_LAST_EXEC_DATETIME, jobTemplate.getLastExecDateTime());
-        res.put(ScheduleParamName.PARAM_KEY_SCHEDULE_KEY, jobTemplate.getScheduleKey());
-        res.put(CommonParamName.PARAM_KEY_NOW_TIME, jobInstance.getStartDateTime());
+        res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_SUCCESS_DATETIME, jobTemplate.getLastSuccessDateTime());
+        res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_FAIL_DATETIME, jobTemplate.getLastFailDateTime());
+        res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_EXEC_DATETIME, jobTemplate.getLastExecDateTime());
+        res.putIfAbsent(ScheduleParamName.PARAM_KEY_SCHEDULE_KEY, jobTemplate.getScheduleKey());
+        res.putIfAbsent(CommonParamName.PARAM_KEY_NOW_TIME, jobInstance.getStartDateTime());
         return res;
     }
 }
