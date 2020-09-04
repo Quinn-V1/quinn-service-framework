@@ -604,22 +604,29 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                 continue;
             }
             BaseResult res = BaseResult.SUCCESS;
-            switch (dbOperateType) {
-                case INSERT:
-                case RECOVERY_HARD:
-                    res = insert(data);
-                    break;
-                case DELETE_SOFT:
-                case UPDATE_NON_EMPTY:
-                case UPDATE_ALL:
-                case RECOVERY_SOFT:
-                    res = update(data);
-                    break;
-                case DELETE_HARD:
-                    res = delete(data);
-                    break;
-                default:
-                    break;
+            try {
+                switch (dbOperateType) {
+                    case INSERT:
+                    case RECOVERY_HARD:
+                        res = insert(data);
+                        break;
+                    case DELETE_SOFT:
+                    case UPDATE_NON_EMPTY:
+                    case UPDATE_ALL:
+                    case RECOVERY_SOFT:
+                        res = update(data);
+                        break;
+                    case DELETE_HARD:
+                        res = delete(data);
+                        break;
+                    default:
+                        break;
+                }
+            } catch(RuntimeException e) {
+                if (transaction) {
+                    throw e;
+                }
+                result.addItem(BaseResult.fromException(e));
             }
 
             if (transaction && !res.isSuccess()) {
