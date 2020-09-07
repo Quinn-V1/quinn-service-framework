@@ -20,7 +20,7 @@ public enum AuthTypeEnum implements MessageEnumFlag {
     MOCK_USER("模拟用户"),
 
     // 微信用户
-    WE_CHART_USER("微信用户"),
+    WE_CHAT_USER("微信用户"),
 
     // 手机用户
     MOBILE_USER("手机用户"),
