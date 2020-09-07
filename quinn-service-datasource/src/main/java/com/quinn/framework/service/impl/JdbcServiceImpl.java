@@ -1,6 +1,5 @@
 package com.quinn.framework.service.impl;
 
-import com.quinn.util.base.api.Strategy;
 import com.quinn.framework.api.strategy.StrategyBean;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.exception.DataOperationTransactionException;
@@ -10,21 +9,24 @@ import com.quinn.framework.service.JdbcService;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
+import com.quinn.util.base.api.Strategy;
 import com.quinn.util.base.convertor.BaseConverter;
-import com.quinn.util.constant.enums.CommonMessageEnum;
-import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.base.model.BatchResult;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.SqlConstant;
 import com.quinn.util.constant.StringConstant;
+import com.quinn.util.constant.enums.CommonMessageEnum;
+import com.quinn.util.constant.enums.DataOperateTypeEnum;
 import com.quinn.util.database.enums.CallableTypeEnum;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
@@ -166,6 +168,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     @Strategy("jdbcService.generateNextValueOfSeq")
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, noRollbackFor = Exception.class)
     public BaseResult<Long> generateNextValueOfSeq(String seqName) {
         CallableObject callableObject =
                 CallableObject.build(CallableTypeEnum.FUNCTION, SqlConstant.SEQ_NEXT_VALUE, Long.class, 2)
@@ -176,6 +179,7 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     @Override
     @Strategy("jdbcService.generateNextNumValueOfSeq")
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, noRollbackFor = Exception.class)
     public BaseResult<NextNumSeqValue> generateNextNumValueOfSeq(String seqName, int seqNum) {
         CallableObject callableObject =
                 CallableObject.build(CallableTypeEnum.PROCEDURE, SqlConstant.SEQ_NEXT_N_VALUE, NextNumSeqValue.class, 4)
@@ -254,7 +258,6 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
         return BaseResult.success(data);
     }
-
 
     /**
      * CallableStatement创建器

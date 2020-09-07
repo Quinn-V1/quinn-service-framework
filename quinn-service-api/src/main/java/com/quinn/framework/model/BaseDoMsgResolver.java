@@ -1,6 +1,6 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.constant.StringConstant;
@@ -11,7 +11,7 @@ import com.quinn.util.constant.StringConstant;
  * @author Qunhua.Liao
  * @since 2020-05-31
  */
-public class BaseDoMsgResolver implements MethodInvokerOneParam<BaseDO, String> {
+public class BaseDoMsgResolver implements MethodInvokerOneParam<IdGenerateAbleDO, String> {
 
     public BaseDoMsgResolver() {
         this(StringConstant.NONE_OF_DATA);
@@ -24,7 +24,7 @@ public class BaseDoMsgResolver implements MethodInvokerOneParam<BaseDO, String> 
     private String propName;
 
     @Override
-    public String invoke(BaseDO baseDO) {
+    public String invoke(IdGenerateAbleDO baseDO) {
         return baseDO.cacheKey() + BaseDTO.PROPERTY_DELIMITER + propName;
     }
 

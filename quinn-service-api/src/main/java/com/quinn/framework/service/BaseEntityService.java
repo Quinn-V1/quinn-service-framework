@@ -1,7 +1,7 @@
 package com.quinn.framework.service;
 
 import com.quinn.framework.api.EntityServiceInterceptor;
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.model.BatchUpdateInfo;
 import com.quinn.framework.model.PageInfo;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Qunhua.Liao
  * @since 2020-03-27
  */
-public interface BaseEntityService<DO extends BaseDO, TO extends BaseDTO, VO extends DO> {
+public interface BaseEntityService<DO extends IdGenerateAbleDO, TO extends BaseDTO, VO extends DO> {
 
     /**
      * 新增之前操作

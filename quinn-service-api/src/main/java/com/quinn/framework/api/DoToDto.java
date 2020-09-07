@@ -1,6 +1,6 @@
 package com.quinn.framework.api;
 
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.PageDTO;
 
 /**
@@ -9,7 +9,7 @@ import com.quinn.framework.entity.dto.PageDTO;
  * @author Qunhua.Liao
  * @since 2020-04-07
  */
-public interface DoToDto<S extends BaseDO, T extends PageDTO<S>> {
+public interface DoToDto<S extends IdGenerateAbleDO, T extends PageDTO<S>> {
 
     /**
      * DO转DTO

@@ -1,7 +1,6 @@
 package com.quinn.framework.entity.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.quinn.framework.api.entityflag.IdGenerateAble;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.constant.NumberConstant;
@@ -22,7 +21,7 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
-public abstract class BaseDO implements Serializable, IdGenerateAble {
+public abstract class BaseDO implements Serializable {
 
     /**
      * ID对应数据缓存键的键前缀
@@ -105,11 +104,6 @@ public abstract class BaseDO implements Serializable, IdGenerateAble {
      */
     public String dataKey() {
         return BaseConverter.staticToString(id);
-    }
-
-    @Override
-    public String seqName() {
-        return this.getClass().getName();
     }
 
     /**

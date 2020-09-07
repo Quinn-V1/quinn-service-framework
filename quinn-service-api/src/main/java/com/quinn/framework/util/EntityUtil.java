@@ -1,7 +1,7 @@
 package com.quinn.framework.util;
 
 import com.alibaba.fastjson.JSON;
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
@@ -174,8 +174,8 @@ public final class EntityUtil {
             return ((BaseDTO) object).cacheKey();
         }
 
-        if (object instanceof BaseDO) {
-            return ((BaseDO) object).cacheKey();
+        if (object instanceof IdGenerateAbleDO) {
+            return ((IdGenerateAbleDO) object).cacheKey();
         }
 
         if (object instanceof Map) {

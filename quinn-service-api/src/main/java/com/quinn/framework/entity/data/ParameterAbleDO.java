@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ParameterAbleDO extends BaseDO implements ParameterAble {
+public class ParameterAbleDO extends IdGenerateAbleDO implements ParameterAble {
 
     /**
      * 综合数据库参数

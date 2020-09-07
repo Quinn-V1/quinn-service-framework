@@ -5,7 +5,7 @@ import com.quinn.framework.api.entityflag.CacheAble;
 import com.quinn.framework.api.methodflag.GetFlag;
 import com.quinn.framework.api.methodflag.MethodFlag;
 import com.quinn.framework.component.EntityServiceInterceptorChain;
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.service.CacheAbleService;
 import com.quinn.util.base.StringUtil;
@@ -94,7 +94,7 @@ public class CacheAbleGetEntityServiceInterceptor implements EntityServiceInterc
         if (cacheAble.getId() == null) {
             return null;
         } else {
-            return BaseDO.CACHE_KEY_ID_TO_DATA_KEY + cacheAble.getEntityClass().getSimpleName()
+            return IdGenerateAbleDO.CACHE_KEY_ID_TO_DATA_KEY + cacheAble.getEntityClass().getSimpleName()
                     + StringConstant.CHAR_COLON + cacheAble.getId();
         }
     }

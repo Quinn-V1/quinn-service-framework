@@ -6,7 +6,7 @@ import com.quinn.framework.api.EntityServiceInterceptor;
 import com.quinn.framework.api.PageAdapter;
 import com.quinn.framework.component.EntityServiceInterceptorChain;
 import com.quinn.framework.component.SpringBeanHolder;
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.entity.dto.PageDTO;
 import com.quinn.framework.exception.DataOperationTransactionException;
@@ -43,7 +43,7 @@ import static com.quinn.util.constant.enums.CommonMessageEnum.*;
  * @author Qunhua.Liao
  * @since 2020-03-27
  */
-public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDTO, VO extends DO>
+public abstract class BaseEntityServiceImpl<DO extends IdGenerateAbleDO, TO extends BaseDTO, VO extends DO>
         implements BaseEntityService<DO, TO, VO> {
 
     {

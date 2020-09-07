@@ -1,7 +1,7 @@
 package com.quinn.framework.mapper;
 
 import com.github.pagehelper.Page;
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 
 /**
@@ -10,7 +10,7 @@ import com.quinn.framework.entity.dto.BaseDTO;
  * @author Qunhua.Liao
  * @since 2020-03-28
  */
-public interface BaseMapper<DO extends BaseDO, TO extends BaseDTO, VO extends DO> {
+public interface BaseMapper<DO extends IdGenerateAbleDO, TO extends BaseDTO, VO extends DO> {
 
     /**
      * 综合计数

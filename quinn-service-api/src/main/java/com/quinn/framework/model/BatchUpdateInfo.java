@@ -1,6 +1,6 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.entity.data.BaseDO;
+import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.constant.enums.NotifyEnum;
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class BatchUpdateInfo<T extends BaseDO> {
+public class BatchUpdateInfo<T extends IdGenerateAbleDO> {
 
     public BatchUpdateInfo() {
     }
