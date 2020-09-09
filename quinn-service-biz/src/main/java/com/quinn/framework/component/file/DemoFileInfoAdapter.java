@@ -95,4 +95,14 @@ public class DemoFileInfoAdapter implements FileInfoAdapter {
 
     }
 
+    @Override
+    public String getActualName() {
+        return null;
+    }
+
+    @Override
+    public void setActualName(String actualName) {
+
+    }
+
 }

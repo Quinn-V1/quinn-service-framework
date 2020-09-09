@@ -47,6 +47,27 @@ public interface FileInfoAdapter {
     String getStoreName();
 
     /**
+     * 设置保存名称
+     *
+     * @param fullPath
+     */
+    void setStorageName(String fullPath);
+
+    /**
+     * 获取文件实际名称
+     *
+     * @return 文件实际名称
+     */
+    String getActualName();
+
+    /**
+     * 设置实际名称
+     *
+     * @param actualName 实际名称
+     */
+    void setActualName(String actualName);
+
+    /**
      * 获取全路径
      *
      * @return 全路径
@@ -108,12 +129,5 @@ public interface FileInfoAdapter {
      * @return 文件类型
      */
     String getFileType();
-
-    /**
-     * 设置保存名称
-     *
-     * @param fullPath
-     */
-    void setStorageName(String fullPath);
 
 }
