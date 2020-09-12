@@ -8,6 +8,7 @@ import com.quinn.framework.service.JdbcService;
 import com.quinn.framework.service.impl.JdbcServiceImpl;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -52,6 +53,11 @@ public class DataSourceConfiguration {
     @Primary
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean("jdbcService")
+    public JdbcService jdbcService(@Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
+        return new JdbcServiceImpl(jdbcTemplate);
     }
 
     @Primary

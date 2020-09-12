@@ -17,6 +17,16 @@ import java.util.List;
 public interface JdbcService extends FreeQueryService {
 
     /**
+     * 动态执行Jdbc：Bean名的属性名
+     */
+    String PROP_NAME_OF_BEAN_NAME = "_jdbcService";
+
+    /**
+     * 默认Bean名称
+     */
+    String DEFAULT_BEAN_NAME = "jdbcService";
+
+    /**
      * 自由查找
      *
      * @param freeQuery 自由查询对象

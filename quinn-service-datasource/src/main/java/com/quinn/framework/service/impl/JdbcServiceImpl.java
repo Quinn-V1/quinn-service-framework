@@ -42,12 +42,14 @@ import static com.quinn.util.constant.enums.CommonMessageEnum.DATA_OPERATION_TRA
  * @author Qunhua.Liao
  * @since 202-04-04
  */
-@Service("jdbcService")
 public class JdbcServiceImpl implements JdbcService, StrategyBean {
 
     private static final LoggerExtend LOGGER = LoggerExtendFactory.getLogger(JdbcServiceImpl.class);
 
-    @Resource
+    public JdbcServiceImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private JdbcTemplate jdbcTemplate;
 
     @Override
