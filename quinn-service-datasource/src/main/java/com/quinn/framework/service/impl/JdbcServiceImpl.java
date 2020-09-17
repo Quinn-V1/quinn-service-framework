@@ -24,15 +24,14 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.quinn.util.constant.enums.CommonMessageEnum.DATA_OPERATION_TRANSACTION_TERMINATED;
 
@@ -130,6 +129,8 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
                 LOGGER.errorError("Error occurs when executor {0}", e, sql);
                 return BaseResult.fromException(e);
             }
+        } else if (Map.class.isAssignableFrom(clazz)) {
+            t = (T) jdbcTemplate.queryForMap(sql, params);
         } else {
             t = (T) jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(clazz));
         }
@@ -154,6 +155,8 @@ public class JdbcServiceImpl implements JdbcService, StrategyBean {
                 LOGGER.errorError("Error occurs when executor {0}", e, sql);
                 return BaseResult.fromException(e);
             }
+        } else if (Map.class.isAssignableFrom(clazz)) {
+            list = (List<T>) jdbcTemplate.queryForList(sql, params);
         } else {
             list = jdbcTemplate.query(sql, params, new BeanPropertyRowMapper(clazz));
         }

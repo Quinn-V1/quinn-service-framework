@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.framework.model.strategy.HttpRequestParam;
+import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -35,12 +37,12 @@ public class HttpPostStrategy implements StrategyExecutor<HttpRequestParam> {
         Object realParam = httpRequestParam.getRealParams();
         HttpEntity entity = httpRequestParam.wrapParamToEntity(realParam);
 
-        if (entity == null) {
-            throw new ParameterShouldNotEmpty();
+        try {
+            ResponseEntity res = restTemplate.postForEntity(httpRequestParam.getUrl(), entity, resultClass);
+            return httpRequestParam.wrapResult(res);
+        } catch (HttpServerErrorException.InternalServerError e) {
+            throw new BaseBusinessException(e.getResponseBodyAsString(), false);
         }
-
-        ResponseEntity res = restTemplate.postForEntity(httpRequestParam.getUrl(), entity, resultClass);
-        return httpRequestParam.wrapResult(res);
     }
 
     @Override

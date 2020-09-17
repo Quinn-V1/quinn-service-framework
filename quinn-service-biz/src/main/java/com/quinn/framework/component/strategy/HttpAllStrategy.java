@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.framework.model.strategy.HttpRequestParam;
-import com.quinn.util.base.exception.ParameterShouldNotEmpty;
+import com.quinn.util.base.exception.BaseBusinessException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -36,9 +37,13 @@ public class HttpAllStrategy implements StrategyExecutor<HttpRequestParam> {
         Object realParam = httpRequestParam.getRealParams();
         HttpEntity entity = httpRequestParam.wrapParamToEntity(realParam);
 
-        ResponseEntity res = restTemplate.exchange(httpRequestParam.getUrl(),
-                HttpMethod.valueOf(httpRequestParam.getMethodName()), entity, resultClass);
-        return httpRequestParam.wrapResult(res);
+        try {
+            ResponseEntity res = restTemplate.exchange(httpRequestParam.getUrl(),
+                    HttpMethod.valueOf(httpRequestParam.getMethodName()), entity, resultClass);
+            return httpRequestParam.wrapResult(res);
+        } catch (HttpServerErrorException.InternalServerError e) {
+            throw new BaseBusinessException(e.getResponseBodyAsString());
+        }
     }
 
     @Override

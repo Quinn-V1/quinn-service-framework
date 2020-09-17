@@ -4,14 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.framework.model.strategy.HttpRequestParam;
-import lombok.SneakyThrows;
+import com.quinn.util.base.exception.BaseBusinessException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 /**
@@ -28,16 +30,24 @@ public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
     private RestTemplate restTemplate;
 
     @Override
-    @SneakyThrows
     public Object execute(HttpRequestParam httpRequestParam) {
         Class clazz = httpRequestParam.getResultClass();
         final Class resultClass = clazz == null ? JSONObject.class : clazz;
 
-        RequestEntity requestEntity = httpRequestParam.wrapBuilder(
-                RequestEntity.get(new URI(httpRequestParam.getUrl()))
-        ).build();
+        RequestEntity requestEntity;
+        try {
+            requestEntity = httpRequestParam.wrapBuilder(
+                    RequestEntity.get(new URI(httpRequestParam.getUrl()))
+            ).build();
+        } catch (URISyntaxException e) {
+            throw new BaseBusinessException("Url not correct", false);
+        }
 
-        return httpRequestParam.wrapResult(restTemplate.exchange(requestEntity, resultClass));
+        try {
+            return httpRequestParam.wrapResult(restTemplate.exchange(requestEntity, resultClass));
+        } catch (HttpServerErrorException.InternalServerError e) {
+            throw new BaseBusinessException(e.getResponseBodyAsString(), false);
+        }
     }
 
     @Override
