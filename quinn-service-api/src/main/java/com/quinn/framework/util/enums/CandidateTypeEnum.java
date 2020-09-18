@@ -12,6 +12,15 @@ public enum CandidateTypeEnum {
     USER,
 
     // 角色
-    ROLE
+    ROLE,
+
+    // 角色-直接
+    ROLE_DIR,
+
+    // 用户-直接
+    USER_DIR,
+
+    // 岗位-直接
+    USER_STA
 
 }
