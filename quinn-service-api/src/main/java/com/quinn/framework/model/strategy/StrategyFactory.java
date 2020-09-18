@@ -11,9 +11,13 @@ import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.base.exception.UnSupportedStrategyException;
 import com.quinn.util.base.model.AsyncSuccess;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.enums.CommonMessageEnum;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -66,43 +70,52 @@ public class StrategyFactory {
      *
      * @return 脚本URL
      */
-    public static List<String> scriptUrls(String scriptType, String keyWords, int pageSize, int pageNum) {
+    public static List<String> scriptUrls(String scriptType, String keyWords, Integer pageSize, Integer pageNum) {
         StrategyExecutor strategyExecutor = STRATEGY_EXECUTOR_MAP.get(scriptType);
-        String[] urls = strategyExecutor.scriptUrls();
+        List<String> urls = strategyExecutor.scriptUrls();
         if (CollectionUtil.isEmpty(urls)) {
             return null;
         }
 
-        pageNum = Math.max(pageNum, 1);
-        pageSize = Math.max(pageSize, 1);
+        if (pageNum == null) {
+            pageNum = NumberConstant.INT_ONE;
+        } else {
+            pageNum = Math.max(pageNum, 1);
+        }
+
+        if (pageSize == null) {
+            pageSize = NumberConstant.INT_TEN;
+        } else {
+            pageSize = Math.max(pageSize, 1);
+        }
+
         int from = (pageNum - 1) * pageSize;
         int to = from + pageSize;
 
-        if (from >= urls.length) {
+        if (from >= urls.size()) {
             return null;
         }
 
         if (StringUtil.isEmpty(keyWords)) {
-            return Arrays.asList(urls).subList(from, Math.min(to, urls.length));
+            return urls.subList(from, Math.min(to, urls.size()));
         }
 
         List<String> result = new ArrayList<>();
         int index = 0;
-        for (int i = 0; i < urls.length; i++) {
-            if (urls[i].contains(keyWords)) {
-                i++;
+        for (String url : urls) {
+            if (url.contains(keyWords)) {
+                index++;
                 if (index < from) {
                     continue;
                 }
 
-                result.add(urls[i]);
+                result.add(url);
 
                 if (index >= to) {
                     return result;
                 }
             }
         }
-
         return result;
     }
 
