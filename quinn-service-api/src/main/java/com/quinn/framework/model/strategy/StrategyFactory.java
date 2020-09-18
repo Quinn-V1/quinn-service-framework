@@ -3,6 +3,7 @@ package com.quinn.framework.model.strategy;
 import com.quinn.framework.api.strategy.StrategyExecutor;
 import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.util.base.BaseUtil;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerOneParam;
 import com.quinn.util.base.convertor.BaseConverter;
@@ -12,8 +13,7 @@ import com.quinn.util.base.model.AsyncSuccess;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.enums.CommonMessageEnum;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -59,6 +59,51 @@ public class StrategyFactory {
      */
     public static void setExecutorService(ExecutorService strategyExecutorService) {
         StrategyFactory.strategyExecutorService = strategyExecutorService;
+    }
+
+    /**
+     * 对应类型脚本URL
+     *
+     * @return 脚本URL
+     */
+    public static List<String> scriptUrls(String scriptType, String keyWords, int pageSize, int pageNum) {
+        StrategyExecutor strategyExecutor = STRATEGY_EXECUTOR_MAP.get(scriptType);
+        String[] urls = strategyExecutor.scriptUrls();
+        if (CollectionUtil.isEmpty(urls)) {
+            return null;
+        }
+
+        pageNum = Math.max(pageNum, 1);
+        pageSize = Math.max(pageSize, 1);
+        int from = (pageNum - 1) * pageSize;
+        int to = from + pageSize;
+
+        if (from >= urls.length) {
+            return null;
+        }
+
+        if (StringUtil.isEmpty(keyWords)) {
+            return Arrays.asList(urls).subList(from, Math.min(to, urls.length));
+        }
+
+        List<String> result = new ArrayList<>();
+        int index = 0;
+        for (int i = 0; i < urls.length; i++) {
+            if (urls[i].contains(keyWords)) {
+                i++;
+                if (index < from) {
+                    continue;
+                }
+
+                result.add(urls[i]);
+
+                if (index >= to) {
+                    return result;
+                }
+            }
+        }
+
+        return result;
     }
 
     /**

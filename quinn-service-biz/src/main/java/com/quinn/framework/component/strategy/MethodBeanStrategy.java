@@ -2,6 +2,7 @@ package com.quinn.framework.component.strategy;
 
 import com.quinn.framework.api.strategy.*;
 import com.quinn.framework.model.strategy.BeanMethodParam;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.api.Strategy;
 import com.quinn.util.base.convertor.BaseConverter;
 import com.quinn.util.base.exception.ParameterShouldNotEmpty;
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Bean方法策略执行器
@@ -21,6 +21,8 @@ import java.util.Map;
  */
 @Component("METHOD_BEAN_StrategyExecutor")
 public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
+
+    private static List<String> scriptUrls;
 
     /**
      * 作为策略的Bean
@@ -83,6 +85,8 @@ public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
                 });
             }
         }
+        scriptUrls = new ArrayList<>(STRATEGY_BEAN_MAP.keySet());
+        Collections.sort(scriptUrls);
     }
 
     @Override
@@ -101,4 +105,8 @@ public class MethodBeanStrategy implements StrategyExecutor<BeanMethodParam> {
         return BeanMethodParam.fromScript(strategyScript, dynamicParam);
     }
 
+    @Override
+    public List<String> scriptUrls() {
+        return scriptUrls;
+    }
 }

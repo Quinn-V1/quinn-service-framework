@@ -9,18 +9,35 @@ package com.quinn.framework.util.enums;
 public enum CandidateTypeEnum {
 
     // 用户
-    USER,
+    USER("", ""),
 
     // 角色
-    ROLE,
+    ROLE("", ""),
 
     // 角色-直接
-    ROLE_DIR,
+    ROLE_DIR("str", "splitByComma"),
 
     // 用户-直接
-    USER_DIR,
+    USER_DIR("str", "splitByComma"),
 
     // 岗位-直接
-    USER_STA
+    USER_STA("stationKey", "selectClosestUserOrgBy"),
+
+    ;
+
+    /**
+     * 参数名
+     */
+    public final String paramName;
+
+    /**
+     * 脚本编码
+     */
+    public final String scriptKey;
+
+    CandidateTypeEnum(String paramName, String scriptKey) {
+        this.paramName = paramName;
+        this.scriptKey = scriptKey;
+    }
 
 }

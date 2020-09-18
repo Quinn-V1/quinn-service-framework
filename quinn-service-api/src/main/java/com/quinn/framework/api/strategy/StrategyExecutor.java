@@ -1,8 +1,8 @@
 package com.quinn.framework.api.strategy;
 
 import com.quinn.framework.model.strategy.BaseStrategyParam;
-import com.quinn.util.base.model.BaseResult;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,5 +32,14 @@ public interface StrategyExecutor<S extends BaseStrategyParam> {
      * @return 结构化参数
      */
     S parseParam(StrategyScript strategyScript, Map<String, Object> param);
+
+    /**
+     * 获取脚本URL
+     *
+     * @return 脚本URLS
+     */
+    default List<String> scriptUrls() {
+        return null;
+    }
 
 }

@@ -1,6 +1,9 @@
 package com.quinn.framework.component.strategy;
 
-import com.quinn.framework.api.strategy.*;
+import com.quinn.framework.api.strategy.StaticMethodInvoker;
+import com.quinn.framework.api.strategy.StaticMethodRegister;
+import com.quinn.framework.api.strategy.StrategyExecutor;
+import com.quinn.framework.api.strategy.StrategyScript;
 import com.quinn.framework.model.strategy.StaticMethodParam;
 import com.quinn.util.base.api.Strategy;
 import com.quinn.util.base.convertor.BaseConverter;
@@ -9,10 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 
 /**
  * 静态方法策略
@@ -22,6 +22,8 @@ import java.util.ServiceLoader;
  */
 @Component("METHOD_STATIC_StrategyExecutor")
 public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam> {
+
+    private static List<String> scriptUrls;
 
     private static final Map<String, StaticMethodInvoker> STATIC_METHOD_INVOKER_MAP = new HashMap<>();
 
@@ -67,6 +69,8 @@ public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam>
                 }
             }
         }
+        scriptUrls = new ArrayList<>(STATIC_METHOD_INVOKER_MAP.keySet());
+        Collections.sort(scriptUrls);
     }
 
     @Override
@@ -82,5 +86,10 @@ public class MethodStaticStrategy implements StrategyExecutor<StaticMethodParam>
     @Override
     public StaticMethodParam parseParam(StrategyScript strategyScript, Map<String, Object> dynamicParam) {
         return StaticMethodParam.fromScript(strategyScript, dynamicParam);
+    }
+
+    @Override
+    public List<String> scriptUrls() {
+        return scriptUrls;
     }
 }
