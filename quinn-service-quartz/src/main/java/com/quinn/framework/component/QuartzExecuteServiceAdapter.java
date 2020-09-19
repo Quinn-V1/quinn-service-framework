@@ -3,6 +3,7 @@ package com.quinn.framework.component;
 import com.quinn.framework.api.*;
 import com.quinn.framework.listener.QuartzJobListenerAdapter;
 import com.quinn.framework.listener.QuartzTriggerListenerAdapter;
+import com.quinn.framework.model.JobInfoFactory;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.MethodInvokerTwoParam;
 import com.quinn.util.base.model.BaseResult;
@@ -27,9 +28,6 @@ import java.util.TimeZone;
 public class QuartzExecuteServiceAdapter implements JobExecuteService {
 
     @Resource
-    private Map<String, BusinessJob> businessJobMap;
-
-    @Resource
     private Scheduler scheduler;
 
     @Override
@@ -38,7 +36,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
         String jobImplement = jobTemplate.getImplementClass();
         String syncType = jobTemplate.getSyncType();
 
-        BusinessJob businessJob = businessJobMap.get(jobImplement);
+        BusinessJob businessJob = JobInfoFactory.getImplement(jobImplement);
         if (businessJob == null) {
             // FIXME
             return BaseResult.fail("任务" + jobKey
@@ -93,7 +91,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
 
     @Override
     public BaseResult executeJobDirect(JobTemplate jobTemplate) {
-        BusinessJob businessJob = businessJobMap.get(jobTemplate.getImplementClass());
+        BusinessJob businessJob = JobInfoFactory.getImplement(jobTemplate.getImplementClass());
         if (businessJob == null) {
             // FIXME
             return BaseResult.fail("未找到实现类");
@@ -105,7 +103,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
     @SneakyThrows
     public BaseResult executeJob(JobTemplate jobTemplate) {
         String keyCode = jobTemplate.getScheduleKey();
-        JobKey jobKey = JobKey.jobKey(keyCode , jobTemplate.getSyncType());
+        JobKey jobKey = JobKey.jobKey(keyCode, jobTemplate.getSyncType());
         scheduler.triggerJob(jobKey);
         return BaseResult.SUCCESS;
     }

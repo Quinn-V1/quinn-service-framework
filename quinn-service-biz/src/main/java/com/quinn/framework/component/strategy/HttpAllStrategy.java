@@ -10,7 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -41,7 +41,7 @@ public class HttpAllStrategy implements StrategyExecutor<HttpRequestParam> {
             ResponseEntity res = restTemplate.exchange(httpRequestParam.getUrl(),
                     HttpMethod.valueOf(httpRequestParam.getMethodName()), entity, resultClass);
             return httpRequestParam.wrapResult(res);
-        } catch (HttpServerErrorException.InternalServerError e) {
+        } catch (RestClientResponseException e) {
             throw new BaseBusinessException(e.getResponseBodyAsString());
         }
     }

@@ -11,10 +11,8 @@ import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.base.model.BaseResult;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 消息发送服务创建工厂
@@ -37,12 +35,12 @@ public class MessageSenderFactory {
     /**
      * 按照消息服务编码进行映射
      */
-    private static Map<String, MessageSender> messageSenderMap = new HashMap<>();
+    private static Map<String, MessageSender> messageSenderMap = new ConcurrentHashMap<>();
 
     /**
      * 按照消息类型进行映射
      */
-    private static Map<String, List<MessageSender>> messageSenderListMap = new HashMap<>();
+    private static Map<String, List<MessageSender>> messageSenderListMap = new ConcurrentHashMap<>();
 
 
     /**
@@ -148,6 +146,18 @@ public class MessageSenderFactory {
         messageSenderMap.put(messageServer.getServerKey(), messageSender);
         CollectionUtil.nullSafePutList(messageSenderListMap, messageSender, messageServer.subKey());
         return messageSender;
+    }
+
+    /**
+     * 支持消息类型
+     *
+     * @return 消息类型
+     */
+    public static List<String> messageTypes() {
+        Set<String> strings = messageSenderSupplierMap.keySet();
+        List<String> result = new ArrayList<>(strings);
+        Collections.sort(result);
+        return result;
     }
 
 }

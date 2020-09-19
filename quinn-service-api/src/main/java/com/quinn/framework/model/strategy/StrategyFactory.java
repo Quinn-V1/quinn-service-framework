@@ -71,52 +71,13 @@ public class StrategyFactory {
      * @return 脚本URL
      */
     public static List<String> scriptUrls(String scriptType, String keyWords, Integer pageSize, Integer pageNum) {
-        StrategyExecutor strategyExecutor = STRATEGY_EXECUTOR_MAP.get(scriptType);
+        StrategyExecutor strategyExecutor = STRATEGY_EXECUTOR_MAP.get(scriptType + BEAN_NAME_SUFFIX);
+        if (strategyExecutor == null) {
+            return null;
+        }
+
         List<String> urls = strategyExecutor.scriptUrls();
-        if (CollectionUtil.isEmpty(urls)) {
-            return null;
-        }
-
-        if (pageNum == null) {
-            pageNum = NumberConstant.INT_ONE;
-        } else {
-            pageNum = Math.max(pageNum, 1);
-        }
-
-        if (pageSize == null) {
-            pageSize = NumberConstant.INT_TEN;
-        } else {
-            pageSize = Math.max(pageSize, 1);
-        }
-
-        int from = (pageNum - 1) * pageSize;
-        int to = from + pageSize;
-
-        if (from >= urls.size()) {
-            return null;
-        }
-
-        if (StringUtil.isEmpty(keyWords)) {
-            return urls.subList(from, Math.min(to, urls.size()));
-        }
-
-        List<String> result = new ArrayList<>();
-        int index = 0;
-        for (String url : urls) {
-            if (url.contains(keyWords)) {
-                index++;
-                if (index < from) {
-                    continue;
-                }
-
-                result.add(url);
-
-                if (index >= to) {
-                    return result;
-                }
-            }
-        }
-        return result;
+        return CollectionUtil.page(urls, keyWords, pageSize, pageNum);
     }
 
     /**

@@ -8,7 +8,7 @@ import com.quinn.util.base.exception.BaseBusinessException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -45,7 +45,7 @@ public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
 
         try {
             return httpRequestParam.wrapResult(restTemplate.exchange(requestEntity, resultClass));
-        } catch (HttpServerErrorException.InternalServerError e) {
+        } catch (RestClientResponseException e) {
             throw new BaseBusinessException(e.getResponseBodyAsString(), false);
         }
     }

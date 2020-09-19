@@ -1,16 +1,16 @@
 package com.quinn.framework.model;
 
+import com.quinn.framework.api.BusinessJob;
 import com.quinn.framework.api.JobInfoSupplier;
 import com.quinn.framework.api.JobInstance;
 import com.quinn.framework.api.JobTemplate;
 import com.quinn.framework.util.JobInfoUtil;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.exception.BaseBusinessException;
 import com.quinn.util.licence.model.ApplicationInfo;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 定时任务信息生成工厂
@@ -19,6 +19,8 @@ import java.util.ServiceLoader;
  * @since 2020-05-30
  */
 public class JobInfoFactory {
+
+    private static final Map<String, BusinessJob> BUSINESS_JOB_MAP = new ConcurrentHashMap<>();
 
     /**
      * 任务实例生成器
@@ -78,4 +80,38 @@ public class JobInfoFactory {
     public static void setInstanceLocalThread(JobInstance jobInstance) {
         instanceThreadLocal.set(jobInstance);
     }
+
+    /**
+     * 添加所有任务MAP
+     *
+     * @param businessJobMap 任务MAP
+     */
+    public static void addAll(Map<String, BusinessJob> businessJobMap) {
+        if (businessJobMap != null) {
+            BUSINESS_JOB_MAP.putAll(businessJobMap);
+        }
+    }
+
+    /**
+     * 获取实现类
+     *
+     * @param jobImplement 任务实现类Bean名
+     * @return 任务实现类
+     */
+    public static BusinessJob getImplement(String jobImplement) {
+        return BUSINESS_JOB_MAP.get(jobImplement);
+    }
+
+    /**
+     * 获取支持胡任务列表
+     *
+     * @return 任务名称
+     */
+    public static List<String> supportJobs(String keyWords, Integer pageSize, Integer pageNum) {
+        Set<String> strings = BUSINESS_JOB_MAP.keySet();
+        List<String> names = new ArrayList<>(strings);
+        Collections.sort(names);
+        return CollectionUtil.page(names, keyWords, pageSize, pageNum);
+    }
+
 }

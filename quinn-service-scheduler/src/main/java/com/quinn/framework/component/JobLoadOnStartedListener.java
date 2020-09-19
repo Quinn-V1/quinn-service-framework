@@ -1,6 +1,7 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.*;
+import com.quinn.framework.model.JobInfoFactory;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.model.BaseResult;
@@ -32,6 +33,10 @@ public class JobLoadOnStartedListener implements ApplicationListener<ContextRefr
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+
+        Map<String, BusinessJob> beansOfType = event.getApplicationContext().getBeansOfType(BusinessJob.class);
+        JobInfoFactory.addAll(beansOfType);
+
         try {
             BaseResult<List<JobTemplate>> result = jobHelpService.findAvailableTemplate();
             if (!result.isSuccess()) {
@@ -73,8 +78,6 @@ public class JobLoadOnStartedListener implements ApplicationListener<ContextRefr
             Collections.sort(sortTriggerListeners, Comparator.comparingInt(SortTriggerListener::getOrder));
 
             jobExecuteService.addTriggerListeners(sortTriggerListeners);
-
-
         } catch (Exception e) {
             LOGGER.error("Error occurs when job load on started", e);
         }

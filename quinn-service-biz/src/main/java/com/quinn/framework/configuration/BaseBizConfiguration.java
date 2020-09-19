@@ -30,10 +30,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -111,7 +118,18 @@ public class BaseBizConfiguration {
     @Bean
     @ConditionalOnMissingBean(value = {RestTemplate.class})
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+        for (HttpMessageConverter<?> converter : messageConverters) {
+            if (converter instanceof AbstractHttpMessageConverter) {
+                ((AbstractHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
+//            } else if (converter instanceof SourceHttpMessageConverter) {
+//                ((SourceHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
+//            } else if (converter instanceof ResourceHttpMessageConverter) {
+//                ((ResourceHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
+            }
+        }
+        return restTemplate;
     }
 
     @Bean
