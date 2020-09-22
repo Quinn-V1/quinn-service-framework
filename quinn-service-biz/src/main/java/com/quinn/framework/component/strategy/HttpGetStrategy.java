@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -46,7 +47,7 @@ public class HttpGetStrategy implements StrategyExecutor<HttpRequestParam> {
         try {
             return httpRequestParam.wrapResult(restTemplate.exchange(requestEntity, resultClass));
         } catch (RestClientResponseException e) {
-            throw new BaseBusinessException(e.getResponseBodyAsString(), false);
+            throw new BaseBusinessException(e.getResponseBodyAsString(StandardCharsets.UTF_8), false);
         }
     }
 

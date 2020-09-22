@@ -14,6 +14,7 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -42,7 +43,7 @@ public class HttpAllStrategy implements StrategyExecutor<HttpRequestParam> {
                     HttpMethod.valueOf(httpRequestParam.getMethodName()), entity, resultClass);
             return httpRequestParam.wrapResult(res);
         } catch (RestClientResponseException e) {
-            throw new BaseBusinessException(e.getResponseBodyAsString());
+            throw new BaseBusinessException(e.getResponseBodyAsString(StandardCharsets.UTF_8), false);
         }
     }
 
