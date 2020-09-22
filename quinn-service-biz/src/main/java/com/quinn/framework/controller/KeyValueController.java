@@ -20,7 +20,7 @@ import java.util.Map;
 @Api(tags = {"0ZY010数据：通用主数据"})
 public class KeyValueController extends AbstractController {
 
-    @PostMapping(value = {"list","list-basic"})
+    @PostMapping(value = {"list", "list-basic"})
     @ApiOperation("综合获取通用主数据列表")
     public BaseResult list(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
@@ -29,13 +29,25 @@ public class KeyValueController extends AbstractController {
         return KeyValueMultiService.selectByMap(condition);
     }
 
-    @PostMapping(value = {"page","page-basic"})
+    @PostMapping(value = {"page", "page-basic"})
     @ApiOperation("分页获取通用主数据列表")
     public BaseResult page(
             @ApiParam(name = "condition", value = "Json格式条件", required = true)
             @RequestBody Map<String, Object> condition
     ) {
         return KeyValueMultiService.pageByMap(condition);
+    }
+
+    @GetMapping(value = {"show", "show-basic"})
+    @ApiOperation("显示：支持多个多个")
+    public BaseResult show(
+            @ApiParam(name = "dataType", value = "数据类型", required = true)
+            @RequestParam(name = "dataType") String dataType,
+
+            @ApiParam(name = "dataKeys", value = "数据编码", required = true)
+            @RequestParam(name = "dataKeys") String dataKeys
+    ) {
+        return KeyValueMultiService.show(dataType, dataKeys);
     }
 
 }

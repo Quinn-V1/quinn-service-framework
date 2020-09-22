@@ -11,6 +11,7 @@ import com.quinn.util.base.StringUtil;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.CommonMessageEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -119,7 +120,7 @@ public final class KeyValueMultiService {
      * @return 通用键值对
      */
     @Strategy("KeyValueMultiService.show")
-    public static BaseResult<String> show(String dataType, String dataKeys) {
+    public static BaseResult<List<KeyValue>> show(String dataType, String dataKeys) {
         if (StringUtil.isEmpty(dataType) || StringUtil.isEmpty(dataKeys)) {
             return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.key(), 1, 0)
                     .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType or dataKeys")
@@ -130,23 +131,17 @@ public final class KeyValueMultiService {
         String[] keys = dataKeys.split(StringConstant.CHAR_COMMA);
 
         BaseDTO baseDTO = SpringBeanHolder.getDto(dataType, keys[0]);
-        StringBuilder query = new StringBuilder();
-
+        List<KeyValue> result = new ArrayList<>();
         for (String key : keys) {
             if (!baseDTO.dataKey(key)) {
                 continue;
             }
-            BaseResult<KeyValue> result = keyValueService.get(baseDTO);
-            if (result.isSuccess()) {
-                query.append(StringConstant.CHAR_COMMA).append(result.getData().getDataValue());
+            BaseResult<KeyValue> res = keyValueService.get(baseDTO);
+            if (res.isSuccess()) {
+                result.add(res.getData());
             }
         }
-
-        if (query.length() > 0) {
-            query.deleteCharAt(0);
-        }
-
-        return BaseResult.success(query.toString());
+        return BaseResult.success(result);
     }
 
 }
