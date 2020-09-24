@@ -107,13 +107,17 @@ public class RedisConfiguration {
                 sentinelConfiguration.setSentinels(hostAndPorts);
                 sentinelConfiguration.setMaster(sentinelMaster);
                 sentinelConfiguration.setDatabase(database);
-                sentinelConfiguration.setPassword(RedisPassword.of(password));
+                if (StringUtil.isNotEmpty(this.password)) {
+                    sentinelConfiguration.setPassword(RedisPassword.of(password));
+                }
 
                 connectionFactory = new JedisConnectionFactory(sentinelConfiguration, jedisClientConfiguration);
             } else if (ConfigConstant.REDIS_DEPLOY_TYPE_CLUSTER.equalsIgnoreCase(hostsType)) {
                 RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
                 clusterConfiguration.setClusterNodes(hostAndPorts);
-                clusterConfiguration.setPassword(RedisPassword.of(password));
+                if (StringUtil.isNotEmpty(this.password)) {
+                    clusterConfiguration.setPassword(RedisPassword.of(password));
+                }
                 clusterConfiguration.setMaxRedirects(maxRedirects);
 
                 connectionFactory = new JedisConnectionFactory(clusterConfiguration, jedisClientConfiguration);
@@ -121,7 +125,9 @@ public class RedisConfiguration {
         } else if (StringUtil.isNotEmpty(host)) {
             RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
             redisStandaloneConfiguration.setDatabase(database);
-            redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+            if (StringUtil.isNotEmpty(this.password)) {
+                redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+            }
 
             connectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration);
         }
