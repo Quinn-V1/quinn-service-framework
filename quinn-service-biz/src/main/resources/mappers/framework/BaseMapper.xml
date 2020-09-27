@@ -15,7 +15,9 @@
     </sql>
 
     <sql id="common_insert_column">
+        <if test="id != null" >
         ID,
+        </if>
         ROOT_ORG,
         INSERT_USER,
         INSERT_DATE_TIME,
@@ -26,7 +28,9 @@
     </sql>
 
     <sql id="common_insert_value">
+        <if test="id != null" >
         #{id,jdbcType=NUMERIC},
+        </if>
         #{rootOrg,jdbcType=VARCHAR},
         #{insertUser,jdbcType=VARCHAR},
         #{insertDateTime,jdbcType=TIMESTAMP},
