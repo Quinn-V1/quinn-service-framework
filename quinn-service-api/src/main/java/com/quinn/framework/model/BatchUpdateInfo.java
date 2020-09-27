@@ -1,11 +1,11 @@
 package com.quinn.framework.model;
 
-import com.quinn.framework.entity.data.IdGenerateAbleDO;
+import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.util.SessionUtil;
 import com.quinn.util.base.CollectionUtil;
-import com.quinn.util.constant.enums.NotifyEnum;
 import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.enums.MessageLevelEnum;
+import com.quinn.util.constant.enums.NotifyEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class BatchUpdateInfo<T extends IdGenerateAbleDO> {
+public class BatchUpdateInfo<T extends BaseDO> {
 
     public BatchUpdateInfo() {
     }

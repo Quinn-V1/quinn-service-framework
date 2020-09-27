@@ -2,6 +2,7 @@ package com.quinn.framework.model.methodinvorker;
 
 import com.quinn.framework.api.methodflag.MethodFlag;
 import com.quinn.framework.api.methodflag.WriteFlag;
+import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.entity.data.IdGenerateAbleDO;
 import com.quinn.util.base.model.BaseResult;
 
@@ -11,7 +12,7 @@ import com.quinn.util.base.model.BaseResult;
  * @author Qunhua.Liao
  * @since 2020-03-29
  */
-public abstract class BaseWriteMethodInvoker<T extends IdGenerateAbleDO> extends AbstractMethodInvoker<T> implements WriteFlag {
+public abstract class BaseWriteMethodInvoker<T extends BaseDO> extends AbstractMethodInvoker<T> implements WriteFlag {
 
     /**
      * 全参构造器
