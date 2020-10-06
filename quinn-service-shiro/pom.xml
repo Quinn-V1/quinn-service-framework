@@ -7,13 +7,13 @@
     <parent>
         <artifactId>quinn-service-framework</artifactId>
         <groupId>com.quinn.framework</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>com.quinn.framework</groupId>
     <artifactId>quinn-service-shiro</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>quinn-service-shiro</name>
     <description>Quinn服务框架：权限验证-Shiro</description>
 

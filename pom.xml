@@ -7,13 +7,13 @@
     <parent>
         <artifactId>quinn-service-parent</artifactId>
         <groupId>com.quinn</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath/>
     </parent>
 
     <groupId>com.quinn.framework</groupId>
     <artifactId>quinn-service-framework</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>quinn-service-framework</name>
     <description>基础功能中心父项目</description>
     <packaging>pom</packaging>
@@ -53,8 +53,8 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <util.version>1.0.0</util.version>
-        <framework.version>1.0.0</framework.version>
+        <util.version>1.1.0</util.version>
+        <framework.version>1.1.0</framework.version>
     </properties>
 
     <dependencies>

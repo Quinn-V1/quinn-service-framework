@@ -7,13 +7,13 @@
     <parent>
         <artifactId>quinn-service-framework</artifactId>
         <groupId>com.quinn.framework</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>com.quinn.framework</groupId>
     <artifactId>quinn-service-nacos-customer</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>quinn-service-nacos-customer</name>
     <description>Quinn服务框架：会话处理</description>
 

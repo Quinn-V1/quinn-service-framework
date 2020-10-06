@@ -6,13 +6,13 @@
     <parent>
         <groupId>com.quinn.framework</groupId>
         <artifactId>quinn-service-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>com.quinn.framework</groupId>
     <artifactId>quinn-service-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>quinn-service-api</name>
     <description>Quinn服务框架：接口层</description>
 

@@ -1,6 +1,6 @@
 package com.quinn.framework.controller;
 
-import com.quinn.framework.entity.data.IdGenerateAbleDO;
+import com.quinn.framework.entity.data.BaseDO;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.model.BatchUpdateInfo;
 import com.quinn.framework.model.PageInfo;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author Qunhua.Liao
  * @since 2020-03-30
  */
-public class BaseEntityController<DO extends IdGenerateAbleDO, TO extends BaseDTO, VO extends DO>
+public class BaseEntityController<DO extends BaseDO, TO extends BaseDTO, VO extends DO>
         extends AbstractController {
 
     /**

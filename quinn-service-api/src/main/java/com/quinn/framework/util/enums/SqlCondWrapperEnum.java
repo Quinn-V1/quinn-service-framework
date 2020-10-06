@@ -1,6 +1,9 @@
 package com.quinn.framework.util.enums;
 
+import com.quinn.util.base.StringUtil;
+import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.StringConstant;
+import lombok.SneakyThrows;
 
 /**
  * 值字段包装枚举类
@@ -48,14 +51,27 @@ public enum SqlCondWrapperEnum {
      * @param filed 字段
      * @return 包装后的字段
      */
-    public String wrap(String filed) {
+    @SneakyThrows
+    public void wrap(Appendable query, String filed, String alias) {
         switch (this) {
             case LIKE:
-                return "concat('%', " + filed + ", '%')";
+                query.append(code).append("concat('%', ");
+                if (StringUtil.isNotEmpty(alias)) {
+                    query.append(alias).append(CharConstant.DOT);
+                }
+                query.append(filed).append(", '%')");
             case LIKE_START:
-                return "concat('%', " + filed + ")";
+                query.append(code).append("concat(");
+                if (StringUtil.isNotEmpty(alias)) {
+                    query.append(alias).append(CharConstant.DOT);
+                }
+                query.append(filed).append(", '%')");
             default:
-                return code + filed;
+                query.append(code);
+                if (StringUtil.isNotEmpty(alias)) {
+                    query.append(alias).append(CharConstant.DOT).append(filed);
+                }
+                query.append(filed);
         }
     }
 

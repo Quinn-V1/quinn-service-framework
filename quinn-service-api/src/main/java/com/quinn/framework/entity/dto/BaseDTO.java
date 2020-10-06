@@ -2,12 +2,11 @@ package com.quinn.framework.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quinn.framework.util.SessionUtil;
-import com.quinn.framework.util.enums.SqlCondWrapperEnum;
-import com.quinn.framework.util.enums.SqlPropWrapperEnum;
-import com.quinn.framework.util.enums.UpdateTypeEnum;
+import com.quinn.framework.util.enums.*;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.convertor.BaseConverter;
+import com.quinn.util.base.exception.ParameterShouldNotEmpty;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
@@ -16,10 +15,10 @@ import com.quinn.util.constant.enums.DataStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 基础数据传输类
@@ -30,6 +29,17 @@ import java.util.List;
 @Setter
 @Getter
 public abstract class BaseDTO<T> {
+
+    /**
+     * 默认表别名
+     */
+    public static final String DEFAULT_TABLE_ALIAS = "t";
+
+    public static final String PROP_NAME_OF_ID = "id";
+
+    public static final String PROP_NAME_OF_DATA_STATUS = "dataStatus";
+
+    public static final String PROP_NAME_OF_DATA_VERSION = "dataVersion";
 
     /**
      * 缓存主键分割符
@@ -236,41 +246,6 @@ public abstract class BaseDTO<T> {
     }
 
     /**
-     * 获取或者生成排序字符串
-     *
-     * @return 排序字符串
-     */
-    public String getOrderBy() {
-        if (orderBy != null) {
-            return orderBy;
-        }
-
-        if (CollectionUtil.isEmpty(orderFields)) {
-            return null;
-        }
-
-        StringBuilder query = new StringBuilder();
-        for (OrderField orderField : orderFields) {
-            String column = columnOfProp(orderField.getProp());
-            if (StringUtil.isEmpty(column)) {
-                continue;
-            }
-
-            query.append(orderField.ofAlias()).append(CharConstant.DOT)
-                    .append(column).append(CharConstant.BLANK)
-                    .append(orderField.ofOrder()).append(", ")
-            ;
-        }
-
-        if (query.length() > 0) {
-            query.delete(query.length() - 2, query.length());
-        }
-
-        orderBy = query.toString();
-        return orderBy;
-    }
-
-    /**
      * 添加排序字段
      *
      * @param prop  属性名
@@ -340,7 +315,6 @@ public abstract class BaseDTO<T> {
      * 逆向解析数据编码
      */
     public boolean dataKey(String dataKey) {
-
         return dataKey(dataKey, DATA_KEY_DELIMITER);
     }
 
@@ -380,11 +354,6 @@ public abstract class BaseDTO<T> {
             cacheKey = cacheKey.substring(entityClass.getSimpleName().length() + delimiter.length());
         }
         dataKey(cacheKey, delimiter);
-    }
-
-    @Override
-    public String toString() {
-        return this.cacheKey();
     }
 
     /**
@@ -487,14 +456,24 @@ public abstract class BaseDTO<T> {
     public class FreeQuery<V> {
 
         /**
+         * 结果字段
+         */
+        private List<ResultField> resultFields;
+
+        /**
          * 条件字段
          */
         private List<FieldValue> condFields;
 
         /**
-         * 结果字段
+         * 分组字段
          */
-        private List<ResultField> resultFields;
+        private List<GroupField> groupFields;
+
+        /**
+         * 关联查询表
+         */
+        private LinkedHashMap<String, JoinTable> joinTables;
 
         /**
          * 结果类型
@@ -507,9 +486,9 @@ public abstract class BaseDTO<T> {
         private Object[] params;
 
         /**
-         * 分组字段
+         * 别名
          */
-        private String[] groupFields;
+        private String alias;
 
         /**
          * 获取结果类型
@@ -529,6 +508,12 @@ public abstract class BaseDTO<T> {
             return params;
         }
 
+        {
+            this.groupFields = new ArrayList(NumberConstant.INT_TWO);
+            BaseDTO.this.orderFields = new ArrayList(NumberConstant.INT_TWO);
+            this.joinTables = new LinkedHashMap<>();
+        }
+
         /**
          * 带参构造器
          *
@@ -537,7 +522,30 @@ public abstract class BaseDTO<T> {
          * @param resultSize  结果数
          */
         private FreeQuery(Class<V> resultClass, int condSize, int resultSize) {
+            this(resultClass, DEFAULT_TABLE_ALIAS, condSize, resultSize);
+        }
+
+        /**
+         * 带参构造器
+         *
+         * @param resultClass 结果类型
+         * @param condSize    条件数
+         * @param props       结果数
+         */
+        private FreeQuery(Class<V> resultClass, int condSize, String... props) {
+            this(resultClass, DEFAULT_TABLE_ALIAS, condSize, props);
+        }
+
+        /**
+         * 带参构造器
+         *
+         * @param resultClass 结果类型
+         * @param condSize    条件数
+         * @param resultSize  结果数
+         */
+        private FreeQuery(Class<V> resultClass, String alias, int condSize, int resultSize) {
             this.resultClass = resultClass;
+            this.alias = alias;
             this.condFields = new ArrayList<>(condSize);
             this.resultFields = new ArrayList<>(resultSize);
         }
@@ -549,8 +557,9 @@ public abstract class BaseDTO<T> {
          * @param condSize    条件数
          * @param props       结果数
          */
-        private FreeQuery(Class<V> resultClass, int condSize, String... props) {
+        private FreeQuery(Class<V> resultClass, String alias, int condSize, String... props) {
             this.resultClass = resultClass;
+            this.alias = alias;
             this.condFields = new ArrayList<>(condSize);
 
             if (props != null) {
@@ -562,48 +571,60 @@ public abstract class BaseDTO<T> {
         }
 
         /**
-         * 生成SQL文件
+         * 内关联
          *
-         * @return SQL文
+         * @param dto   条件
+         * @param alias 别名
+         * @return 本身
          */
-        public String generateSql() {
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT ");
-            for (ResultField resultField : resultFields) {
-                query.append(resultField.fullName()).append(",");
-            }
+        public JoinTable join(BaseDTO dto, String alias) {
+            return addJoinTable(dto, alias, JoinTypeEnum.INNER);
+        }
 
-            query.deleteCharAt(query.length() - 1);
-            query.append(" FROM ").append(tableName());
+        /**
+         * 左关联
+         *
+         * @param dto   条件
+         * @param alias 别名
+         * @return 本身
+         */
+        public JoinTable lefJoin(BaseDTO dto, String alias) {
+            return addJoinTable(dto, alias, JoinTypeEnum.LEFT);
+        }
 
-            if (!CollectionUtil.isEmpty(condFields)) {
-                query.append(" WHERE ");
-                params = new Object[condFields.size()];
-                for (int i = 0; i < condFields.size(); i++) {
-                    FieldValue fieldValue = condFields.get(i);
-                    query.append(fieldValue.fullValue())
-                            .append(" AND ")
-                    ;
-                    params[i] = fieldValue.value;
-                }
+        /**
+         * 右关联
+         *
+         * @param dto   条件
+         * @param alias 别名
+         * @return 本身
+         */
+        public JoinTable rightJoin(BaseDTO dto, String alias) {
+            return addJoinTable(dto, alias, JoinTypeEnum.RIGHT);
+        }
 
-                query.delete(query.length() - 5, query.length());
-            }
+        /**
+         * 全关联
+         *
+         * @param dto   条件
+         * @param alias 别名
+         * @return 本身
+         */
+        public JoinTable fullJoin(BaseDTO dto, String alias) {
+            return addJoinTable(dto, alias, JoinTypeEnum.FULL);
+        }
 
-            if (!CollectionUtil.isEmpty(groupFields)) {
-                query.append(" GROUP BY ");
-                for (String groupField : groupFields) {
-                    query.append(columnOfProp(groupField)).append(", ");
-                }
-                query.delete(query.length() - 2, query.length());
-            }
-
-            String orderBy = getOrderBy();
-            if (!StringUtil.isEmpty(orderBy)) {
-                query.append(" ORDER BY").append(orderBy);
-            }
-
-            return query.toString();
+        /**
+         * 添加关联表
+         *
+         * @param dto   关联条件实体
+         * @param alias 别名
+         * @return 本身
+         */
+        private JoinTable addJoinTable(BaseDTO dto, String alias, JoinTypeEnum joinType) {
+            JoinTable joinTable = new JoinTable(dto, alias, joinType);
+            this.joinTables.put(alias, joinTable);
+            return joinTable;
         }
 
         /**
@@ -614,7 +635,22 @@ public abstract class BaseDTO<T> {
          * @return 本身
          */
         public FreeQuery<V> wrapResultField(String prop, SqlPropWrapperEnum wrapper) {
-            resultFields.add(new ResultField(prop, wrapper));
+            return wrapResultField(prop, alias, wrapper);
+        }
+
+        /**
+         * 包裹 属性
+         *
+         * @param prop    属性名
+         * @param wrapper 包装方式
+         * @return 本身
+         */
+        public FreeQuery<V> wrapResultField(String prop, String alias, SqlPropWrapperEnum wrapper) {
+            if (StringUtil.isEmpty(alias) || alias.equals(this.alias)) {
+                resultFields.add(new ResultField(prop, alias, wrapper));
+            } else {
+                resultFields.add(joinTables.get(alias).getDto().new ResultField(prop, alias, wrapper));
+            }
             return this;
         }
 
@@ -626,10 +662,7 @@ public abstract class BaseDTO<T> {
          * @return 本身
          */
         public FreeQuery<V> addParamField(String prop, Object value) {
-            if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
-                condFields.add(new FieldValue(prop, value));
-            }
-            return this;
+            return addParamField(prop, alias, value, SqlCondWrapperEnum.EQUAL);
         }
 
         /**
@@ -640,9 +673,35 @@ public abstract class BaseDTO<T> {
          * @return 本身
          */
         public FreeQuery<V> addParamField(String prop, Object value, SqlCondWrapperEnum wrapper) {
-            if (value != null && !StringConstant.STRING_EMPTY.equals(value)) {
-                condFields.add(new FieldValue(prop, value, wrapper));
+            return addParamField(prop, alias, value, wrapper);
+        }
+
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         * @return 本身
+         */
+        public FreeQuery<V> addParamField(String prop, String alias, Object value) {
+            return addParamField(prop, alias, value, SqlCondWrapperEnum.EQUAL);
+        }
+
+        /**
+         * 增加参数
+         *
+         * @param prop  属性
+         * @param value 参数
+         * @return 本身
+         */
+        public FreeQuery<V> addParamField(String prop, String alias, Object value, SqlCondWrapperEnum wrapper) {
+            FieldValue fieldValue;
+            if (StringUtil.isEmpty(alias) || alias.equals(this.alias)) {
+                fieldValue = new FieldValue(prop, alias, value, wrapper);
+            } else {
+                fieldValue = joinTables.get(alias).getDto().new FieldValue(prop, alias, value, wrapper);
             }
+            condFields.add(fieldValue);
             return this;
         }
 
@@ -653,11 +712,11 @@ public abstract class BaseDTO<T> {
          */
         public FreeQuery<V> addAvailableParam() {
             if (condFields == null) {
-                condFields = new ArrayList<>(2);
+                condFields = new ArrayList<>(NumberConstant.INT_TWO);
             }
-
-            condFields.add(new FieldValue("dataVersion", NumberConstant.INT_ONE, SqlCondWrapperEnum.GREAT_EQUAL));
-            condFields.add(new FieldValue("dataStatus", DataStatusEnum.NORMAL.code,
+            condFields.add(new FieldValue(PROP_NAME_OF_DATA_VERSION, alias, NumberConstant.INT_ONE,
+                    SqlCondWrapperEnum.GREAT_EQUAL));
+            condFields.add(new FieldValue(PROP_NAME_OF_DATA_STATUS, alias, DataStatusEnum.NORMAL.code,
                     SqlCondWrapperEnum.GREAT_EQUAL));
             return this;
         }
@@ -665,12 +724,90 @@ public abstract class BaseDTO<T> {
         /**
          * 添加分组字段
          *
-         * @param props 分组属性名
+         * @param prop  分组属性名
+         * @param alias 分组属性名
          * @return 本身
          */
-        public FreeQuery<V> groupBy(String... props) {
-            this.groupFields = props;
+        public FreeQuery<V> addGroupBy(String prop, String alias) {
+            if (StringUtil.isEmpty(alias) || alias.equals(this.alias)) {
+                this.groupFields.add(new GroupField(prop, alias));
+            } else {
+                this.groupFields.add(joinTables.get(alias).getDto().new GroupField(prop, alias));
+            }
             return this;
+        }
+
+        /**
+         * 添加分组字段
+         *
+         * @param prop  分组属性名
+         * @param alias 分组属性名
+         * @return 本身
+         */
+        public FreeQuery<V> addOrderField(String prop, String alias, String order) {
+            if (StringUtil.isEmpty(alias) || alias.equals(this.alias)) {
+                BaseDTO.this.orderFields.add(new OrderField(prop, alias, order));
+            } else {
+                BaseDTO.this.orderFields.add(joinTables.get(alias).getDto().new OrderField(prop, alias, order));
+            }
+            return this;
+        }
+
+        /**
+         * 生成SQL文件
+         *
+         * @return SQL文
+         */
+        public String generateSql() {
+            StringBuilder query = new StringBuilder();
+
+            Iterator<ResultField> rfIterator = resultFields.iterator();
+            rfIterator.next().appendTo(query, AppendWayEnum.SELECT.code);
+            while (rfIterator.hasNext()) {
+                rfIterator.next().appendTo(query, StringConstant.CHAR_COMMA);
+            }
+
+            query.append(CharConstant.BLANK).append(AppendWayEnum.FROM.code).append(CharConstant.BLANK)
+                    .append(tableName()).append(CharConstant.BLANK).append(alias);
+            if (!CollectionUtil.isEmpty(joinTables)) {
+                for (Map.Entry<String, JoinTable> entry : joinTables.entrySet()) {
+                    entry.getValue().appendTo(query);
+                }
+            }
+
+            if (!CollectionUtil.isEmpty(condFields)) {
+                params = new Object[condFields.size()];
+
+                int j = 0;
+                if (condFields.get(0).appendTo(query, AppendWayEnum.WHERE.name())) {
+                    params[j++] = condFields.get(0).value;
+                }
+                for (int i = 1; i < condFields.size(); i++) {
+                    if (condFields.get(i).appendTo(query, AppendWayEnum.AND.name())) {
+                        params[j++] = condFields.get(i).value;
+                    }
+                }
+            }
+
+            if (!CollectionUtil.isEmpty(groupFields)) {
+                Iterator<GroupField> iterator = groupFields.iterator();
+                iterator.next().appendTo(query, AppendWayEnum.GROUP_BY.code);
+                while (iterator.hasNext()) {
+                    iterator.next().appendTo(query, StringConstant.CHAR_COMMA);
+                }
+            }
+
+            if (!StringUtil.isEmpty(orderBy)) {
+                query.append(CharConstant.BLANK).append(AppendWayEnum.ORDER_BY.code)
+                        .append(CharConstant.BLANK).append(orderBy);
+            } else if (!CollectionUtil.isEmpty(orderFields)) {
+                Iterator<OrderField> iterator = orderFields.iterator();
+                iterator.next().appendTo(query, AppendWayEnum.ORDER_BY.code);
+                while (iterator.hasNext()) {
+                    iterator.next().appendTo(query, StringConstant.CHAR_COMMA);
+                }
+            }
+            return query.toString();
         }
 
     }
@@ -712,7 +849,7 @@ public abstract class BaseDTO<T> {
         /**
          * 更新类型
          */
-        private UpdateTypeEnum updateType;
+        private final UpdateTypeEnum updateType;
 
         /**
          * 值字段
@@ -736,65 +873,98 @@ public abstract class BaseDTO<T> {
          */
         public String generateSql() {
             StringBuilder query = new StringBuilder();
+            Iterator<FieldValue> iterator;
+            FieldValue next;
+            int k = 0;
 
             switch (updateType) {
                 case UPDATE:
-                    query.append("UPDATE ").append(tableName()).append(" SET ");
+                    query.append(AppendWayEnum.UPDATE.code).append(CharConstant.BLANK).append(tableName());
                     params = new Object[valueFields.size() + condFields.size()];
-                    int k = 0;
-                    for (; k < valueFields.size(); k++) {
-                        FieldValue fieldValue = valueFields.get(k);
-                        query.append(columnOfProp(fieldValue.prop)).append(" = ?,");
-                        params[k] = fieldValue.value;
-                    }
-                    query.deleteCharAt(query.length() - 1);
 
-                    query.append(" WHERE ");
-                    for (int i = 0; i < condFields.size(); i++) {
-                        FieldValue fieldValue = condFields.get(i);
-                        query.append(fieldValue.fullValue())
-                                .append(" AND ")
-                        /*.append(columnOfProp(fieldValue.prop)).append(" = ? AND ")*/;
-                        params[k + i] = fieldValue.value;
+                    iterator = valueFields.iterator();
+                    next = iterator.next();
+                    if (next.appendTo(query, AppendWayEnum.SET.name())) {
+                        params[k++] = next.value;
                     }
-                    query.delete(query.length() - 5, query.length());
 
+                    while (iterator.hasNext()) {
+                        next = iterator.next();
+                        if (next.appendTo(query, StringConstant.CHAR_COMMA)) {
+                            params[k++] = next.value;
+                        }
+                    }
+
+                    iterator = condFields.iterator();
+                    next = iterator.next();
+                    if (next.appendTo(query, AppendWayEnum.WHERE.name())) {
+                        params[k++] = next.value;
+                    }
+
+                    while (iterator.hasNext()) {
+                        next = iterator.next();
+                        if (next.appendTo(query, AppendWayEnum.AND.name())) {
+                            params[k++] = next.value;
+                        }
+                    }
                     break;
                 case INSERT:
-                    query.append("INSERT INTO ").append(tableName()).append("(");
-                    StringBuilder queryVal = new StringBuilder();
+                    query.append(AppendWayEnum.INSERT.code).append(CharConstant.BLANK)
+                            .append(tableName()).append(CharConstant.OPEN_PAREN);
+                    List<Object> paramTemp = new ArrayList<>();
 
-                    params = new Object[valueFields.size()];
+                    iterator = valueFields.iterator();
+                    next = iterator.next();
+                    paramTemp.add(next.value);
+                    query.append(columnOfProp(next.prop));
 
-                    for (int i = 0; i < valueFields.size(); i++) {
-                        FieldValue FieldValue = valueFields.get(i);
-                        query.append(columnOfProp(FieldValue.prop)).append(",");
-                        queryVal.append("?,");
-                        params[i] = FieldValue.value;
+                    while (iterator.hasNext()) {
+                        next = iterator.next();
+                        query.append(CharConstant.COMMA).append(columnOfProp(next.prop));
+                        paramTemp.add(next.value);
                     }
-                    query.deleteCharAt(query.length() - 1);
-                    queryVal.deleteCharAt(queryVal.length() - 1);
+                    query.append(CharConstant.CLOSE_PAREN).append(AppendWayEnum.VALUES).append(CharConstant.OPEN_PAREN);
 
-                    query.append(") VALUES (");
-                    query.append(queryVal).append(")");
+                    Iterator<Object> iteratorParam = paramTemp.iterator();
+                    Object nextParam = iteratorParam.next();
+                    params = new Object[valueFields.size()];
+                    if (nextParam == null) {
+                        query.append(AppendWayEnum.NULL.code);
+                    } else {
+                        query.append(CharConstant.QUESTION_MARK);
+                        params[k++] = nextParam;
+                    }
 
+                    while (iteratorParam.hasNext()) {
+                        if (params[0] == null) {
+                            query.append(AppendWayEnum.NULL.code);
+                        } else {
+                            query.append(CharConstant.COMMA).append(CharConstant.QUESTION_MARK);
+                            params[k++] = nextParam;
+                        }
+                    }
+                    query.append(CharConstant.CLOSE_PAREN);
                 case DELETE:
-                    query.append("DELETE FROM ").append(tableName()).append(" WHERE ");
+                    query.append("DELETE FROM ").append(tableName());
                     params = new Object[condFields.size()];
 
-                    for (int i = 0; i < condFields.size(); i++) {
-                        FieldValue fieldValue = condFields.get(i);
-                        query.append(fieldValue.fullValue())
-                                .append(" AND ")
-                        /*.append(columnOfProp(FieldValue.prop)).append(" = ? AND ")*/;
-                        params[i] = fieldValue.value;
+                    if (condFields.get(0).appendTo(query, AppendWayEnum.WHERE.name())) {
+                        params[k++] = condFields.get(0).value;
                     }
-                    query.delete(query.length() - 5, query.length());
+
+                    for (int i = 1; i < condFields.size(); i++) {
+                        if (condFields.get(i).appendTo(query, AppendWayEnum.AND.name())) {
+                            params[k++] = condFields.get(i).value;
+                        }
+                    }
                     break;
                 default:
                     break;
             }
 
+            if (k != params.length) {
+                params = Arrays.copyOf(params, k);
+            }
             return query.toString();
         }
 
@@ -842,6 +1012,75 @@ public abstract class BaseDTO<T> {
     }
 
     /**
+     * 结果字段
+     *
+     * @author Qunhua.Liao
+     * @since 2020-04-24
+     */
+    private class ResultField {
+
+        private ResultField(String prop, SqlPropWrapperEnum wrapper) {
+            this.prop = prop;
+            this.columnAlias = prop;
+            this.wrapper = wrapper;
+        }
+
+        private ResultField(String prop, String tableAlias, SqlPropWrapperEnum wrapper) {
+            this.prop = prop;
+            this.tableAlias = tableAlias;
+            this.columnAlias = prop;
+            this.wrapper = wrapper;
+        }
+
+        private ResultField(String prop, String tableAlias, String columnAlias, SqlPropWrapperEnum wrapper) {
+            this.prop = prop;
+            this.tableAlias = tableAlias;
+            this.columnAlias = columnAlias;
+            this.wrapper = wrapper;
+        }
+
+        /**
+         * 属性名称
+         */
+        String prop;
+
+        /**
+         * 别名
+         */
+        String tableAlias;
+
+        /**
+         * 别名
+         */
+        String columnAlias;
+
+        /**
+         * 包装方式
+         */
+        SqlPropWrapperEnum wrapper;
+
+        /**
+         * 全条件值
+         *
+         * @param query     字符串
+         * @param appendWay 拼接方式 SELECT | ,
+         * @return 全条件值
+         */
+        @SneakyThrows
+        public void appendTo(Appendable query, String appendWay) {
+            if (StringUtil.isNotEmpty(appendWay)) {
+                query.append(CharConstant.BLANK).append(appendWay).append(CharConstant.BLANK);
+            }
+
+            if (StringUtil.isNotEmpty(tableAlias)) {
+                query.append(tableAlias).append(CharConstant.DOT);
+            }
+            query.append(columnOfProp(prop)).append(" AS ").append(columnAlias);
+
+        }
+    }
+
+    /**
      * 条件字段
      *
      * @author Qunhua.Liao
@@ -854,11 +1093,29 @@ public abstract class BaseDTO<T> {
             this.value = value;
         }
 
+        private FieldValue(String prop, Object value, String alias) {
+            this.prop = prop;
+            this.value = value;
+            this.alias = alias;
+        }
+
         private FieldValue(String prop, Object value, SqlCondWrapperEnum wrapper) {
             this.prop = prop;
             this.value = value;
             this.wrapper = wrapper;
         }
+
+        private FieldValue(String prop, String alias, Object value, SqlCondWrapperEnum wrapper) {
+            this.prop = prop;
+            this.value = value;
+            this.alias = alias;
+            this.wrapper = wrapper;
+        }
+
+        /**
+         * 表别名
+         */
+        String alias;
 
         /**
          * 属性名称
@@ -880,50 +1137,151 @@ public abstract class BaseDTO<T> {
          *
          * @return 全条件值
          */
-        public String fullValue() {
-            if (wrapper == null) {
-                return columnOfProp(prop) + StringConstant.CHAR_EQUAL_MARK + StringConstant.CHAR_QUESTION_MARK;
+        @SneakyThrows
+        public boolean appendTo(Appendable query, String appendWay) {
+            if (StringUtil.isNotEmpty(appendWay)) {
+                query.append(CharConstant.BLANK).append(appendWay).append(CharConstant.BLANK);
+            }
+
+            if (StringUtil.isNotEmpty(alias)) {
+                query.append(alias).append(CharConstant.DOT);
+            }
+            query.append(columnOfProp(prop));
+
+            if (value == null) {
+                query.append(StringConstant.CHAR_EQUAL_MARK).append(AppendWayEnum.IS_NULL.code);
+                return false;
             } else {
-                return columnOfProp(prop) + wrapper.wrap(StringConstant.CHAR_QUESTION_MARK);
+                if (wrapper == null) {
+                    query.append(StringConstant.CHAR_EQUAL_MARK)
+                            .append(StringConstant.CHAR_QUESTION_MARK);
+                } else {
+                    wrapper.wrap(query, StringConstant.CHAR_QUESTION_MARK, null);
+                }
+                return true;
             }
         }
 
     }
 
     /**
-     * 结果字段
+     * 排序字段
      *
      * @author Qunhua.Liao
-     * @since 2020-04-24
+     * @since 2020-05-08
      */
-    private class ResultField {
+    @Getter
+    @Setter
+    class GroupField {
 
-        private ResultField(String prop, SqlPropWrapperEnum wrapper) {
+        public GroupField() {
+        }
+
+        public GroupField(String prop, String alias) {
+            if (StringUtil.isEmpty(prop)) {
+                throw new ParameterShouldNotEmpty();
+            }
             this.prop = prop;
-            this.wrapper = wrapper;
+            this.alias = alias;
         }
 
         /**
-         * 属性名称
+         * 属性名
          */
-        String prop;
+        @ApiModelProperty("属性名")
+        private String prop;
 
         /**
-         * 包装方式
+         * 别名
          */
-        SqlPropWrapperEnum wrapper;
+        @ApiModelProperty("别名")
+        private String alias;
 
         /**
-         * 全字段名
+         * 全条件值
          *
-         * @return 全字段名
+         * @return 全条件值
          */
-        public String fullName() {
-            if (wrapper == null) {
-                return columnOfProp(prop) + " AS " + prop;
-            } else {
-                return wrapper.wrap(columnOfProp(prop)) + " AS " + prop;
+        @SneakyThrows
+        public void appendTo(Appendable query, String appendWay) {
+            if (StringUtil.isNotEmpty(appendWay)) {
+                query.append(CharConstant.BLANK).append(appendWay).append(CharConstant.BLANK);
+            }
+
+            if (StringUtil.isNotEmpty(alias)) {
+                query.append(alias).append(CharConstant.DOT);
+            }
+            query.append(columnOfProp(prop));
+        }
+
+    }
+
+    /**
+     * 排序字段
+     *
+     * @author Qunhua.Liao
+     * @since 2020-05-08
+     */
+    @Getter
+    @Setter
+    public class OrderField {
+
+        public OrderField() {
+        }
+
+        public OrderField(String prop, String order, String alias) {
+            if (StringUtil.isEmpty(prop)) {
+                throw new ParameterShouldNotEmpty();
+            }
+            this.prop = prop;
+            this.alias = alias;
+            this.order = order;
+        }
+
+        /**
+         * 属性名
+         */
+        @ApiModelProperty("属性名")
+        private String prop;
+
+        /**
+         * 别名
+         */
+        @ApiModelProperty("别名")
+        private String alias;
+
+        /**
+         * 顺序
+         */
+        @ApiModelProperty("顺序")
+        private String order;
+
+        /**
+         * 全条件值
+         *
+         * @param query     字符串
+         * @param appendWay 拼接方式 ORDER BY | ,
+         * @return 全条件值
+         */
+        @SneakyThrows
+        public void appendTo(Appendable query, String appendWay) {
+            if (StringUtil.isNotEmpty(appendWay)) {
+                query.append(CharConstant.BLANK).append(appendWay).append(CharConstant.BLANK);
+            }
+
+            if (StringUtil.isNotEmpty(alias)) {
+                query.append(alias).append(CharConstant.DOT);
+            }
+            query.append(columnOfProp(prop));
+
+            if (StringUtil.isNotEmpty(order)) {
+                query.append(order);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.cacheKey();
     }
 }
