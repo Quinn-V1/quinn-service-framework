@@ -1,19 +1,18 @@
 package com.quinn.framework.component;
 
 import com.quinn.framework.api.KeyValueService;
-import com.quinn.util.base.api.Strategy;
 import com.quinn.framework.entity.dto.BaseDTO;
 import com.quinn.framework.model.PageInfo;
 import com.quinn.framework.service.BaseEntityService;
-import com.quinn.util.base.api.KeyValue;
-import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
+import com.quinn.util.base.api.KeyValue;
+import com.quinn.util.base.api.Strategy;
+import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.StringConstant;
 import com.quinn.util.constant.enums.CommonMessageEnum;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 集成键值对处理器
@@ -121,19 +120,36 @@ public final class KeyValueMultiService {
      */
     @Strategy("KeyValueMultiService.show")
     public static BaseResult<List<KeyValue>> show(String dataType, String dataKeys) {
-        if (StringUtil.isEmpty(dataType) || StringUtil.isEmpty(dataKeys)) {
+        if (dataKeys == null) {
+            return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.key(), 1, 0)
+                    .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataKeys")
+                    .result();
+        }
+        return shows(dataType, Arrays.asList(dataKeys.split(StringConstant.CHAR_COMMA)));
+    }
+
+    /**
+     * 指定显示
+     *
+     * @param dataType 数据类型
+     * @param dataKeys 数据编码
+     * @return 通用键值对
+     */
+    @Strategy("KeyValueMultiService.shows")
+    public static BaseResult<List<KeyValue>> shows(String dataType, Collection<String> dataKeys) {
+        if (StringUtil.isEmpty(dataType) || CollectionUtil.isEmpty(dataKeys)) {
             return BaseResult.fail().buildMessage(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.key(), 1, 0)
                     .addParam(CommonMessageEnum.PARAM_SHOULD_NOT_NULL.paramNames[0], "dataType or dataKeys")
                     .result();
         }
 
         KeyValueService keyValueService = SpringBeanHolder.getKeyValueService(dataType);
-        String[] keys = dataKeys.split(StringConstant.CHAR_COMMA);
+        Iterator<String> iterator = dataKeys.iterator();
 
-        BaseDTO baseDTO = SpringBeanHolder.getDto(dataType, keys[0]);
+        BaseDTO baseDTO = SpringBeanHolder.getDto(dataType, iterator.next());
         List<KeyValue> result = new ArrayList<>();
-        for (String key : keys) {
-            if (!baseDTO.dataKey(key)) {
+        while (iterator.hasNext()) {
+            if (!baseDTO.dataKey(iterator.next())) {
                 continue;
             }
             BaseResult<KeyValue> res = keyValueService.get(baseDTO);
