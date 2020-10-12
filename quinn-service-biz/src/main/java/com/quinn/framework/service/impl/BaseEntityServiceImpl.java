@@ -251,9 +251,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
                     throw e;
                 }
 
-                if (res >= 0) {
-                    getResult().ofData(vo);
-                } else {
+                if (res <= 0) {
                     getResult().ofSuccess(false).ofLevel(MessageLevelEnum.ERROR)
                             .buildMessage(DATA_OPERATION_MISS_HINT.key(), 1, 2)
                             .addParamI8n(DATA_OPERATION_MISS_HINT.paramNames[0], DataOperateTypeEnum.UPDATE.key())
@@ -265,7 +263,7 @@ public abstract class BaseEntityServiceImpl<DO extends BaseDO, TO extends BaseDT
             }
         });
 
-        return afterUpdate(result, data);
+        return afterUpdate(result, vo);
     }
 
     @Override
