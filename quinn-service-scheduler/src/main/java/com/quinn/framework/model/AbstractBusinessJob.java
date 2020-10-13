@@ -6,6 +6,7 @@ import com.quinn.framework.api.JobHelpService;
 import com.quinn.framework.api.JobInstance;
 import com.quinn.framework.api.JobTemplate;
 import com.quinn.framework.util.enums.JobStateEnum;
+import com.quinn.util.base.StringUtil;
 import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.handler.MultiMessageResolver;
@@ -74,7 +75,9 @@ public abstract class AbstractBusinessJob implements BusinessJob {
         } finally {
             // 保存任务实例
             jobInstance.setEndDateTime(LocalDateTime.now());
-            jobInstance.setExecMsg(MultiMessageResolver.resolveResult(result));
+            String s = MultiMessageResolver.resolveResult(result);
+            jobInstance.setExecMsg(StringUtil.cutFromLeftOfByte(s, 2000));
+
             jobHelpService.updateInstance(jobInstance);
 
             // 更新最新运行时间
