@@ -35,6 +35,10 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
         String jobKey = jobTemplate.getScheduleKey();
         String jobImplement = jobTemplate.getImplementClass();
         String syncType = jobTemplate.getSyncType();
+        String execCycleExpress = jobTemplate.getExecCycleExpress();
+        if (StringUtil.isEmpty(execCycleExpress)) {
+            return BaseResult.SUCCESS;
+        }
 
         BusinessJob businessJob = JobInfoFactory.getImplement(jobImplement);
         if (businessJob == null) {
@@ -71,7 +75,7 @@ public class QuartzExecuteServiceAdapter implements JobExecuteService {
             trigger = TriggerBuilder.newTrigger()
                     // Scheduler.DEFAULT_GROUP
                     .withIdentity(jobKey, syncType)
-                    .withSchedule(CronScheduleBuilder.cronSchedule(jobTemplate.getExecCycleExpress())).build();
+                    .withSchedule(CronScheduleBuilder.cronSchedule(execCycleExpress)).build();
         }
 
 

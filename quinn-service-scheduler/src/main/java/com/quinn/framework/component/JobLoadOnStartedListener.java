@@ -37,50 +37,56 @@ public class JobLoadOnStartedListener implements ApplicationListener<ContextRefr
         Map<String, BusinessJob> beansOfType = event.getApplicationContext().getBeansOfType(BusinessJob.class);
         JobInfoFactory.addAll(beansOfType);
 
-        try {
-            BaseResult<List<JobTemplate>> result = jobHelpService.findAvailableTemplate();
-            if (!result.isSuccess()) {
-                LOGGER.warn("No JobTemplate configured in the application context");
-                return;
-            }
+        BaseResult<List<JobTemplate>> result = jobHelpService.findAvailableTemplate();
+        if (!result.isSuccess()) {
+            LOGGER.warn("No JobTemplate configured in the application context");
+            return;
+        }
 
-            // 注册任务
-            List<JobTemplate> jobs = result.getData();
-            if (null != jobs) {
-                for (JobTemplate job : jobs) {
+        // 注册任务
+        List<JobTemplate> jobs = result.getData();
+        if (null != jobs) {
+            for (JobTemplate job : jobs) {
+                try {
                     BaseResult res = jobExecuteService.addJob(job);
                     if (!res.isSuccess()) {
-                        if (strictMode) {
+                        if (strictMode && !res.wantContinue()) {
                             LOGGER.error("Schedule job {} add failed for reason {}", job.getScheduleKey(),
                                     res.getMessage());
                             System.exit(-1);
                         } else {
                             LOGGER.warn("Schedule job {} add failed for reason {}", job.getScheduleKey(),
                                     res.getMessage());
-                            continue;
                         }
+                    }
+                } catch (Exception e) {
+                    if (strictMode) {
+                        LOGGER.error("Schedule job {} add failed for reason {}", job.getScheduleKey(),
+                                e.getMessage());
+                        System.exit(-1);
+                    } else {
+                        LOGGER.warn("Schedule job {} add failed for reason {}", job.getScheduleKey(),
+                                e.getMessage());
                     }
                 }
             }
-
-            // 添加工作监听
-            Map<String, SortJobListener> sortJobListenerMap = event.getApplicationContext()
-                    .getBeansOfType(SortJobListener.class);
-            List<SortJobListener> sortJobListeners = new ArrayList<>(sortJobListenerMap.values());
-            Collections.sort(sortJobListeners, Comparator.comparingInt(SortJobListener::getOrder));
-
-            jobExecuteService.addJobListeners(sortJobListeners);
-
-            // 添加触发监听器
-            Map<String, SortTriggerListener> sortTriggerListenerMap = event.getApplicationContext()
-                    .getBeansOfType(SortTriggerListener.class);
-            List<SortTriggerListener> sortTriggerListeners = new ArrayList<>(sortTriggerListenerMap.values());
-            Collections.sort(sortTriggerListeners, Comparator.comparingInt(SortTriggerListener::getOrder));
-
-            jobExecuteService.addTriggerListeners(sortTriggerListeners);
-        } catch (Exception e) {
-            LOGGER.error("Error occurs when job load on started", e);
         }
+
+        // 添加工作监听
+        Map<String, SortJobListener> sortJobListenerMap = event.getApplicationContext()
+                .getBeansOfType(SortJobListener.class);
+        List<SortJobListener> sortJobListeners = new ArrayList<>(sortJobListenerMap.values());
+        Collections.sort(sortJobListeners, Comparator.comparingInt(SortJobListener::getOrder));
+
+        jobExecuteService.addJobListeners(sortJobListeners);
+
+        // 添加触发监听器
+        Map<String, SortTriggerListener> sortTriggerListenerMap = event.getApplicationContext()
+                .getBeansOfType(SortTriggerListener.class);
+        List<SortTriggerListener> sortTriggerListeners = new ArrayList<>(sortTriggerListenerMap.values());
+        Collections.sort(sortTriggerListeners, Comparator.comparingInt(SortTriggerListener::getOrder));
+
+        jobExecuteService.addTriggerListeners(sortTriggerListeners);
     }
 
 }

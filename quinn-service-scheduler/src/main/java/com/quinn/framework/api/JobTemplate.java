@@ -2,7 +2,6 @@ package com.quinn.framework.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * 任务模板接口
@@ -66,7 +65,31 @@ public interface JobTemplate extends Serializable {
      *
      * @return 最后成功时间
      */
+    Long getDelayInSeconds();
+
+    /**
+     * 最后成功时间
+     *
+     * @return 最后成功时间
+     */
     LocalDateTime getLastSuccessDateTime();
+
+    /**
+     * 或者这次执行时间
+     *
+     * @return 这次执行时间
+     */
+    default LocalDateTime geThisExecDateTime() {
+        if (getDelayInSeconds() == null || getLastSuccessDateTime() == null) {
+            return getLastSuccessDateTime();
+        }
+
+        if (getDelayInSeconds() < 0) {
+            return getLastSuccessDateTime().plusSeconds(getDelayInSeconds());
+        }
+        return getLastSuccessDateTime().minusSeconds(getDelayInSeconds());
+    }
+
 
     /**
      * 最后失败时间

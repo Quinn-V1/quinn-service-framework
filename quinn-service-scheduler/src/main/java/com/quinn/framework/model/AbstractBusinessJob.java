@@ -1,6 +1,7 @@
 package com.quinn.framework.model;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.PropertyPreFilters;
 import com.quinn.framework.api.BusinessJob;
 import com.quinn.framework.api.JobHelpService;
 import com.quinn.framework.api.JobInstance;
@@ -11,6 +12,7 @@ import com.quinn.util.base.api.LoggerExtend;
 import com.quinn.util.base.factory.LoggerExtendFactory;
 import com.quinn.util.base.handler.MultiMessageResolver;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.CommonParamName;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -58,7 +60,14 @@ public abstract class AbstractBusinessJob implements BusinessJob {
                 result = BaseResult.fromPrev(paramRes);
                 return result;
             }
-            jobInstance.setExecParam(JSONObject.toJSONString(paramRes.getData()));
+
+            String[] excludeProperties = {CommonParamName.PARAM_KEY_RUNTIME_PARAM, "_result", "_sql"};
+            PropertyPreFilters filters = new PropertyPreFilters();
+            PropertyPreFilters.MySimplePropertyPreFilter excludeFilter = filters.addFilter();
+            excludeFilter.addExcludes(excludeProperties);
+
+            jobInstance.setExecParam(StringUtil.cutFromLeftOfByte(
+                    JSONObject.toJSONString(paramRes.getData(), excludeFilter), 2000));
 
             // 调用业务逻辑
             result = doExecute(jobInstance, paramRes.getData());
