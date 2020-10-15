@@ -58,6 +58,8 @@ public class JobLoadOnStartedListener implements ApplicationListener<ContextRefr
                             LOGGER.warn("Schedule job {} add failed for reason {}", job.getScheduleKey(),
                                     res.getMessage());
                         }
+                    } else {
+                        LOGGER.error("Schedule job {} add loaded success", job.getScheduleKey());
                     }
                 } catch (Exception e) {
                     if (strictMode) {
