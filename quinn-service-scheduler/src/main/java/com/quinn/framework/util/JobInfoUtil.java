@@ -52,7 +52,7 @@ public final class JobInfoUtil {
         res = res == null ? new HashMap<>(8) : res;
         JobTemplate jobTemplate = jobInstance.getJobTemplate();
 
-        res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_SUCCESS_DATETIME, jobTemplate.getLastSuccessDateTime());
+        res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_SUCCESS_DATETIME, jobTemplate.getThisExecDateTime());
         res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_FAIL_DATETIME, jobTemplate.getLastFailDateTime());
         res.putIfAbsent(ScheduleParamName.PARAM_KEY_LAST_EXEC_DATETIME, jobTemplate.getLastExecDateTime());
         res.putIfAbsent(ScheduleParamName.PARAM_KEY_SCHEDULE_KEY, jobTemplate.getScheduleKey());

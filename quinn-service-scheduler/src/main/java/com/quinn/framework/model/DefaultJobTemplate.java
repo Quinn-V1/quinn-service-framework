@@ -59,6 +59,12 @@ public class DefaultJobTemplate implements JobTemplate {
     private String cycleDesc;
 
     /**
+     * 延迟秒数
+     */
+    @ApiModelProperty("延迟秒数")
+    private Long delayInSeconds;
+
+    /**
      * 随后执行成功时间
      */
     @ApiModelProperty("随后执行成功时间")

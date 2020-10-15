@@ -79,13 +79,13 @@ public interface JobTemplate extends Serializable {
      *
      * @return 这次执行时间
      */
-    default LocalDateTime geThisExecDateTime() {
+    default LocalDateTime getThisExecDateTime() {
         if (getDelayInSeconds() == null || getLastSuccessDateTime() == null) {
             return getLastSuccessDateTime();
         }
 
         if (getDelayInSeconds() < 0) {
-            return getLastSuccessDateTime().plusSeconds(getDelayInSeconds());
+            return getLastSuccessDateTime().plusSeconds(- getDelayInSeconds());
         }
         return getLastSuccessDateTime().minusSeconds(getDelayInSeconds());
     }
