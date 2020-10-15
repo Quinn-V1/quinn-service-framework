@@ -51,23 +51,23 @@ public class JobLoadOnStartedListener implements ApplicationListener<ContextRefr
                     BaseResult res = jobExecuteService.addJob(job);
                     if (!res.isSuccess()) {
                         if (strictMode && !res.wantContinue()) {
-                            LOGGER.error("Schedule job {} add failed for reason {}", job.getScheduleKey(),
+                            LOGGER.error("Schedule job {0} add failed for reason {1}", job.getScheduleKey(),
                                     res.getMessage());
                             System.exit(-1);
                         } else {
-                            LOGGER.warn("Schedule job {} add failed for reason {}", job.getScheduleKey(),
+                            LOGGER.warn("Schedule job {0} add failed for reason {1}", job.getScheduleKey(),
                                     res.getMessage());
                         }
                     } else {
-                        LOGGER.error("Schedule job {} add loaded success", job.getScheduleKey());
+                        LOGGER.error("Schedule job {0} add loaded success", job.getScheduleKey());
                     }
                 } catch (Exception e) {
                     if (strictMode) {
-                        LOGGER.error("Schedule job {} add failed for reason {}", job.getScheduleKey(),
+                        LOGGER.error("Schedule job {0} add failed for reason {1}", job.getScheduleKey(),
                                 e.getMessage());
                         System.exit(-1);
                     } else {
-                        LOGGER.warn("Schedule job {} add failed for reason {}", job.getScheduleKey(),
+                        LOGGER.warn("Schedule job {0} add failed for reason {1}", job.getScheduleKey(),
                                 e.getMessage());
                     }
                 }
