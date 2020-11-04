@@ -65,6 +65,12 @@ public class MessageSendParam {
     private String messageType;
 
     /**
+     * 子消息类型
+     */
+    @ApiModelProperty("子消息类型")
+    private String subMessageType;
+
+    /**
      * 服务主键
      */
     @ApiModelProperty("消息服务主键")

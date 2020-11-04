@@ -448,6 +448,26 @@ public abstract class BaseDTO<T> {
     }
 
     /**
+     * 排序字段
+     *
+     * @return 排序字段
+     */
+    public String getOrderBy() {
+        if (StringUtil.isNotEmpty(orderBy)) {
+            return orderBy;
+        } else if (!CollectionUtil.isEmpty(orderFields)) {
+            StringBuilder query = new StringBuilder();
+            Iterator<OrderField> iterator = orderFields.iterator();
+            iterator.next().appendTo(query, StringConstant.STRING_EMPTY);
+            while (iterator.hasNext()) {
+                iterator.next().appendTo(query, StringConstant.CHAR_COMMA);
+            }
+            orderBy = query.toString();
+        }
+        return orderBy;
+    }
+
+    /**
      * 自有查询对象
      *
      * @author Qunhua.Liao
@@ -779,11 +799,11 @@ public abstract class BaseDTO<T> {
                 params = new Object[condFields.size()];
 
                 int j = 0;
-                if (condFields.get(0).appendTo(query, AppendWayEnum.WHERE.name())) {
+                if (condFields.get(0).appendTo(query, AppendWayEnum.WHERE.name(), false)) {
                     params[j++] = condFields.get(0).value;
                 }
                 for (int i = 1; i < condFields.size(); i++) {
-                    if (condFields.get(i).appendTo(query, AppendWayEnum.AND.name())) {
+                    if (condFields.get(i).appendTo(query, AppendWayEnum.AND.name(), false)) {
                         params[j++] = condFields.get(i).value;
                     }
                 }
@@ -884,26 +904,26 @@ public abstract class BaseDTO<T> {
 
                     iterator = valueFields.iterator();
                     next = iterator.next();
-                    if (next.appendTo(query, AppendWayEnum.SET.name())) {
+                    if (next.appendTo(query, AppendWayEnum.SET.name(), true)) {
                         params[k++] = next.value;
                     }
 
                     while (iterator.hasNext()) {
                         next = iterator.next();
-                        if (next.appendTo(query, StringConstant.CHAR_COMMA)) {
+                        if (next.appendTo(query, StringConstant.CHAR_COMMA, true)) {
                             params[k++] = next.value;
                         }
                     }
 
                     iterator = condFields.iterator();
                     next = iterator.next();
-                    if (next.appendTo(query, AppendWayEnum.WHERE.name())) {
+                    if (next.appendTo(query, AppendWayEnum.WHERE.name(), false)) {
                         params[k++] = next.value;
                     }
 
                     while (iterator.hasNext()) {
                         next = iterator.next();
-                        if (next.appendTo(query, AppendWayEnum.AND.name())) {
+                        if (next.appendTo(query, AppendWayEnum.AND.name(), false)) {
                             params[k++] = next.value;
                         }
                     }
@@ -948,12 +968,12 @@ public abstract class BaseDTO<T> {
                     query.append("DELETE FROM ").append(tableName());
                     params = new Object[condFields.size()];
 
-                    if (condFields.get(0).appendTo(query, AppendWayEnum.WHERE.name())) {
+                    if (condFields.get(0).appendTo(query, AppendWayEnum.WHERE.name(), false)) {
                         params[k++] = condFields.get(0).value;
                     }
 
                     for (int i = 1; i < condFields.size(); i++) {
-                        if (condFields.get(i).appendTo(query, AppendWayEnum.AND.name())) {
+                        if (condFields.get(i).appendTo(query, AppendWayEnum.AND.name(), false)) {
                             params[k++] = condFields.get(i).value;
                         }
                     }
@@ -1138,7 +1158,7 @@ public abstract class BaseDTO<T> {
          * @return 全条件值
          */
         @SneakyThrows
-        public boolean appendTo(Appendable query, String appendWay) {
+        public boolean appendTo(Appendable query, String appendWay, boolean nullEq) {
             if (StringUtil.isNotEmpty(appendWay)) {
                 query.append(CharConstant.BLANK).append(appendWay).append(CharConstant.BLANK);
             }
@@ -1149,7 +1169,11 @@ public abstract class BaseDTO<T> {
             query.append(columnOfProp(prop));
 
             if (value == null) {
-                query.append(StringConstant.CHAR_EQUAL_MARK).append(AppendWayEnum.IS_NULL.code);
+                if (nullEq) {
+                    query.append(StringConstant.CHAR_EQUAL_MARK).append(AppendWayEnum.NULL.code);
+                } else {
+                    query.append(AppendWayEnum.IS_NULL.code);
+                }
                 return false;
             } else {
                 if (wrapper == null) {
@@ -1275,7 +1299,7 @@ public abstract class BaseDTO<T> {
             query.append(columnOfProp(prop));
 
             if (StringUtil.isNotEmpty(order)) {
-                query.append(order);
+                query.append(CharConstant.BLANK).append(order);
             }
         }
     }

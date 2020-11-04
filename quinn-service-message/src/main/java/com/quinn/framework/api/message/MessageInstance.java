@@ -1,5 +1,7 @@
 package com.quinn.framework.api.message;
 
+import com.quinn.util.constant.StringConstant;
+
 import java.util.Set;
 
 /**
@@ -72,6 +74,23 @@ public interface MessageInstance {
      * @return 消息类型
      */
     String getMessageType();
+
+    /**
+     * 设置消息子类型
+     *
+     * @param subMessageType 消息子类型
+     */
+    default void setSubMessageType(String subMessageType) {
+    }
+
+    /**
+     * 获取消息子类型
+     *
+     * @return subMessageType 消息子类型
+     */
+    default String getSubMessageType() {
+        return StringConstant.NONE_OF_DATA;
+    }
 
     /**
      * 设置语言编码

@@ -16,18 +16,18 @@ public interface MessageReceiver {
     String getReceiverType();
 
     /**
-     * 获取收件人值
-     *
-     * @return 收件人值
-     */
-    String getReceiverValue();
-
-    /**
      * 设置消息接受者类型
      *
      * @param receiverType 消息接受类型
      */
     void setReceiverType(String receiverType);
+
+    /**
+     * 获取收件人值
+     *
+     * @return 收件人值
+     */
+    String getReceiverValue();
 
     /**
      * 设置消息接收者值

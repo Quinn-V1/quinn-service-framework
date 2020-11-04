@@ -1,5 +1,7 @@
 package com.quinn.framework.api.message;
 
+import com.quinn.util.constant.StringConstant;
+
 /**
  * 消息模板内容
  *
@@ -56,6 +58,15 @@ public interface MessageTempContent {
      * @return 消息类型
      */
     String getMessageType();
+
+    /**
+     * 获取消息子类型
+     *
+     * @return subMessageType 消息子类型
+     */
+    default String getSubMessageType() {
+        return StringConstant.NONE_OF_DATA;
+    }
 
     /**
      * 获取语言编码

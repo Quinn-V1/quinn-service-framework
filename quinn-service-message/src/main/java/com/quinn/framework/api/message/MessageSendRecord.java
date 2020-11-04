@@ -31,6 +31,20 @@ public interface MessageSendRecord {
     String subKey();
 
     /**
+     * 收件人类型
+     *
+     * @return 收件人类型
+     */
+    String getReceiverType();
+
+    /**
+     * 设置消息接受者类型
+     *
+     * @param receiverType 消息接受类型
+     */
+    void setReceiverType(String receiverType);
+
+    /**
      * 获取消息实例
      *
      * @return 消息实例

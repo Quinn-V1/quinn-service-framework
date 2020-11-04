@@ -23,6 +23,12 @@ public enum MsgReceiverTypeEnum {
     // 参数
     PARAM(""),
 
+    // 参数
+    PARTY(""),
+
+    // 参数
+    TAG(""),
+
     ;
 
     public final String defaultDesc;

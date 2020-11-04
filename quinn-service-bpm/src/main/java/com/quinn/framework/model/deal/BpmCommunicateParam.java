@@ -6,12 +6,13 @@ import com.quinn.framework.util.enums.BpmDealTypeEnum;
 import com.quinn.framework.util.enums.BpmTodoTypeEnum;
 import com.quinn.util.base.CollectionUtil;
 import com.quinn.util.base.StringUtil;
-import com.quinn.util.constant.enums.CommonMessageEnum;
 import com.quinn.util.base.model.BaseResult;
+import com.quinn.util.constant.enums.CommonMessageEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,8 +45,12 @@ public class BpmCommunicateParam extends AbstractBpmDealParam {
     @Override
     public void initWithMap(Map<String, Object> param) {
         super.initWithMap(param);
-        String[] toUserKeys = CollectionUtil.toArray(param.get(BpmInstParamName.TO_USER_KEYS), String.class);
-        setToUserKeys(toUserKeys);
+        Object o = param.get(BpmInstParamName.TO_USER_KEYS);
+        if (o != null) {
+            List<String> strings = CollectionUtil.toArray(o, String.class);
+            String[] toUserKeys = strings.toArray(new String[0]);
+            setToUserKeys(toUserKeys);
+        }
     }
 
     @Override
@@ -82,7 +87,7 @@ public class BpmCommunicateParam extends AbstractBpmDealParam {
 
         @Override
         public String[] getDealTypes() {
-            return new String[] {BpmDealTypeEnum.COMMUNICATE.name(), BpmDealTypeEnum.COPY.name()};
+            return new String[]{BpmDealTypeEnum.COMMUNICATE.name(), BpmDealTypeEnum.COPY.name()};
         }
     }
 
