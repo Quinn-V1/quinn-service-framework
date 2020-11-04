@@ -71,6 +71,18 @@ public class MessageSendParam {
     private String subMessageType;
 
     /**
+     * 描述
+     */
+    @ApiModelProperty("描述")
+    private String description;
+
+    /**
+     * 安全标志
+     */
+    @ApiModelProperty("安全标志")
+    private Integer safeFlag;
+
+    /**
      * 服务主键
      */
     @ApiModelProperty("消息服务主键")

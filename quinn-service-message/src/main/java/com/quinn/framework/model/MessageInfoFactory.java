@@ -10,10 +10,11 @@ import com.quinn.util.base.model.BaseResult;
 import com.quinn.util.constant.CharConstant;
 import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
-import com.quinn.util.constant.enums.LanguageEnum;
 import com.quinn.util.constant.enums.UrgentLevelEnum;
+//import com.quinn.util.licence.model.ApplicationInfo;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,8 @@ public class MessageInfoFactory {
     public static MessageInstance createInstance(MessageTempContent content, MessageSendParam messageSendParam) {
         MessageInstance instance = messageInfoSupplier.createInstance();
         instance.setMessageType(content.getMessageType());
+        instance.setSubMessageType(content.getSubMessageType());
+        instance.setSafeFlag(content.getSafeFlag());
         instance.setLangCode(content.getLangCode());
 
         instance.setSubject(content.getSubjectTemplate());
@@ -74,6 +77,9 @@ public class MessageInfoFactory {
                 instance.setContent(FreeMarkTemplateLoader.invoke(instance.getContent(), messageParam));
             }
         }
+
+        // By Simon.z  FIXME
+        instance.setDescription(messageSendParam.getDescription());
 
         instance.setFromSystem(messageSendParam.getFromSystem());
         instance.setBusinessKey(messageSendParam.getBusinessKey());
@@ -123,12 +129,17 @@ public class MessageInfoFactory {
             instance.setLangCode(StringConstant.ALL_OF_DATA);
         }
 
-        // 消息类型可以为空，因为可以根据消息发送对象计息出来
+        // 消息类型可以为空，因为可以根据消息发送对象解析出来
         if (!StringUtils.isEmpty(messageSendParam.getMessageType())) {
             instance.setMessageType(messageSendParam.getMessageType());
         } else {
             instance.setMessageType(StringConstant.ALL_OF_DATA);
         }
+
+        // By Simon.z  FIXME
+        instance.setDescription(messageSendParam.getDescription());
+        instance.setSubMessageType(messageSendParam.getSubMessageType());
+        instance.setSafeFlag(messageSendParam.getSafeFlag());
 
         Integer urgentLevel = messageSendParam.getUrgentLevel();
         if (NumberUtil.isEmptyInFrame(urgentLevel)) {
@@ -193,9 +204,15 @@ public class MessageInfoFactory {
             String langCode = receiver.getLangCode();
             for (MessageSendRecord record : data) {
                 record.setMessageType(receiver.getMessageType());
-                if (!StringUtil.isEmptyInFrame(langCode) && !LanguageEnum.by_user.name().equals(langCode)) {
+                if (StringUtil.isNotEmpty(langCode)) {
                     record.setLangCode(langCode);
                 }
+
+//                if (ApplicationInfo.getInstance().isSupportLang(record.getLangCode())) {
+//                    record.setLangCode(receiver.getLangCode());
+//                } else {
+//                    record.setLangCode(ApplicationInfo.getInstance().getDefaultLangCode());
+//                }
 
                 if (!StringUtil.isEmptyInFrame(receiver.getServerKey())) {
                     record.setServerKey(receiver.getServerKey());

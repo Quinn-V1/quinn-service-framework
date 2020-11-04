@@ -1,5 +1,6 @@
 package com.quinn.framework.api.message;
 
+import com.quinn.util.constant.NumberConstant;
 import com.quinn.util.constant.StringConstant;
 
 /**
@@ -30,6 +31,14 @@ public interface MessageTempContent {
      * @return 消息模板
      */
     String getContentTemplate();
+
+    default Integer getSafeFlag() {
+        return NumberConstant.TOP_OF_DATA;
+    }
+
+    default String getDescription() {
+        return StringConstant.NONE_OF_DATA;
+    }
 
     /**
      * 主题模板

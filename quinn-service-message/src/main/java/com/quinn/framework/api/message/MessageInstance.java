@@ -33,6 +33,12 @@ public interface MessageInstance {
      */
     String getFromSystem();
 
+    default void setSafeFlag(Integer safeFlag) {
+    }
+
+    default void setDescription(String description) {
+    }
+
     /**
      * 设置业务主键
      *
