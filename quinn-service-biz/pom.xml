@@ -27,14 +27,6 @@
             <artifactId>quinn-service-api</artifactId>
         </dependency>
 
-        <!-- support danger class of this framework -->
-        <dependency>
-            <groupId>com.quinn.util</groupId>
-            <artifactId>quinn-util-danger</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
         <!-- spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,13 +43,6 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.quinn.util</groupId>
-            <artifactId>quinn-util-licence</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
